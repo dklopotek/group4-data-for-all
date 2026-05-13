@@ -11,3 +11,6 @@ __pycache__/
 data/urban-atlas/urban-atlas.fgb.partab
 data/urban-atlas/urban-atlas.fgb.partac
 scripts/download_data.py
+class_cut.md
+feedback_important.md
+group_internal_meeting.md
