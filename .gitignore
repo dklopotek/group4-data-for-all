@@ -8,3 +8,5 @@ __pycache__/
 *.xlsx
 *.zip
 *.fgb
+data/urban-atlas/urban-atlas.fgb.partab
+data/urban-atlas/urban-atlas.fgb.partac
