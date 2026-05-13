@@ -10,3 +10,4 @@ __pycache__/
 *.fgb
 data/urban-atlas/urban-atlas.fgb.partab
 data/urban-atlas/urban-atlas.fgb.partac
+scripts/download_data.py
