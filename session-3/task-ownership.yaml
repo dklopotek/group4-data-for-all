@@ -24,18 +24,14 @@ claims:
     # owner:
     # claimed:
     # status:
-  D1:
-    # owner:
-    # claimed:
-    # status:
-  D2:
-    # owner:
-    # claimed:
-    # status:
-  D3:
-    # owner:
-    # claimed:
-    # status:
+  D-DOMINIKA:
+    owner: Dominika
+    claimed: 2026-05-13
+    status: claimed
+  D-JUAN:
+    owner: Juan
+    claimed: 2026-05-13
+    status: claimed
   DO1:
     # owner:
     # claimed:
