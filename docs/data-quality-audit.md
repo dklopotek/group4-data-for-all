@@ -108,6 +108,8 @@ no per-event timeline of plantings or removals.
   claim about "where new plantings have happened," we'd need to compare
   two snapshots.
 
+- **Irrigation decoupling (added 2026-05-10):** Barcelona's street trees receive municipal drip irrigation (`GOTEIG` is the dominant `tipus_reg` value in this dataset). This decouples Landsat LST surface temperature from root-zone soil moisture stress — a zone that measures high surface temperature may experience negligible heat stress at root depth if under active drip irrigation. Jumpponen & Egerton-Warburton (2010, *Mycorrhiza* 20:557–567) found that AM and EM colonisation rates in urban trees are suppressed primarily by substrate quality, not above-ground conditions. The LST sub-score (P7) should be interpreted as a heat-exposure indicator, not a soil-moisture-stress indicator. This limit is documented in `docs/system-sketch-v0.md` P7.
+
 - **Label bias:** N/A — this dataset has no labels in the ML sense.
 
 ---

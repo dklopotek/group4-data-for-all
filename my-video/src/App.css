@@ -1,0 +1,1043 @@
+.canvasMain {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: top left;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.05), transparent 28%),
+    linear-gradient(135deg, #10131b 0%, #0a0d13 50%, #07080d 100%);
+  color: #f4efe6;
+  font-family:
+    "Segoe UI", "Aptos", "Trebuchet MS", sans-serif;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+  transition: background 260ms ease;
+}
+
+.panel {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  background: rgba(14, 18, 24, 0.84);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
+    0 0 0 1px rgba(0, 0, 0, 0.35),
+    0 12px 30px rgba(0, 0, 0, 0.22);
+  transition:
+    border-color 220ms ease,
+    box-shadow 220ms ease,
+    background 220ms ease;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  border: 1px solid var(--accent-soft);
+  pointer-events: none;
+  transition: border-color 220ms ease;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 22px 10px;
+}
+
+.panelHeader h2 {
+  margin: 0;
+  max-width: 100%;
+  font-size: 20px;
+  line-height: 1.12;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.panelEyebrow {
+  flex: 0 0 auto;
+  color: rgba(244, 239, 230, 0.5);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.panelBody {
+  padding: 0 22px 20px;
+  height: calc(100% - 76px);
+  overflow: hidden;
+}
+
+.panel[data-panel-id="panel_top_phase_navigation"] .panelHeader {
+  padding: 12px 18px 4px;
+}
+
+.panel[data-panel-id="panel_top_phase_navigation"] .panelHeader h2 {
+  font-size: 18px;
+}
+
+.panel[data-panel-id="panel_top_phase_navigation"] .panelBody {
+  padding: 0 18px 14px;
+  height: calc(100% - 42px);
+}
+
+.panel[data-panel-id="panel_left_assembly_sequence"] .panelHeader,
+.panel[data-panel-id="panel_right_cost_chart"] .panelHeader,
+.panel[data-panel-id="panel_right_phase_preview"] .panelHeader {
+  padding-bottom: 8px;
+}
+
+.panel[data-panel-id="panel_left_assembly_sequence"] .panelHeader h2,
+.panel[data-panel-id="panel_right_cost_chart"] .panelHeader h2,
+.panel[data-panel-id="panel_right_phase_preview"] .panelHeader h2 {
+  font-size: 18px;
+}
+
+.fadePane {
+  animation: contentFade 220ms ease;
+}
+
+.infoStack,
+.comparisonPanel,
+.previewPanel,
+.lifecycleCard,
+.totalMetricsPanel,
+.sequencePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+}
+
+.heroCard,
+.infoCard,
+.basisCard,
+.heroMetricCard,
+.previewCard,
+.totalMetricCell {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.028);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  min-width: 0;
+}
+
+.heroCard {
+  padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    var(--accent-soft);
+  box-shadow: 0 0 36px rgba(0, 0, 0, 0.14);
+}
+
+.infoCard,
+.previewCard {
+  padding: 14px 16px;
+}
+
+.heroCardTop,
+.comparisonHeader,
+.totalsHeader,
+.badgeRow,
+.previewHeadline,
+.methodCardTop,
+.planHeaderMeta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.comparisonHeader > div:first-child,
+.previewHeadline > div:first-child,
+.heroCardTop > div,
+.badgeRow > div {
+  min-width: 0;
+}
+
+.heroEyebrow,
+.infoCardTitle,
+.basisTitle,
+.totalsEyebrow,
+.microLabel {
+  color: rgba(244, 239, 230, 0.58);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroTitle,
+.comparisonTitle {
+  margin-top: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.heroSubtitle,
+.comparisonMeta,
+.bodyCopy,
+.calmCopy,
+.phaseNavNote,
+.planLegend,
+.totalsHeroSub {
+  color: rgba(244, 239, 230, 0.68);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.phaseNavNote {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.miniGrid,
+.heroMetricGrid,
+.previewStats,
+.totalsGrid {
+  display: grid;
+  gap: 12px;
+}
+
+.miniGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.heroMetricGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.previewStats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.totalsGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.miniStat,
+.previewStat,
+.totalMetricCell {
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  min-width: 0;
+}
+
+.miniStat span,
+.previewStat span,
+.compactMetricRow span,
+.totalMetricCell span,
+.heroMetricCard span,
+.lifecycleRowMetrics span,
+.methodCard p,
+.methodMode,
+.methodTag,
+.softBadge,
+.warningBadge,
+.successBadge {
+  color: rgba(244, 239, 230, 0.68);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.miniStat strong,
+.previewStat strong,
+.compactMetricRow strong,
+.totalMetricCell strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 17px;
+  line-height: 1.22;
+  overflow-wrap: anywhere;
+}
+
+.chipWrap,
+.badgeRail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.chipWrap.compact {
+  gap: 6px;
+}
+
+.softBadge,
+.warningBadge,
+.successBadge,
+.methodTag,
+.methodMode,
+.sequenceLabel {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.softBadge {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+}
+
+.softBadge.neutral {
+  color: rgba(244, 239, 230, 0.65);
+}
+
+.warningBadge {
+  color: #ffd288;
+  border-color: rgba(255, 210, 136, 0.22);
+}
+
+.warningBadge.compact,
+.softBadge,
+.successBadge,
+.methodTag,
+.methodMode,
+.sequenceLabel {
+  font-size: 10px;
+}
+
+.successBadge {
+  color: #b9ffe0;
+  border-color: rgba(71, 215, 143, 0.25);
+}
+
+.keyValueList,
+.compactMetricList,
+.sequenceNotes,
+.sequenceSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+
+.keyValueList > div,
+.compactMetricRow,
+.sequenceItem,
+.lifecycleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  min-width: 0;
+}
+
+.keyValueList > div {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.keyValueList > div:last-child {
+  border-bottom: 0;
+}
+
+.keyValueList span {
+  color: rgba(244, 239, 230, 0.6);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.keyValueList strong {
+  display: block;
+  text-align: right;
+  font-size: 14px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.keyValueList.compactList > div {
+  padding: 6px 0;
+}
+
+.keyValueList.compactList strong {
+  font-size: 15px;
+}
+
+.phaseNavWrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  height: 100%;
+}
+
+.phaseNav {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  transition: opacity 180ms ease;
+}
+
+.phaseNavDisabled {
+  opacity: 0.34;
+}
+
+.phaseChip,
+.subMethodButton,
+.methodCard {
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 220ms ease,
+    opacity 160ms ease;
+}
+
+.subMethodToggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+}
+
+.phaseChip {
+  border-radius: 999px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 7px 8px;
+  font-size: 11px;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+.subMethodButton {
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.phaseChip:hover,
+.subMethodButton:hover,
+.methodCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.phaseChip.active,
+.subMethodButton.active,
+.methodCard.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+.phaseChip:disabled {
+  cursor: not-allowed;
+}
+
+.planShell {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.planSvg {
+  width: 100%;
+  height: calc(100% - 62px);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+    rgba(255, 255, 255, 0.018);
+}
+
+.planFrame {
+  fill: rgba(255, 255, 255, 0.012);
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 2;
+}
+
+.planZone {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 2;
+  transition:
+    fill 140ms ease,
+    stroke 140ms ease,
+    opacity 140ms ease,
+    filter 220ms ease;
+}
+
+.planZone.hovered {
+  fill: rgba(255, 255, 255, 0.08);
+}
+
+.planZone.selected {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  filter: drop-shadow(0 0 8px var(--accent-glow));
+  animation: zonePulse 2.6s ease-in-out infinite;
+}
+
+.planZone.facadeBand {
+  fill: transparent;
+  stroke-dasharray: 10 8;
+}
+
+.planZoneLabel {
+  fill: #f4efe6;
+  font-size: 16px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  letter-spacing: 0.06em;
+  pointer-events: none;
+}
+
+.planLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.comparisonPanel,
+.lifecycleCard {
+  justify-content: flex-start;
+}
+
+.heroMetricCard {
+  padding: 14px;
+  min-width: 0;
+}
+
+.heroMetricCard.primary {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    rgba(255, 255, 255, 0.04);
+}
+
+.heroMetricCard strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 24px;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.comparisonSecondaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.compactMetricList {
+  gap: 0;
+}
+
+.compactMetricRow {
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.compactMetricRow:last-child {
+  border-bottom: 0;
+}
+
+.compactMetricRow strong {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.lifecycleRows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.lifecycleRow {
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.lifecycleRow:last-child {
+  border-bottom: 0;
+}
+
+.lifecycleRowCopy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lifecycleRowCopy strong {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.lifecycleRowCopy span {
+  color: rgba(244, 239, 230, 0.6);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  line-height: 1.3;
+  white-space: normal;
+}
+
+.lifecycleRowMetrics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  text-align: right;
+}
+
+.lifecycleRowMetrics span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.basisCard {
+  padding: 12px 14px;
+  margin-top: auto;
+  font-size: 11px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.basisInline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+
+.emptyStateCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  min-height: 108px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.024);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.emptyStateCard strong {
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+}
+
+.floorControlStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.floorHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.floorMeta {
+  min-width: 0;
+  text-align: right;
+}
+
+.floorHeader strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 20px;
+  line-height: 1.05;
+}
+
+.floorStepper {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
+  gap: 8px;
+}
+
+.stepperButton,
+.stepperInput {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f4efe6;
+}
+
+.stepperButton {
+  cursor: pointer;
+  height: 44px;
+  font-size: 22px;
+  line-height: 1;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 200ms ease,
+    opacity 160ms ease;
+}
+
+.stepperButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.stepperButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.34;
+}
+
+.stepperInput {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  outline: none;
+}
+
+.stepperInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.04);
+}
+
+.rangeNote,
+.floorNotice,
+.methodRangeCopy {
+  color: rgba(244, 239, 230, 0.68);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.floorNotice {
+  color: #ffd288;
+}
+
+.rangeNote.subdued {
+  color: rgba(244, 239, 230, 0.56);
+}
+
+.totalMetricsPanel {
+  gap: 12px;
+}
+
+.totalsScope {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.totalsHero {
+  border-radius: 16px;
+  padding: 14px 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.totalsHero span {
+  color: rgba(244, 239, 230, 0.6);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.totalsHero strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 28px;
+  line-height: 1.06;
+}
+
+.totalMetricCell strong {
+  font-size: 14px;
+}
+
+.totalsGrid .totalMetricCell:last-child {
+  grid-column: 1 / -1;
+}
+
+.sequenceItem {
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  min-width: 0;
+}
+
+.sequenceItem:last-child {
+  border-bottom: 0;
+}
+
+.sequenceItem.current {
+  color: var(--accent);
+}
+
+.sequenceDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+  flex: 0 0 auto;
+}
+
+.sequenceDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sequenceLabel {
+  flex: 0 0 auto;
+}
+
+.sequenceFocus {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sequencePillRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sequencePill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(244, 239, 230, 0.7);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sequencePill.active {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sequenceBody {
+  margin: 0;
+}
+
+.methodGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  height: 100%;
+}
+
+.methodCard {
+  border-radius: 18px;
+  padding: 18px;
+  text-align: left;
+  min-width: 0;
+}
+
+.methodCard strong {
+  display: block;
+  margin-top: 16px;
+  font-size: 22px;
+  line-height: 1.08;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.methodCard p {
+  margin: 10px 0 0;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+.methodRangeCopy {
+  margin-top: 14px;
+}
+
+.previewHeadline strong {
+  display: block;
+  font-size: 20px;
+  line-height: 1.08;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.previewHeadline span {
+  display: block;
+  margin-top: 6px;
+  color: rgba(244, 239, 230, 0.66);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.previewMetaList {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.previewMetaItem {
+  min-width: 0;
+}
+
+.previewMetaItem span {
+  display: block;
+  color: rgba(244, 239, 230, 0.6);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.previewMetaItem strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.statusBar {
+  position: absolute;
+  display: grid;
+  grid-template-columns: 720px 1fr 150px;
+  align-items: center;
+  gap: 18px;
+  padding: 0 24px;
+  background: rgba(7, 10, 14, 0.96);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(244, 239, 230, 0.84);
+}
+
+.statusSteps {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+}
+
+.statusStep {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.56);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.statusStep.complete {
+  color: rgba(244, 239, 230, 0.78);
+}
+
+.statusStep.current {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.statusHint {
+  min-width: 0;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statusMeta {
+  justify-self: end;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 230, 0.54);
+}
+
+.debugOverlay {
+  position: absolute;
+  right: 22px;
+  bottom: 66px;
+  width: 420px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff7d1;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+}
+
+.debugPanelOutline {
+  position: absolute;
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+.debugPanelOutline span {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  background: rgba(0, 0, 0, 0.82);
+  color: #f7f0bc;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+}
+
+@keyframes contentFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zonePulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px var(--accent-glow));
+  }
+  50% {
+    filter: drop-shadow(0 0 12px var(--accent-glow));
+  }
+}

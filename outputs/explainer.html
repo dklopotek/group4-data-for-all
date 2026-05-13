@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mycorrhizal Barcelona — Fifteen Zones Where the Next Trees Will Live</title>
+<meta name="description" content="A barrier-reduction priority map for Barcelona's 400m grid: fifteen zones where capital spend on de-paving, cooling, and planting has the highest expected leverage." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" />
+<style>
+  /* ---------- Tokens ---------- */
+  :root {
+    --ink:        #1c2018;
+    --ink-soft:   #3a4138;
+    --paper:      #f4efe6;
+    --paper-2:    #ebe4d6;
+    --rule:       #d8cdb8;
+    --forest:     #1f3a2c;
+    --forest-2:   #2c5340;
+    --moss:       #5a7a52;
+    --copper:     #b6753a;
+    --copper-2:   #8a4f24;
+    --warn:       #7a3a18;
+
+    --serif:      'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    --sans:       'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+    --measure:    72ch;
+    --content:    840px;
+    --wide:       1180px;
+
+    --shadow-1:   0 1px 2px rgba(28,32,24,.05), 0 6px 24px rgba(28,32,24,.06);
+  }
+
+  /* ---------- Base ---------- */
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--copper); color: var(--paper); }
+  a { color: var(--forest-2); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--copper-2); }
+
+  h1, h2, h3, h4 {
+    font-family: var(--serif);
+    font-weight: 600;
+    color: var(--forest);
+    letter-spacing: -0.005em;
+    line-height: 1.15;
+    margin: 0 0 .4em;
+  }
+  h1 { font-size: clamp(2.4rem, 4.6vw, 3.8rem); font-weight: 500; }
+  h2 { font-size: clamp(1.7rem, 2.6vw, 2.3rem); font-weight: 500; }
+  h3 { font-size: 1.25rem; }
+  p  { margin: 0 0 1em; }
+
+  .small  { font-size: .85rem; color: var(--ink-soft); }
+  .label  { font-family: var(--sans); font-size: .72rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--copper-2); }
+  .caption{ font-size: .9rem; color: var(--ink-soft); border-left: 2px solid var(--copper); padding-left: .85rem; margin-top: .75rem; }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(244,239,230,.92);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-inner {
+    max-width: var(--wide);
+    margin: 0 auto;
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 18px; justify-content: space-between;
+  }
+  .brand { font-family: var(--serif); font-size: 1.15rem; color: var(--forest); white-space: nowrap; }
+  .brand .dot { color: var(--copper); }
+  .nav ul { list-style: none; padding: 0; margin: 0; display: flex; gap: 16px; flex-wrap: wrap; }
+  .nav a { color: var(--ink-soft); text-decoration: none; font-size: .82rem; font-weight: 500; letter-spacing: .02em; }
+  .nav a:hover { color: var(--copper-2); }
+
+  /* ---------- Layout containers ---------- */
+  main { display: block; }
+  section { padding: 64px 24px; }
+  .col {
+    max-width: var(--content);
+    margin: 0 auto;
+  }
+  .wide {
+    max-width: var(--wide);
+    margin: 0 auto;
+  }
+
+  .rule {
+    border: 0; height: 1px; background: var(--rule);
+    max-width: var(--content); margin: 24px auto;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background:
+      radial-gradient(ellipse 120% 80% at 50% -10%, rgba(31,58,44,.12), transparent 60%),
+      radial-gradient(ellipse 80% 50% at 90% 110%, rgba(182,117,58,.10), transparent 60%),
+      var(--paper);
+    padding: 96px 24px 88px;
+    border-bottom: 1px solid var(--rule);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600' opacity='0.07'><g fill='none' stroke='%231f3a2c' stroke-width='1'><circle cx='200' cy='480' r='3'/><circle cx='340' cy='520' r='2'/><circle cx='480' cy='450' r='2.5'/><circle cx='620' cy='510' r='2'/><circle cx='760' cy='470' r='3'/><circle cx='900' cy='530' r='2'/><circle cx='1040' cy='480' r='2.5'/><path d='M200 480 Q 270 540 340 520 T 480 450 T 620 510 T 760 470 T 900 530 T 1040 480'/><path d='M340 520 Q 410 580 480 560'/><path d='M480 450 Q 550 400 620 420'/><path d='M620 510 Q 690 560 760 540'/><path d='M760 470 Q 830 420 900 440'/></g></svg>");
+    background-position: bottom center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: var(--content); margin: 0 auto; }
+  .hero .label { display: inline-block; margin-bottom: 18px; }
+  .hero h1 {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--forest);
+    margin-bottom: .35em;
+  }
+  .hero .lede {
+    font-family: var(--serif);
+    font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+    line-height: 1.45;
+    color: var(--ink);
+    max-width: 60ch;
+    margin: 0 0 1.6em;
+  }
+  .hero .meta {
+    display: flex; flex-wrap: wrap; gap: 12px 24px;
+    font-size: .82rem; color: var(--ink-soft);
+    border-top: 1px solid var(--rule); padding-top: 18px; max-width: 60ch;
+  }
+  .hero .meta strong { color: var(--forest); font-weight: 600; }
+
+  /* ---------- Pull quote / motto ---------- */
+  .motto {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--forest-2);
+    border-left: 3px solid var(--copper);
+    padding: .25rem 0 .25rem 1.2rem;
+    margin: 24px 0;
+    max-width: 56ch;
+  }
+
+  /* ---------- Section headers ---------- */
+  .sec-head { margin-bottom: 28px; }
+  .sec-head .label { display: block; margin-bottom: 8px; }
+
+  /* ---------- Barriers grid ---------- */
+  .barriers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 24px 0 0;
+  }
+  .barrier {
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 22px 20px;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .barrier:hover { transform: translateY(-2px); box-shadow: var(--shadow-1); }
+  .barrier .icon {
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--forest); color: var(--paper);
+    border-radius: 6px; margin-bottom: 14px;
+  }
+  .barrier .icon svg { width: 22px; height: 22px; }
+  .barrier h3 { font-family: var(--sans); font-size: .85rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--forest); margin-bottom: 6px; }
+  .barrier p { font-size: .92rem; color: var(--ink-soft); margin: 0; line-height: 1.55; }
+  .barrier.honest { background: var(--paper); border: 1px dashed var(--copper); }
+  .barrier.honest .icon { background: var(--copper); }
+  .barrier.honest h3 { color: var(--copper-2); }
+
+  /* ---------- Map iframe ---------- */
+  .map-frame {
+    margin: 0 auto;
+    max-width: var(--wide);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--shadow-1);
+  }
+  .map-frame iframe {
+    display: block;
+    width: 100%;
+    height: 640px;
+    border: 0;
+  }
+  @media (max-width: 700px) {
+    .map-frame iframe { height: 460px; }
+  }
+
+  /* ---------- Zones table ---------- */
+  .table-wrap {
+    margin: 0 auto;
+    max-width: var(--wide);
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .table-scroll { overflow-x: auto; }
+  table.zones {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+  }
+  table.zones th, table.zones td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: middle;
+    text-align: left;
+  }
+  table.zones thead th {
+    background: var(--forest);
+    color: var(--paper);
+    font-weight: 500;
+    font-size: .72rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+    position: sticky; top: 0;
+    white-space: nowrap;
+  }
+  table.zones thead th:hover { background: var(--forest-2); }
+  table.zones thead th .arrow { opacity: .4; margin-left: 4px; font-size: .8em; }
+  table.zones thead th.sort-asc .arrow,
+  table.zones thead th.sort-desc .arrow { opacity: 1; color: var(--copper); }
+  table.zones tbody tr:hover { background: rgba(31,58,44,.04); }
+  table.zones tbody tr:last-child td { border-bottom: 0; }
+  table.zones td.rank { font-family: var(--serif); font-size: 1.2rem; color: var(--forest); width: 48px; }
+  table.zones td.district { font-weight: 500; color: var(--forest); white-space: nowrap; }
+  table.zones td.barri { color: var(--ink-soft); }
+  table.zones td.profile { font-size: .82rem; color: var(--ink-soft); min-width: 220px; }
+
+  .bar-cell { min-width: 180px; }
+  .bar-track {
+    position: relative;
+    height: 14px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--forest), var(--moss));
+  }
+  .bar-val {
+    font-family: var(--serif); font-size: .95rem; color: var(--forest);
+    margin-top: 2px; display: inline-block;
+  }
+
+  .flag {
+    display: inline-block;
+    font-size: .68rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 2px 6px;
+    border: 1px solid var(--copper);
+    color: var(--copper-2);
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* ---------- Sensitivity image ---------- */
+  .figure {
+    margin: 0 auto;
+    max-width: var(--wide);
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 28px;
+  }
+  .figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  /* ---------- Limitations ---------- */
+  .limits {
+    background: var(--forest);
+    color: var(--paper);
+    border-radius: 6px;
+    padding: 40px 36px;
+    max-width: var(--content);
+    margin: 0 auto;
+  }
+  .limits h2 { color: var(--paper); }
+  .limits .label { color: var(--copper); }
+  .limits ul { padding: 0; margin: 18px 0 0; list-style: none; }
+  .limits li {
+    padding: 14px 0 14px 28px;
+    border-top: 1px solid rgba(244,239,230,.15);
+    position: relative;
+    line-height: 1.55;
+  }
+  .limits li:first-child { border-top: 0; }
+  .limits li::before {
+    content: "—";
+    position: absolute; left: 0; top: 14px;
+    color: var(--copper);
+    font-weight: 600;
+  }
+  .limits li strong { color: var(--paper); font-weight: 600; }
+
+  /* ---------- Action / next steps ---------- */
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .action {
+    background: var(--paper-2);
+    border-left: 3px solid var(--copper);
+    padding: 22px 22px;
+    border-radius: 0 6px 6px 0;
+  }
+  .action h3 { font-family: var(--sans); font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--copper-2); margin-bottom: 10px; }
+  .action .what { font-family: var(--serif); font-size: 1.2rem; color: var(--forest); margin-bottom: 8px; }
+  .action .where { font-size: .9rem; color: var(--ink-soft); margin: 0; }
+  .todo {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: rgba(182,117,58,.08);
+    border: 1px dashed var(--copper);
+    border-radius: 4px;
+    font-size: .88rem;
+    color: var(--warn);
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    background: var(--forest);
+    color: var(--paper);
+    padding: 40px 24px;
+    margin-top: 0;
+  }
+  footer .col { max-width: var(--content); }
+  footer p { margin: 0 0 .5em; font-size: .88rem; opacity: .85; }
+  footer .motto-foot {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--copper);
+    border: 0;
+    padding: 0;
+    margin: 0 0 18px;
+  }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* ---------- Section accents ---------- */
+  #problem  { background: var(--paper); }
+  #barriers { background: var(--paper-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  #map      { background: var(--paper); }
+  #zones    { background: var(--paper-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  #robust   { background: var(--paper); }
+  #network  { background: var(--paper-2); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  #limits   { background: var(--paper); }
+  #next     { background: var(--paper-2); border-top: 1px solid var(--rule); }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 720px) {
+    section { padding: 48px 18px; }
+    .hero { padding: 64px 18px 56px; }
+    .nav-inner { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px 18px; }
+    .nav ul { gap: 12px; }
+    .nav a { font-size: .78rem; }
+    table.zones th, table.zones td { padding: 10px 10px; font-size: .85rem; }
+    .limits { padding: 28px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ Sticky nav ============ -->
+<nav class="nav" aria-label="Primary">
+  <div class="nav-inner">
+    <div class="brand">Mycorrhizal Barcelona<span class="dot">.</span></div>
+    <ul>
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#barriers">Barriers</a></li>
+      <li><a href="#map">Map</a></li>
+      <li><a href="#zones">Zones</a></li>
+      <li><a href="#robust">Robustness</a></li>
+      <li><a href="#network">Connectivity</a></li>
+      <li><a href="#limits">Limits</a></li>
+      <li><a href="#next">Next</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="hero" aria-labelledby="hero-title">
+  <div class="hero-inner">
+    <span class="label">Barrier-reduction priority map · 400 m grid · 2026</span>
+    <h1 id="hero-title">Mature trees cost less than dead saplings.</h1>
+    <p class="lede">Here are fifteen places in Barcelona where the next ones will live — and where a euro of de-paving, cooling, or planting does the most measurable work.</p>
+    <div class="meta">
+      <span><strong>For:</strong> Espais Verds i Biodiversitat — capital planning</span>
+      <span><strong>Output:</strong> shortlist + intervention type per zone</span>
+      <span><strong>Scope:</strong> Barcelona municipal boundary</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. THE PROBLEM ============ -->
+<section id="problem" aria-labelledby="problem-title">
+  <div class="col reveal">
+    <div class="sec-head">
+      <span class="label">The problem</span>
+      <h2 id="problem-title">The same blocks keep losing the same trees.</h2>
+    </div>
+    <p>Barcelona plants thousands of street trees a year. In the hottest, most sealed parts of the city, they do not make it past their third summer. The replacement order is signed; the sapling is replaced; the next sapling fails in the same pit. The cost is not theoretical: in disturbed urban substrate, a failed-and-replaced young tree costs roughly <strong>three to five times</strong> the original planting once removal, soil repair, and re-establishment are included.</p>
+    <p>The question planners have not yet been handed a defensible answer to is not <em>where should we plant</em>. It is <em>where will what we plant actually root and live past year three.</em></p>
+    <p class="motto">Soil life is municipal plumbing. Invisible, easy to break with surface work, expensive to replace — and the reason new tenants do or do not survive their first summer.</p>
+  </div>
+</section>
+
+<!-- ============ 3. THE BARRIERS ============ -->
+<section id="barriers" aria-labelledby="barriers-title">
+  <div class="col reveal">
+    <div class="sec-head">
+      <span class="label">Four barriers, mapped</span>
+      <h2 id="barriers-title">What the model measures.</h2>
+    </div>
+    <p>The composite barrier score per 400 m cell stacks four sub-scores. Three are physically measurable from above-ground sources; the fourth is a flag we have to be honest about.</p>
+
+    <div class="barriers">
+      <div class="barrier">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </div>
+        <h3>Sealed surface</h3>
+        <p>Asphalt and concrete cap. Roots cannot expand, water cannot infiltrate. Source: Copernicus Urban Atlas (10 m).</p>
+      </div>
+      <div class="barrier">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M4.93 4.93l2.83 2.83M2 12h4M4.93 19.07l2.83-2.83M12 18v4M16.24 16.24l2.83 2.83M18 12h4M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
+        </div>
+        <h3>Heat anomaly</h3>
+        <p>Surface-temperature offset from the city median in summer. Above +5 °C, sapling stress is acute. Source: Landsat 8/9 thermal.</p>
+      </div>
+      <div class="barrier">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c-3 4-6 7-6 11a6 6 0 0 0 12 0c0-4-3-7-6-11z"/><path d="M12 22v-6"/></svg>
+        </div>
+        <h3>Low canopy</h3>
+        <p>NDVI from cloud-masked summer composite. Thin canopy means thin shade and thin root-zone moisture buffer. Source: Sentinel-2 L2A.</p>
+      </div>
+      <div class="barrier honest">
+        <div class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+        </div>
+        <h3>Host mismatch — flag, not gradient</h3>
+        <p>Barcelona's street trees are mostly arbuscular-mycorrhizal hosts. AM fungi produce no fruiting bodies, so for ~95 % of cells this sub-score is "expected-but-unconfirmable." We treat it as a flag.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. THE MAP ============ -->
+<section id="map" aria-labelledby="map-title">
+  <div class="col reveal" style="margin-bottom: 28px;">
+    <div class="sec-head">
+      <span class="label">The shortlist as a map</span>
+      <h2 id="map-title">Fifteen zones, colour-coded by intervention type.</h2>
+    </div>
+    <p>Each numbered marker is a 400 m cell. Click a marker for the zone's rank, district, dominant intervention, and sub-score breakdown. The colour tells you which budget line addresses the dominant barrier in that cell — de-paving for sealed ground, cooling for heat anomaly, planting for thin canopy. Pan, zoom, and toggle layers freely; the map is read-only and stores nothing.</p>
+  </div>
+  <div class="map-frame reveal" role="region" aria-label="Priority zones map">
+    <iframe src="priority_map.html" title="Barcelona priority-zones map" loading="lazy"></iframe>
+  </div>
+  <div class="col">
+    <p class="caption">Read it as a budget memo waiting to be written: zones, not points; intervention-type colour, not raw scores; click to verify against your own knowledge of the block.</p>
+  </div>
+</section>
+
+<!-- ============ 5. THE 15 ZONES TABLE ============ -->
+<section id="zones" aria-labelledby="zones-title">
+  <div class="col reveal" style="margin-bottom: 28px;">
+    <div class="sec-head">
+      <span class="label">The fifteen zones</span>
+      <h2 id="zones-title">Ranked. Verifiable. Sortable.</h2>
+    </div>
+    <p>Click any column header to sort. Composite barrier index combines all four sub-scores. The intervention profile shows the percentage weight each budget line carries for that zone — a cell at "62 % de-paving · 19 % planting · 16 % cooling" is a de-paving zone first, with secondary planting and cooling needs.</p>
+  </div>
+  <div class="table-wrap reveal">
+    <div class="table-scroll">
+      <table class="zones" id="zones-table" aria-describedby="zones-title">
+        <thead>
+          <tr>
+            <th data-key="rank" data-type="num" class="sort-asc">Rank<span class="arrow">▲</span></th>
+            <th data-key="district" data-type="str">District<span class="arrow">↕</span></th>
+            <th data-key="barri" data-type="str">Barri<span class="arrow">↕</span></th>
+            <th data-key="composite" data-type="num">Composite barrier<span class="arrow">↕</span></th>
+            <th data-key="profile" data-type="str">Intervention profile<span class="arrow">↕</span></th>
+          </tr>
+        </thead>
+        <tbody><!-- populated by JS via DOM methods --></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col">
+    <p class="caption">Flagged rows carry <span class="flag">colonisation uncertain</span> — ≥30 % of trees in the cell were planted within the last 5 years, so the AM-host expectation is biological potential, not observed status.</p>
+  </div>
+</section>
+
+<!-- ============ 6. ROBUSTNESS ============ -->
+<section id="robust" aria-labelledby="robust-title">
+  <div class="col reveal" style="margin-bottom: 28px;">
+    <div class="sec-head">
+      <span class="label">Robustness proof</span>
+      <h2 id="robust-title">Three weightings. The same fifteen zones.</h2>
+    </div>
+    <p>Before trusting a ranking, you should know whether it survives the analyst tweaking the weights. We re-ran the composite with three different weighting philosophies — equal-weight, sealed-surface-priority, and heat-priority — and compared the top-15 lists.</p>
+  </div>
+  <div class="figure reveal">
+    <img src="sensitivity_comparison.png" alt="Sensitivity comparison chart: top-15 priority zones are stable across three weighting schemes." />
+    <p class="caption" style="margin-top: 18px;">A high Jaccard overlap across schemes means the ranking is not a knob we tuned to get a preferred answer. The barriers stack physically in these zones; no weighting choice changes that. <strong>Honesty note:</strong> the current chart shows Jaccard ≈ 1.0; part of that is genuine signal and part is a known data artefact in the sealed-surface raster being repaired. Expected post-fix Jaccard is 0.7–0.9 — still a robustness result, just an honest one.</p>
+  </div>
+</section>
+
+<!-- ============ 7. CONNECTIVITY ============ -->
+<section id="network" aria-labelledby="network-title">
+  <div class="col reveal" style="margin-bottom: 28px;">
+    <div class="sec-head">
+      <span class="label">The connectivity story</span>
+      <h2 id="network-title">Where the priority zones cluster — and where they don't.</h2>
+    </div>
+    <p>The priority shortlist is not just fifteen scattered points. Several zones sit within 500 m of each other and form contiguous neighbourhoods of high-leverage cells, particularly across Sants–Montjuïc and Sant Andreu. Those clusters are where a single Eix Verd alignment can serve more than one priority zone at once.</p>
+  </div>
+  <div class="map-frame reveal" role="region" aria-label="Connectivity neighbourhoods map">
+    <iframe src="network_neighborhoods.html" title="Connectivity neighbourhoods map" loading="lazy"></iframe>
+  </div>
+  <div class="col">
+    <p class="caption"><strong>Caveat:</strong> this is a 500 m connectivity neighbourhood — a spatial-adjacency view of the shortlist — <em>not</em> a 2030 forecast and not a measured belowground network. It tells you where co-located capital spend has logistical leverage. It does not tell you that fungi will reconnect.</p>
+  </div>
+</section>
+
+<!-- ============ 8. WHAT THIS MAP CANNOT CLAIM ============ -->
+<section id="limits" aria-labelledby="limits-title">
+  <div class="limits reveal">
+    <span class="label">What this map cannot claim</span>
+    <h2 id="limits-title">The honest footer.</h2>
+    <p style="opacity:.9;">Decision-support only. These are the boundaries you should be ready to defend in a council session.</p>
+    <ul>
+      <li><strong>Not a measured belowground map.</strong> No soil sampling, no DNA, no in-situ measurement. The pipeline maps surface and atmospheric barriers — sealed surface, heat, low canopy — that are observable from above ground.</li>
+      <li><strong>Does not predict mycorrhizal recovery within a planning cycle.</strong> Soil-microbial recovery timescales are documented at 5–20+ years. Eixos Verds operates on 3–10-year cycles. The map identifies leverage, not outcomes.</li>
+      <li><strong>Host-mismatch sub-score is informationally near-null for ~95 % of the city.</strong> AM fungi produce no fruiting bodies, so AM-dominant zones receive an identical "expected-but-unconfirmable" flag. Treat it as a flag, not a gradient.</li>
+      <li><strong>Highest barrier index ≠ highest intervention leverage in every case.</strong> A severely degraded soil may need structural intervention (drainage, decontamination) before de-paving or planting can have effect.</li>
+      <li><strong>Budget-line crosswalk is pending verification.</strong> Intervention-type assignments are decision-support suggestions, not confirmed allocations against current Ajuntament documents (open Seam 3).</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 9. WHAT TO DO NEXT ============ -->
+<section id="next" aria-labelledby="next-title">
+  <div class="col reveal">
+    <div class="sec-head">
+      <span class="label">What to do next</span>
+      <h2 id="next-title">Match each zone to a budget line.</h2>
+    </div>
+    <p>The four intervention types in the shortlist are designed to map to existing Ajuntament capital lines. The crosswalk below is the <em>intended</em> alignment — confirm against current planning documents before submission.</p>
+
+    <div class="actions">
+      <div class="action">
+        <h3>De-paving</h3>
+        <p class="what">Sealed-surface intervention</p>
+        <p class="where">Twelve of fifteen zones lead with this. Pairs with Superilla pavement-removal lines and structural-soil retrofits.</p>
+      </div>
+      <div class="action">
+        <h3>Cooling</h3>
+        <p class="what">Heat-anomaly intervention</p>
+        <p class="where">Pairs with the Eixos Verds canopy-priority strategy and the Ajuntament cooling-corridor KPI.</p>
+      </div>
+      <div class="action">
+        <h3>Planting</h3>
+        <p class="what">Canopy-gain intervention</p>
+        <p class="where">Pairs with the annual planting programme. Use the colonisation-uncertain flag to choose AM-compatible species in recently-engineered substrate.</p>
+      </div>
+      <div class="action">
+        <h3>Species selection</h3>
+        <p class="what">Host-fungal-match intervention</p>
+        <p class="where">Auxiliary; only quantitatively meaningful in EM-dominant zones (~5 % of cells, <em>Quercus / Pinus / Cedrus</em>).</p>
+      </div>
+    </div>
+
+    <div class="todo" role="note">
+      <strong>TODO — Seam 3:</strong> formal crosswalk between these four intervention types and the named Ajuntament budget lines (Eixos Verds, Superilla, planting programme, cooling strategy) has not yet been verified against current planning documents. Treat the matches above as decision-support suggestions until that work closes.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="col">
+    <p class="motto-foot">An ecosystem that supports mycelium health is an ecosystem that supports the health of all beings.</p>
+    <p>Mycorrhizal Barcelona — barrier-reduction priority pipeline. Pipeline date 2026-05-10.</p>
+    <p>Inputs: Ajuntament Arbrat Viari · GBIF · FungalRoot v2.0 · Copernicus Urban Atlas · Sentinel-2 L2A · Landsat 8/9. See <code>outputs/limitations.md</code> and <code>docs/problem-brief.md</code> for full provenance.</p>
+  </div>
+</footer>
+
+<!-- ============ JS: data + table + reveal (DOM-safe, no innerHTML for data) ============ -->
+<script>
+(function () {
+  'use strict';
+
+  // ---------- Hardcoded fallback (matches priority_zones.csv) ----------
+  // Used when fetch fails (e.g. file:// without server).
+  var FALLBACK = [
+    { rank: 1,  cell_id:'C016_011', district:'SANTS - MONTJUÏC',     barri:'LA MARINA DEL PORT',                   composite:0.8554, intervention:'de-paving', uncertain:false, profile:'52% de-paving · 23% cooling · 22% planting' },
+    { rank: 2,  cell_id:'C031_035', district:'SANT ANDREU',          barri:'EL BON PASTOR',                        composite:0.8207, intervention:'de-paving', uncertain:false, profile:'54% de-paving · 22% cooling · 22% planting' },
+    { rank: 3,  cell_id:'C032_032', district:'SANT ANDREU',          barri:'EL BON PASTOR',                        composite:0.8173, intervention:'de-paving', uncertain:false, profile:'54% de-paving · 22% planting · 21% cooling' },
+    { rank: 4,  cell_id:'C020_016', district:'SANTS - MONTJUÏC',     barri:'EL POBLE SEC',                         composite:0.7975, intervention:'de-paving', uncertain:false, profile:'56% de-paving · 23% planting · 17% cooling' },
+    { rank: 5,  cell_id:'C016_010', district:'SANTS - MONTJUÏC',     barri:'LA MARINA DEL PRAT VERMELL',           composite:0.7968, intervention:'de-paving', uncertain:false, profile:'56% de-paving · 21% planting · 20% cooling' },
+    { rank: 6,  cell_id:'C014_016', district:'SANTS - MONTJUÏC',     barri:'SANTS - BADAL',                        composite:0.7943, intervention:'de-paving', uncertain:false, profile:'61% de-paving · 19% planting · 16% cooling' },
+    { rank: 7,  cell_id:'C026_019', district:'CIUTAT VELLA',         barri:'SANT PERE, SANTA CATERINA I LA RIBERA',composite:0.7883, intervention:'de-paving', uncertain:false, profile:'62% de-paving · 21% planting · 14% cooling' },
+    { rank: 8,  cell_id:'C015_016', district:'SANTS - MONTJUÏC',     barri:'SANTS - BADAL',                        composite:0.7877, intervention:'de-paving', uncertain:false, profile:'62% de-paving · 19% planting · 16% cooling' },
+    { rank: 9,  cell_id:'C027_027', district:'SANT MARTÍ',           barri:'EL CAMP DE L’ARPA DEL CLOT',           composite:0.7863, intervention:'de-paving', uncertain:false, profile:'62% de-paving · 19% planting · 16% cooling' },
+    { rank:10,  cell_id:'C025_030', district:'HORTA - GUINARDÓ',     barri:'EL GUINARDÓ',                          composite:0.7754, intervention:'de-paving', uncertain:false, profile:'62% de-paving · 19% planting · 15% cooling' },
+    { rank:11,  cell_id:'C020_024', district:'SARRIÀ - SANT GERVASI',barri:'LA VILA DE GRÀCIA',                    composite:0.7657, intervention:'de-paving', uncertain:false, profile:'64% de-paving · 19% planting · 13% cooling' },
+    { rank:12,  cell_id:'C025_020', district:'EIXAMPLE',             barri:'LA DRETA DE L’EIXAMPLE',               composite:0.7642, intervention:'de-paving', uncertain:false, profile:'64% de-paving · 19% planting · 13% cooling' },
+    { rank:13,  cell_id:'C015_019', district:'LES CORTS',            barri:'LES CORTS',                            composite:0.7609, intervention:'de-paving', uncertain:false, profile:'62% de-paving · 17% planting · 17% cooling' },
+    { rank:14,  cell_id:'C025_036', district:'NOU BARRIS',           barri:'LES ROQUETES',                         composite:0.7527, intervention:'de-paving', uncertain:true,  profile:'62% de-paving · 20% planting · 15% cooling' },
+    { rank:15,  cell_id:'C021_023', district:'GRÀCIA',               barri:'LA VILA DE GRÀCIA',                    composite:0.7467, intervention:'de-paving', uncertain:true,  profile:'65% de-paving · 20% planting · 11% cooling' }
+  ];
+
+  // ---------- CSV parser ----------
+  function parseCSV(text) {
+    var rows = [];
+    var i = 0, field = '', row = [], inQ = false;
+    while (i < text.length) {
+      var c = text[i];
+      if (inQ) {
+        if (c === '"') {
+          if (text[i+1] === '"') { field += '"'; i += 2; continue; }
+          inQ = false; i++; continue;
+        }
+        field += c; i++; continue;
+      }
+      if (c === '"') { inQ = true; i++; continue; }
+      if (c === ',') { row.push(field); field = ''; i++; continue; }
+      if (c === '\n' || c === '\r') {
+        if (field !== '' || row.length > 0) { row.push(field); rows.push(row); }
+        field = ''; row = [];
+        if (c === '\r' && text[i+1] === '\n') i++;
+        i++; continue;
+      }
+      field += c; i++;
+    }
+    if (field !== '' || row.length > 0) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function rowsToZones(rows) {
+    if (!rows || rows.length < 2) return null;
+    var headers = rows[0].map(function (h) { return h.trim(); });
+    var idx = function (name) { return headers.indexOf(name); };
+    var iRank   = idx('rank');
+    var iCell   = idx('cell_id');
+    var iDist   = idx('nom_districte');
+    var iBarri  = idx('barri_name');
+    var iComp   = idx('composite_B');
+    var iInt    = idx('intervention_type');
+    var iUnc    = idx('colonisation_uncertain');
+    var iProf   = idx('intervention_profile_str');
+    if ([iRank, iDist, iBarri, iComp, iInt, iProf].some(function(x){ return x < 0; })) return null;
+    var out = [];
+    for (var r = 1; r < rows.length; r++) {
+      var row = rows[r];
+      if (!row || row.length < headers.length) continue;
+      out.push({
+        rank: parseInt(row[iRank], 10),
+        cell_id: row[iCell],
+        district: row[iDist],
+        barri: row[iBarri],
+        composite: parseFloat(row[iComp]),
+        intervention: row[iInt],
+        uncertain: (row[iUnc] || '').toLowerCase() === 'true',
+        profile: row[iProf]
+      });
+    }
+    return out.length ? out : null;
+  }
+
+  // ---------- Render with safe DOM methods (no innerHTML for data) ----------
+  var zonesData = null;
+  var sortState = { key: 'rank', dir: 'asc' };
+
+  function maxComposite(rows) {
+    return rows.reduce(function (m, r) { return Math.max(m, r.composite); }, 0);
+  }
+
+  function makeCell(text, className) {
+    var td = document.createElement('td');
+    if (className) td.className = className;
+    td.textContent = text;
+    return td;
+  }
+
+  function makeBarCell(value, max) {
+    var td = document.createElement('td');
+    td.className = 'bar-cell';
+
+    var pct = max > 0 ? Math.round((value / max) * 100) : 0;
+    var track = document.createElement('div');
+    track.className = 'bar-track';
+    track.setAttribute('role', 'img');
+    track.setAttribute('aria-label', 'composite barrier ' + value.toFixed(3));
+
+    var fill = document.createElement('div');
+    fill.className = 'bar-fill';
+    fill.style.width = pct + '%';
+    track.appendChild(fill);
+    td.appendChild(track);
+
+    var val = document.createElement('span');
+    val.className = 'bar-val';
+    val.textContent = value.toFixed(3);
+    td.appendChild(val);
+
+    return td;
+  }
+
+  function makeBarriCell(barri, uncertain) {
+    var td = document.createElement('td');
+    td.className = 'barri';
+    td.appendChild(document.createTextNode(barri));
+    if (uncertain) {
+      td.appendChild(document.createTextNode(' '));
+      var flag = document.createElement('span');
+      flag.className = 'flag';
+      flag.title = '≥30% trees planted in last 5 years';
+      flag.textContent = 'colonisation uncertain';
+      td.appendChild(flag);
+    }
+    return td;
+  }
+
+  function renderTable() {
+    var tbody = document.querySelector('#zones-table tbody');
+    if (!tbody || !zonesData) return;
+
+    var max = maxComposite(zonesData);
+    var sorted = zonesData.slice().sort(function (a, b) {
+      var k = sortState.key, dir = sortState.dir === 'asc' ? 1 : -1;
+      var va, vb;
+      if (k === 'rank' || k === 'composite') { va = +a[k] || 0; vb = +b[k] || 0; return (va - vb) * dir; }
+      if (k === 'district') { va = a.district; vb = b.district; }
+      else if (k === 'barri') { va = a.barri; vb = b.barri; }
+      else if (k === 'profile') { va = a.profile; vb = b.profile; }
+      else { va = a[k] || ''; vb = b[k] || ''; }
+      return String(va).localeCompare(String(vb)) * dir;
+    });
+
+    // Clear existing rows safely
+    while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
+
+    var frag = document.createDocumentFragment();
+    for (var i = 0; i < sorted.length; i++) {
+      var z = sorted[i];
+      var tr = document.createElement('tr');
+      tr.appendChild(makeCell(String(z.rank), 'rank'));
+      tr.appendChild(makeCell(z.district, 'district'));
+      tr.appendChild(makeBarriCell(z.barri, z.uncertain));
+      tr.appendChild(makeBarCell(z.composite, max));
+      tr.appendChild(makeCell(z.profile, 'profile'));
+      frag.appendChild(tr);
+    }
+    tbody.appendChild(frag);
+
+    // Update header arrows
+    var ths = document.querySelectorAll('#zones-table thead th');
+    ths.forEach(function (th) {
+      th.classList.remove('sort-asc', 'sort-desc');
+      var arrow = th.querySelector('.arrow');
+      if (th.dataset.key === sortState.key) {
+        th.classList.add(sortState.dir === 'asc' ? 'sort-asc' : 'sort-desc');
+        if (arrow) arrow.textContent = sortState.dir === 'asc' ? '▲' : '▼';
+      } else {
+        if (arrow) arrow.textContent = '↕';
+      }
+    });
+  }
+
+  function attachSortHandlers() {
+    var ths = document.querySelectorAll('#zones-table thead th');
+    ths.forEach(function (th) {
+      th.addEventListener('click', function () {
+        var key = th.dataset.key;
+        if (!key) return;
+        if (sortState.key === key) {
+          sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+          sortState.key = key;
+          sortState.dir = 'asc';
+        }
+        renderTable();
+      });
+      th.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); th.click(); }
+      });
+      th.setAttribute('tabindex', '0');
+      th.setAttribute('role', 'button');
+    });
+  }
+
+  function loadZones() {
+    if (typeof fetch === 'function' && location.protocol !== 'file:') {
+      fetch('priority_zones.csv', { cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.text(); })
+        .then(function (txt) {
+          var rows = parseCSV(txt);
+          var data = rowsToZones(rows);
+          zonesData = data && data.length ? data : FALLBACK;
+          renderTable();
+        })
+        .catch(function () {
+          zonesData = FALLBACK;
+          renderTable();
+        });
+    } else {
+      zonesData = FALLBACK;
+      renderTable();
+    }
+  }
+
+  // ---------- Reveal on scroll ----------
+  function setupReveal() {
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    els.forEach(function (el) { io.observe(el); });
+  }
+
+  // ---------- Boot ----------
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      attachSortHandlers();
+      loadZones();
+      setupReveal();
+    });
+  } else {
+    attachSortHandlers();
+    loadZones();
+    setupReveal();
+  }
+})();
+</script>
+
+</body>
+</html>

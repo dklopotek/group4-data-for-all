@@ -163,6 +163,13 @@ flowchart LR
   - **Output:** per-cell LST anomaly in °C above city-wide summer median.
   - **Transformation:** cloud-mask, summer composite, zonal mean,
     subtract city-wide median.
+  - **Irrigation caveat (added 2026-05-10):** Barcelona's municipally-managed
+    street trees receive drip irrigation (`GOTEIG`). LST measures surface
+    radiant temperature, not root-zone temperature or soil moisture. In
+    irrigated zones, LST anomaly is a heat-exposure proxy, not a
+    soil-moisture-stress proxy. Document this in the model card (Session 7)
+    and apply it when interpreting high-LST scores in zones with high
+    `GOTEIG` irrigation density.
 
 - **P8 — Compute mean NDVI per cell.**
   - **Input:** Source E (Sentinel-2 summer composite).
@@ -174,9 +181,13 @@ flowchart LR
     P7 LST, P8 NDVI.
   - **Output:** per-cell composite score [0, 1] + per-cell sub-score
     breakdown.
-  - **Transformation:** normalise each sub-score to [0,1]; weighted sum
-    with documented weights (initial: equal weighting,
-    sensitivity-tested in Session 4).
+  - **Transformation:** normalise each sub-score to [0,1]; weighted sum.
+    Three weight scenarios tested (updated 2026-05-10):
+    - **Scenario A — Equal:** sealed 0.25 / LST 0.25 / NDVI 0.25 / host-mismatch 0.25
+    - **Scenario B — Sealed-dominant (recommended primary):** sealed 0.55 / LST 0.20 / NDVI 0.20 / host-mismatch 0.05
+      *(host-mismatch downweighted per deep research finding: AM-blindness makes sub-score 4 informationally null for ~95% of the city)*
+    - **Scenario C — Heat+canopy:** sealed 0.17 / LST 0.30 / NDVI 0.30 / host-mismatch 0.23
+    - Jaccard similarity between all 3 scenario top-15 sets computed; if any pair < 0.5, rankings are weight-sensitive and all 3 scenarios presented without a primary recommendation.
 
 - **P10 — Map intervention type per cell.**
   - **Input:** P9 sub-score breakdown.

@@ -116,6 +116,14 @@ optional interactive web-map version sharing the same underlying GeoJSON.
 - **Not a forecast of intervention success.** Soil-microbial recovery
   timescales are long; the map is a planning-decision aid, not a
   guaranteed outcome predictor.
+- **Not a guarantee that the highest-scoring zones will produce the
+  fastest mycorrhizal recovery.** Urban restoration ecology supports
+  non-linear response curves — zones with moderate barrier levels and
+  some residual soil biological capital (spore banks, residual hyphal
+  networks) may recover faster from the same intervention than severely
+  degraded zones. Highest composite score ≠ highest intervention return
+  per euro. Zones with `colonisation_uncertain=True` in the per-zone
+  record warrant additional site assessment before committing capital.
 
 ---
 

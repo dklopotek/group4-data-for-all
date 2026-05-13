@@ -1,0 +1,51 @@
+flowchart LR
+    subgraph sources [Data sources]
+        A[Ajuntament tree inventory<br/>street + park, 189k trees]
+        B[GBIF fungal records<br/>BCN bbox, 2015-2024, 1023 records]
+        C[FungalRoot v2.0<br/>host -> mycorrhizal type lookup]
+        D[Copernicus Urban Atlas<br/>10m sealed surface]
+        E[Sentinel-2 L2A<br/>10m NDVI]
+        F[Landsat 8/9 thermal<br/>100m LST]
+        G[OSM + BCN open data<br/>district / barri / grid frame]
+        H[Peri-urban reference patch<br/>Collserola or Garraf, 1km square]
+    end
+    subgraph processing [Processing pipeline]
+        P1[Aggregate trees per 400m cell]
+        P2[Join species -> mycorrhizal type]
+        P3[Compute expected type per cell]
+        P4[Spatial query GBIF within 200m of each cell centroid]
+        P5[Compute confirmation gap + AM-blindness flag per cell]
+        P6[Compute sealed-surface percent per cell]
+        P7[Compute LST anomaly per cell vs city median]
+        P8[Compute mean NDVI per cell]
+        P9[Compose 4 sub-scores into barrier composite]
+        P10[Map intervention type per cell<br/>highest individual sub-score wins]
+        P11[Rank cells, take top 15]
+        P12[Compute reference-patch barrier index<br/>for qualitative anchor]
+    end
+    subgraph output [Output]
+        O[Priority map +<br/>per-zone record +<br/>limitations sheet]
+    end
+
+    A --> P1
+    G --> P1
+    P1 --> P2
+    C --> P2
+    P2 --> P3
+    A --> P4
+    B --> P4
+    P4 --> P5
+    D --> P6
+    F --> P7
+    E --> P8
+    P3 --> P9
+    P5 --> P9
+    P6 --> P9
+    P7 --> P9
+    P8 --> P9
+    P9 --> P10
+    P9 --> P11
+    P10 --> P11
+    H --> P12
+    P11 --> O
+    P12 --> O

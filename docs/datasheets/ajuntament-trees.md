@@ -289,6 +289,18 @@ character intersect with our problem brief?*
     *expected-mycorrhizal-type* layer is genuinely an *expectation*,
     not a confirmation.
   - Public-realm-only coverage as noted above.
+  - **FungalRoot lookup in engineered urban substrates (added 2026-05-10):**
+    FungalRoot v2.0 colonisation-type assignments were compiled from
+    natural and semi-natural ecosystem literature. Barcelona's street
+    trees are frequently planted in structural soil cells (crushed
+    aggregate + minimal soil), compacted backfill, or as container-grown
+    transplants — conditions under which AM and EM colonisation may not
+    establish for 3–10 years post-planting regardless of host species
+    (Jumpponen & Egerton-Warburton 2010, *Mycorrhiza* 20:557–567). The
+    expected-mycorrhizal-type layer is therefore an expectation
+    conditional on colonisation-competent substrate existing at the root
+    zone. Trees with `data_plantacio` within the past 5 years are flagged
+    `colonisation_uncertain=True` in the pipeline output (notebooks/03-scoring.ipynb).
 
 - **What additional sources would compensate for these limits?**
   - Sentinel-2 NDVI sanity-checks the inventory against actual vegetation

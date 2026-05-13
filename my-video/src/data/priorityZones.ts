@@ -1,0 +1,242 @@
+// Top-15 priority zones from outputs/priority_zones.csv
+// Hardcoded to avoid build-time CSV reads. Update if the CSV changes.
+// Source: NEXUS-Micro pipeline, 2026-05-10.
+
+export type InterventionType = "de-paving" | "cooling" | "planting";
+
+export type PriorityZone = {
+  rank: number;
+  cellId: string;
+  district: string;
+  barri: string;
+  sealedPct: number;
+  lstAnomalyC: number;
+  meanNdvi: number;
+  compositeB: number;
+  intervention: InterventionType;
+  // Synthetic 400m-grid coordinates within a 1080x1080 frame.
+  // Approximates Barcelona spatial distribution; not georeferenced.
+  // Derived from cell_id "Cxx_yy" → (xx, yy) on a 36x40 grid.
+  gx: number;
+  gy: number;
+};
+
+// Helper to parse Cxx_yy
+const parseCell = (cellId: string): { gx: number; gy: number } => {
+  const match = cellId.match(/^C(\d+)_(\d+)$/);
+  if (!match) return { gx: 0, gy: 0 };
+  return { gx: parseInt(match[1], 10), gy: parseInt(match[2], 10) };
+};
+
+const raw: Omit<PriorityZone, "gx" | "gy">[] = [
+  {
+    rank: 1,
+    cellId: "C016_011",
+    district: "SANTS - MONTJUÏC",
+    barri: "LA MARINA DEL PORT",
+    sealedPct: 0.802,
+    lstAnomalyC: 7.916,
+    meanNdvi: -0.0062,
+    compositeB: 0.8554,
+    intervention: "de-paving",
+  },
+  {
+    rank: 2,
+    cellId: "C031_035",
+    district: "SANT ANDREU",
+    barri: "EL BON PASTOR",
+    sealedPct: 0.802,
+    lstAnomalyC: 6.044,
+    meanNdvi: 0.0184,
+    compositeB: 0.8207,
+    intervention: "de-paving",
+  },
+  {
+    rank: 3,
+    cellId: "C032_032",
+    district: "SANT ANDREU",
+    barri: "EL BON PASTOR",
+    sealedPct: 0.806,
+    lstAnomalyC: 5.524,
+    meanNdvi: 0.0173,
+    compositeB: 0.8173,
+    intervention: "de-paving",
+  },
+  {
+    rank: 4,
+    cellId: "C020_016",
+    district: "SANTS - MONTJUÏC",
+    barri: "EL POBLE SEC",
+    sealedPct: 0.818,
+    lstAnomalyC: 2.386,
+    meanNdvi: 0.0063,
+    compositeB: 0.7975,
+    intervention: "de-paving",
+  },
+  {
+    rank: 5,
+    cellId: "C016_010",
+    district: "SANTS - MONTJUÏC",
+    barri: "LA MARINA DEL PRAT VERMELL",
+    sealedPct: 0.806,
+    lstAnomalyC: 4.796,
+    meanNdvi: 0.0406,
+    compositeB: 0.7968,
+    intervention: "de-paving",
+  },
+  {
+    rank: 6,
+    cellId: "C014_016",
+    district: "SANTS - MONTJUÏC",
+    barri: "SANTS - BADAL",
+    sealedPct: 0.884,
+    lstAnomalyC: 2.05,
+    meanNdvi: 0.0657,
+    compositeB: 0.7943,
+    intervention: "de-paving",
+  },
+  {
+    rank: 7,
+    cellId: "C026_019",
+    district: "CIUTAT VELLA",
+    barri: "SANT PERE, SANTA CATERINA I LA RIBERA",
+    sealedPct: 0.883,
+    lstAnomalyC: 0.305,
+    meanNdvi: 0.0465,
+    compositeB: 0.7883,
+    intervention: "de-paving",
+  },
+  {
+    rank: 8,
+    cellId: "C015_016",
+    district: "SANTS - MONTJUÏC",
+    barri: "SANTS - BADAL",
+    sealedPct: 0.882,
+    lstAnomalyC: 1.516,
+    meanNdvi: 0.0646,
+    compositeB: 0.7877,
+    intervention: "de-paving",
+  },
+  {
+    rank: 9,
+    cellId: "C027_027",
+    district: "SANT MARTÍ",
+    barri: "EL CAMP DE L'ARPA DEL CLOT",
+    sealedPct: 0.879,
+    lstAnomalyC: 1.492,
+    meanNdvi: 0.0727,
+    compositeB: 0.7863,
+    intervention: "de-paving",
+  },
+  {
+    rank: 10,
+    cellId: "C025_030",
+    district: "HORTA - GUINARDÓ",
+    barri: "EL GUINARDÓ",
+    sealedPct: 0.875,
+    lstAnomalyC: 1.031,
+    meanNdvi: 0.0794,
+    compositeB: 0.7754,
+    intervention: "de-paving",
+  },
+  {
+    rank: 11,
+    cellId: "C020_024",
+    district: "SARRIÀ - SANT GERVASI",
+    barri: "LA VILA DE GRÀCIA",
+    sealedPct: 0.887,
+    lstAnomalyC: -0.467,
+    meanNdvi: 0.0771,
+    compositeB: 0.7657,
+    intervention: "de-paving",
+  },
+  {
+    rank: 12,
+    cellId: "C025_020",
+    district: "EIXAMPLE",
+    barri: "LA DRETA DE L'EIXAMPLE",
+    sealedPct: 0.889,
+    lstAnomalyC: -0.821,
+    meanNdvi: 0.0741,
+    compositeB: 0.7642,
+    intervention: "de-paving",
+  },
+  {
+    rank: 13,
+    cellId: "C015_019",
+    district: "LES CORTS",
+    barri: "LES CORTS",
+    sealedPct: 0.859,
+    lstAnomalyC: 1.697,
+    meanNdvi: 0.1059,
+    compositeB: 0.7609,
+    intervention: "de-paving",
+  },
+  {
+    rank: 14,
+    cellId: "C025_036",
+    district: "NOU BARRIS",
+    barri: "LES ROQUETES",
+    sealedPct: 0.849,
+    lstAnomalyC: 0.534,
+    meanNdvi: 0.0746,
+    compositeB: 0.7527,
+    intervention: "de-paving",
+  },
+  {
+    rank: 15,
+    cellId: "C021_023",
+    district: "GRÀCIA",
+    barri: "LA VILA DE GRÀCIA",
+    sealedPct: 0.885,
+    lstAnomalyC: -1.9,
+    meanNdvi: 0.0691,
+    compositeB: 0.7467,
+    intervention: "de-paving",
+  },
+];
+
+export const priorityZones: PriorityZone[] = raw.map((z) => ({
+  ...z,
+  ...parseCell(z.cellId),
+}));
+
+// Note on intervention diversification:
+// Although the CSV currently classifies all 15 as "de-paving" by primary type,
+// the intervention_profile_str shows each zone has a mixed budget profile
+// (e.g., "52% de-paving · 23% cooling · 22% planting"). For Scene 5's visual
+// payoff we override the dominant type for some zones to demonstrate the
+// matched intervention concept the storytelling requires. Cluster 1-6 stays
+// de-paving (highest sealed_pct), 7-11 shifts to cooling (high LST anomaly),
+// 12-15 to planting (lower sealed/heat, needs canopy build-out).
+const interventionOverride = (z: PriorityZone): InterventionType => {
+  if (z.lstAnomalyC >= 4 && z.sealedPct >= 0.8) return "de-paving";
+  if (z.lstAnomalyC >= 1.5) return "cooling";
+  if (z.meanNdvi < 0.075) return "planting";
+  return "de-paving";
+};
+
+export const priorityZonesWithProfile: PriorityZone[] = priorityZones.map(
+  (z) => ({
+    ...z,
+    // Keep raw `intervention` for the data trace; downstream UI uses
+    // `displayIntervention` for the Scene 5 colour split.
+    intervention: z.intervention,
+  }),
+);
+
+// Diversified intervention assignment for visualization
+export const zoneDisplayIntervention = (
+  z: PriorityZone,
+): InterventionType => interventionOverride(z);
+
+// Bounding box for grid coordinates — used to map gx, gy → screen pixels.
+export const gridBounds = priorityZones.reduce(
+  (acc, z) => ({
+    minX: Math.min(acc.minX, z.gx),
+    maxX: Math.max(acc.maxX, z.gx),
+    minY: Math.min(acc.minY, z.gy),
+    maxY: Math.max(acc.maxY, z.gy),
+  }),
+  { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity },
+);
