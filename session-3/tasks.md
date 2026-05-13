@@ -1,5 +1,8 @@
 # Session 3 — CRISP-DM Data Preparation Tasks
 
+> **Scope:** Data pipeline strategy only. No frontend, no map UI, no visualisation improvements.
+> The teacher will not review any frontend work. Focus: how data is processed, why, and for whom.
+
 > Claim a task in `session-3/task-ownership.yaml` before starting.
 > Only Rafik can release a claimed task.
 

@@ -82,6 +82,27 @@ note_style = ParagraphStyle(
     fontSize=9.5,
 )
 
+stop_style = ParagraphStyle(
+    "Stop",
+    parent=body_style,
+    backColor=colors.HexColor("#fdecea"),
+    borderPadding=(8, 10, 8, 10),
+    textColor=colors.HexColor("#7a0000"),
+    fontSize=10,
+    spaceAfter=8,
+    spaceBefore=4,
+)
+strategy_style = ParagraphStyle(
+    "Strategy",
+    parent=body_style,
+    backColor=colors.HexColor("#e8f5e9"),
+    borderPadding=(8, 10, 8, 10),
+    textColor=colors.HexColor("#1b5e20"),
+    fontSize=10,
+    spaceAfter=8,
+    spaceBefore=4,
+)
+
 story = []
 
 # ── Header ──────────────────────────────────────────────────────────────────
@@ -89,6 +110,28 @@ story.append(Paragraph("Group 4 — Barcelona Mycorrhizal", title_style))
 story.append(Paragraph("Session 3 · CRISP-DM Data Preparation · Team Briefing", subtitle_style))
 story.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor("#2d6a4f")))
 story.append(Spacer(1, 10))
+
+# ── Strategic direction ──────────────────────────────────────────────────────
+story.append(Paragraph("Strategic direction — read this first", h1_style))
+story.append(Paragraph(
+    "<b>STOP.</b> Do not build or improve any frontend, map UI, or visualisation. "
+    "The teacher will not review it. The explainer map exists — leave it alone.",
+    stop_style,
+))
+story.append(Paragraph(
+    "<b>DO THIS INSTEAD.</b> Show clearly: how you are processing your data, "
+    "why you made each decision, and for whom the data is being prepared. "
+    "The deliverable is a defensible, documented data pipeline — not a product.",
+    strategy_style,
+))
+story.append(Paragraph("The three questions every notebook must answer:", body_style))
+for item in [
+    "<b>How?</b> What steps transform raw data into a usable layer (filter, clean, derive, validate)",
+    "<b>Why?</b> What design decision drove each step — and what would break if you skipped it",
+    "<b>For whom?</b> Urban planners and city ecologists making intervention decisions in Barcelona — someone who needs to trust the numbers, not just see a map",
+]:
+    story.append(Paragraph(f"• {item}", bullet_style))
+story.append(Spacer(1, 6))
 
 # ── What the teacher wants ───────────────────────────────────────────────────
 story.append(Paragraph("What the teacher said", h1_style))
