@@ -1,0 +1,46 @@
+# Session 3 — Task Ownership
+# How to claim: add your name + today's date + status: claimed
+# Statuses: claimed | in_progress | done
+# Only Rafik can release a claimed task.
+
+claims:
+  P1:
+    # owner:
+    # claimed:
+    # status:
+  P2:
+    # owner:
+    # claimed:
+    # status:
+  P3:
+    # owner:
+    # claimed:
+    # status:
+  P4:
+    # owner:
+    # claimed:
+    # status:
+  P5:
+    # owner:
+    # claimed:
+    # status:
+  D1:
+    # owner:
+    # claimed:
+    # status:
+  D2:
+    # owner:
+    # claimed:
+    # status:
+  D3:
+    # owner:
+    # claimed:
+    # status:
+  DO1:
+    # owner:
+    # claimed:
+    # status:
+  DO2:
+    # owner:
+    # claimed:
+    # status:
