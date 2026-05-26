@@ -3,7 +3,21 @@
 Per CRISP-DM Phase 4 (Chapman et al. 2000, p. 31–33): Modeling. **Guidelines only — do NOT train models.** This document defines the modeling approach, evaluation strategy, and caveats for whoever executes Phase 4.
 
 **Date:** 2026-05-26
-**Status:** GUIDELINES — Phase 4 not executed
+**Status:** SUPERSEDED by `phase-4/analytical-question.md` + `phase-4/test-design.md` + `outputs/model-card-v1.md` after Session 4 (2026-05-26 PM).
+
+---
+
+## ADDENDUM — 2026-05-26 (post Session 4 lecture)
+
+This document was written PRE-LECTURE as conservative Phase 4 scoping; it argued against training a supervised regressor on the composite because the target is itself derived. Session 4 lecture explicitly required a trained model with spatial splits, baselines, and a model card.
+
+Resolution: the lecture overrode this doc. The new Core B path predicts `composite_score_B` from RAW raster + tree-inventory features (the upstream inputs), NOT from the engineered sub-scores, with an explicit leakage exclusion list in `phase-4/analytical-question.md §5`. The eval R² of 0.999 confirms this doc's circularity warning IS valid within a similar geographic cluster; the test R² of 0.877 on a held-out spatial cluster shows the linear approximation degrades but does NOT collapse, which is itself the Phase 4 finding.
+
+The P0 sensitivity-analysis task below remains valid and is pre-registered in `phase-4/test-design.md §4` (Core A wrap-up, deferred from Session 4 to a follow-up).
+
+The rest of this file is preserved as historical scoping context only. The canonical Phase 4 record is `phase-4/test-design.md`.
+
+---
 
 ---
 
