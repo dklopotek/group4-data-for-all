@@ -1,0 +1,74 @@
+{
+  "@context": {
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "name": "sc:name",
+    "description": "sc:description",
+    "url": "sc:url",
+    "version": "sc:version",
+    "datePublished": "sc:datePublished",
+    "license": "sc:license",
+    "creator": "sc:creator",
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "dataType": "cr:dataType",
+    "fileFormat": "sc:encodingFormat",
+    "contentSize": "sc:contentSize",
+    "contentUrl": "sc:contentUrl",
+    "citation": "sc:citation"
+  },
+  "@type": "sc:Dataset",
+  "name": "Sentinel-2 L2A NDVI — Barcelona Tile T31TDF (Summer 2023 Composite)",
+  "description": "Normalised Difference Vegetation Index (NDVI) derived from Sentinel-2 L2A bands B04 (Red) and B08 (NIR) for tile T31TDF covering Barcelona. Summer 2023 multi-scene composite with cloud masking (SCL classes 8, 9, 10 excluded). Sen2Cor atmospheric correction applied. 10m native resolution. NDVI values in [-1, 1]. Used as the canopy/NDVI barrier sub-score input (SQ4) in the Mycorrhizal Barcelona project. Also serves as a sanity-check for the tree inventory (catches missing or dead trees).",
+  "url": "https://dataspace.copernicus.eu/",
+  "version": "Sentinel-2 L2A, Summer 2023 composite, tile T31TDF",
+  "datePublished": "2023",
+  "license": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+  "citation": "Copernicus Sentinel-2 L2A (2023). ESA / Copernicus Programme. Processed by European Space Agency.",
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "European Space Agency (ESA) / Copernicus Programme",
+    "url": "https://dataspace.copernicus.eu/"
+  },
+  "distribution": [
+    {
+      "@type": "sc:FileObject",
+      "name": "B04_red.tif",
+      "description": "Sentinel-2 Band 4 (Red) for tile T31TDF. 5.6MB.",
+      "encodingFormat": "image/tiff",
+      "contentSize": "5575788"
+    },
+    {
+      "@type": "sc:FileObject",
+      "name": "B08_nir.tif",
+      "description": "Sentinel-2 Band 8 (NIR) for tile T31TDF. 5.6MB.",
+      "encodingFormat": "image/tiff",
+      "contentSize": "5575788"
+    },
+    {
+      "@type": "sc:FileObject",
+      "name": "ndvi_summer_composite.tif",
+      "description": "Summer 2023 multi-scene NDVI composite (B08-B04)/(B08+B04). 11.2MB.",
+      "encodingFormat": "image/tiff",
+      "contentSize": "11151204"
+    },
+    {
+      "@type": "sc:FileObject",
+      "name": "ndvi_summer2023.tif",
+      "description": "Summer 2023 NDVI composite, cloud-masked. 11.2MB.",
+      "encodingFormat": "image/tiff",
+      "contentSize": "11151204"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "ndvi",
+      "description": "Raster layer: NDVI values in [-1.0, 1.0] over Barcelona tile T31TDF. Native CRS: EPSG:32631. 10m resolution. Nodata = NaN (cloud-masked pixels).",
+      "field": [
+        {"name": "ndvi", "dataType": "sc:Float", "description": "NDVI unitless value [-1.0, 1.0]. Nodata = NaN (cloud/cloud-shadow masked)."}
+      ]
+    }
+  ]
+}

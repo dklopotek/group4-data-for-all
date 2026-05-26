@@ -1,0 +1,64 @@
+{
+  "@context": {
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "name": "sc:name",
+    "description": "sc:description",
+    "url": "sc:url",
+    "version": "sc:version",
+    "datePublished": "sc:datePublished",
+    "license": "sc:license",
+    "creator": "sc:creator",
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "dataType": "cr:dataType",
+    "fileFormat": "sc:encodingFormat",
+    "contentSize": "sc:contentSize",
+    "contentUrl": "sc:contentUrl",
+    "citation": "sc:citation"
+  },
+  "@type": "sc:Dataset",
+  "name": "FungalRoot v2.0 — Global Plant Mycorrhizal Type Database",
+  "description": "A global database of plant mycorrhizal type assignments compiled from ~36,000 published source records. Each row maps a plant species to its documented mycorrhizal association type (AM, EM, ErM, NM, OM, or mixed/facultative combinations). Published as supplementary data to Soudzilovskaia et al. (2022) in New Phytologist (doi:10.1111/nph.18207). Used as the essential join table to convert Barcelona tree species → expected mycorrhizal type in the Mycorrhizal Barcelona project. 13,756 plant species with mycorrhizal type assignments.",
+  "url": "https://doi.org/10.1111/nph.18207",
+  "version": "2.0 (2022)",
+  "datePublished": "2022",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "citation": "Soudzilovskaia, N.A., et al. (2022). FungalRoot v2.0 — an empirical database of plant mycorrhizal traits. New Phytologist, 235(4). doi:10.1111/nph.18207.",
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "Soudzilovskaia lab consortium (Leiden University / Netherlands Institute of Ecology)",
+    "url": "https://nph.onlinelibrary.wiley.com/doi/10.1111/nph.18207"
+  },
+  "distribution": [
+    {
+      "@type": "sc:FileObject",
+      "name": "fungalroot.csv",
+      "description": "FungalRoot v2.0 CSV — species_name, myco_type lookup table. Retrieved from Zenodo mirror.",
+      "contentUrl": "https://zenodo.org/record/doi/10.1111/nph.18207",
+      "encodingFormat": "text/csv",
+      "contentSize": "379211",
+      "sha256": "77baf7315e22aa534b79d198046053c3c7e9cdbdce585cfc34653285912aec0a"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "species_myco_type",
+      "description": "13,756 rows. One row = one plant species → mycorrhizal type assignment.",
+      "field": [
+        {
+          "name": "species_name",
+          "dataType": "sc:Text",
+          "description": "Scientific name (genus + epithet). 13,756 unique values. No nulls."
+        },
+        {
+          "name": "myco_type",
+          "dataType": "sc:Text",
+          "description": "Mycorrhizal type assignment. Values: AM, EcM/AM undetermined, EcM/no AM colonization, EcM/AM mixed, non-mycorrhizal, ErM, OM, Other, etc. 11 unique categories observed."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "@context": {
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "name": "sc:name",
+    "description": "sc:description",
+    "url": "sc:url",
+    "version": "sc:version",
+    "datePublished": "sc:datePublished",
+    "license": "sc:license",
+    "creator": "sc:creator",
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "dataType": "cr:dataType",
+    "fileFormat": "sc:encodingFormat",
+    "contentSize": "sc:contentSize",
+    "contentUrl": "sc:contentUrl",
+    "citation": "sc:citation"
+  },
+  "@type": "sc:Dataset",
+  "name": "Landsat 8/9 Land Surface Temperature — Barcelona Scene (Summer 2023 Composite)",
+  "description": "Land surface temperature (LST) derived from Landsat 8/9 Collection 2 Level-2 thermal band (ST_B10) for Barcelona scene (path 198, row 031). Summer 2023 multi-scene composite processed to degrees Celsius. Atmospheric correction and emissivity methodology per USGS product specification. 100m native resolution resampled to 30m. Used as the heat-anomaly barrier sub-score input (SQ3) in the Mycorrhizal Barcelona project.",
+  "url": "https://earthexplorer.usgs.gov/",
+  "version": "Landsat Collection 2 Level-2, Summer 2023 composite",
+  "datePublished": "2023",
+  "license": "https://www.usgs.gov/information-policies-and-instructions/crediting-usgs",
+  "citation": "NASA/USGS Landsat 8/9 Collection 2 Level-2. U.S. Geological Survey. Public domain.",
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "NASA / U.S. Geological Survey (USGS)",
+    "url": "https://www.usgs.gov/landsat-missions"
+  },
+  "distribution": [
+    {
+      "@type": "sc:FileObject",
+      "name": "ST_B10_raw.tif",
+      "description": "Raw Landsat ST_B10 thermal band (Kelvin). 1.2MB.",
+      "encodingFormat": "image/tiff",
+      "contentSize": "1240688"
+    },
+    {
+      "@type": "sc:FileObject",
+      "name": "lst_summer_composite.tif",
+      "description": "Summer 2023 multi-scene LST composite (Kelvin). 1.2MB.",
+      "encodingFormat": "image/tiff",
+      "contentSize": "1240688"
+    },
+    {
+      "@type": "sc:FileObject",
+      "name": "lst_summer2023_celsius.tif",
+      "description": "Summer 2023 LST composite converted to degrees Celsius. 0.6MB.",
+      "encodingFormat": "image/tiff",
+      "contentSize": "620530"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "lst_celsius",
+      "description": "Raster layer: LST in degrees Celsius over Barcelona scene. Native CRS: EPSG:32631. 100m resolution (resampled 30m). Valid range: [-20, 65] °C.",
+      "field": [
+        {"name": "lst_celsius", "dataType": "sc:Float", "description": "Land surface temperature in °C. Valid range [-20, 65]. Nodata = NaN."}
+      ]
+    }
+  ]
+}

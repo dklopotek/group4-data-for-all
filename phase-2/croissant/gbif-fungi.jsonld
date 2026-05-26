@@ -1,0 +1,82 @@
+{
+  "@context": {
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "name": "sc:name",
+    "description": "sc:description",
+    "url": "sc:url",
+    "version": "sc:version",
+    "datePublished": "sc:datePublished",
+    "license": "sc:license",
+    "creator": "sc:creator",
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "dataType": "cr:dataType",
+    "fileFormat": "sc:encodingFormat",
+    "contentSize": "sc:contentSize",
+    "contentUrl": "sc:contentUrl",
+    "citation": "sc:citation"
+  },
+  "@type": "sc:Dataset",
+  "name": "GBIF Fungal Occurrence Records — Barcelona, Catalonia (2015–2024)",
+  "description": "Fungal occurrence records for the Barcelona municipality and Catalonia region, retrieved from the Global Biodiversity Information Facility (GBIF) via the Occurrence REST API. Filtered to Kingdom Fungi, eventDate 2015–2024, with coordinate uncertainty ≤100m. Barcelona municipal subset: 1,023 records. Dominated by iNaturalist research-grade citizen-science observations (98.3% HUMAN_OBSERVATION). Used as the observation-context layer for the host–mismatch sub-score in the Mycorrhizal Barcelona project. NOT used as a barrier sub-score input due to documented AM-blindness (arbuscular mycorrhizal fungi produce no visible fruiting bodies).",
+  "url": "https://www.gbif.org/occurrence/search?taxonKey=5&country=ES",
+  "version": "Retrieved 2026-05-13; GBIF index snapshot of that date",
+  "datePublished": "2026-05-13",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "citation": "GBIF.org (2026) GBIF Occurrence Download. Accessed 2026-05-13.",
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "GBIF Secretariat (Global Biodiversity Information Facility)",
+    "url": "https://www.gbif.org/"
+  },
+  "distribution": [
+    {
+      "@type": "sc:FileObject",
+      "name": "gbif-fungi.json",
+      "description": "Barcelona municipal subset — fungal occurrence records, JSON from GBIF Occurrence API",
+      "contentUrl": "https://api.gbif.org/v1/occurrence/search?taxonKey=5&geometry=2.052,41.310,2.230,41.475&eventDate=2015,2024&hasCoordinate=true",
+      "encodingFormat": "application/json",
+      "contentSize": "3165654",
+      "sha256": "a65d2aa68907d54f84f4b7b2075222302ff917ba1c2207ad6cb6ecf68a8fc50c"
+    },
+    {
+      "@type": "sc:FileObject",
+      "name": "gbif-fungi-all.json",
+      "description": "Catalonia-wide subset — fungal occurrence records, JSON from GBIF Occurrence API",
+      "contentUrl": "https://api.gbif.org/v1/occurrence/search?taxonKey=5&country=ES&eventDate=2015,2024&hasCoordinate=true",
+      "encodingFormat": "application/json",
+      "contentSize": "8955950",
+      "sha256": "7fb74bd6db8d24d5f2064285836069c1279b4d007971c1b5f967e09f62d255f5"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "occurrences",
+      "description": "Flattened fungal occurrence records in Darwin Core terms. 1,023 records in Barcelona subset.",
+      "field": [
+        {"name": "gbifID", "dataType": "sc:Integer", "description": "GBIF unique occurrence identifier"},
+        {"name": "scientificName", "dataType": "sc:Text", "description": "Full scientific name as reported by publisher"},
+        {"name": "kingdom", "dataType": "sc:Text", "description": "Kingdom (Fungi)"},
+        {"name": "phylum", "dataType": "sc:Text", "description": "Phylum from taxonomic hierarchy"},
+        {"name": "class", "dataType": "sc:Text", "description": "Class from taxonomic hierarchy"},
+        {"name": "order", "dataType": "sc:Text", "description": "Order from taxonomic hierarchy"},
+        {"name": "family", "dataType": "sc:Text", "description": "Family from taxonomic hierarchy"},
+        {"name": "genus", "dataType": "sc:Text", "description": "Genus from taxonomic hierarchy"},
+        {"name": "specificEpithet", "dataType": "sc:Text", "description": "Specific epithet from taxonomic hierarchy"},
+        {"name": "taxonRank", "dataType": "sc:Text", "description": "Taxonomic rank of identification (SPECIES, GENUS, etc.)"},
+        {"name": "decimalLatitude", "dataType": "sc:Float", "description": "WGS84 latitude (41.30–41.48)"},
+        {"name": "decimalLongitude", "dataType": "sc:Float", "description": "WGS84 longitude (2.05–2.23)"},
+        {"name": "coordinateUncertaintyInMeters", "dataType": "sc:Float", "description": "Coordinate uncertainty in metres (nullable; filter ≤100m)"},
+        {"name": "eventDate", "dataType": "sc:Text", "description": "Observation date (ISO 8601; 2015–2024)"},
+        {"name": "basisOfRecord", "dataType": "sc:Text", "description": "Basis of record (HUMAN_OBSERVATION=98.3%, PRESERVED_SPECIMEN=1.6%)"},
+        {"name": "recordedBy", "dataType": "sc:Text", "description": "Observer or collector name"},
+        {"name": "datasetKey", "dataType": "sc:Text", "description": "UUID of publishing dataset"},
+        {"name": "license", "dataType": "sc:Text", "description": "Per-record license (CC0_1_0, CC_BY_4_0, CC_BY_NC_4_0)"},
+        {"name": "occurrenceStatus", "dataType": "sc:Text", "description": "Occurrence status (PRESENT)"}
+      ]
+    }
+  ]
+}

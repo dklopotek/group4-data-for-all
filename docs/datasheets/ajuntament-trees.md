@@ -151,20 +151,36 @@
   question).
 
 - **Is the raw data also available?**
-  No raw fieldwork sheets are published. The published snapshot is the
-  cleaned record.
+  Yes — CSV download from Open Data BCN. The published snapshot is the raw
+  data for our pipeline; no further upstream fieldwork sheets are published.
 
 - **What preprocessing did WE do before adopting the dataset?**
-  *(To be filled in during the profiling notebook — Cell 3.)* Planned:
-  (i) merge street + park snapshots into one logical dataset; (ii)
-  reproject to a single CRS (ETRS89 / UTM 31N for distance calculations);
-  (iii) join `nom_cientific` against FungalRoot v2.0 — at species level
-  where possible, falling back to genus-level lookup with a documented
-  fallback flag; (iv) aggregate per 400m grid cell for the priority-map
-  pipeline; (v) tag each tree with district + barri (already in source).
+  - Merged street (`arbrat-viari.csv`) + park (`arbrat-zona.csv`) inventories
+    into one logical dataset (189,090 rows combined, 7 columns retained after
+    SEL-005 column selection).
+  - Species name normalisation: lowercase, canonical `genus species` format.
+  - Joined `cat_nom_cientific` against FungalRoot v2.0 (13,756 species
+    mappings) for mycorrhizal type assignment (AM / EM / NM).
+  - 45,272 trees (24%) fell outside the MYCO_LOOKUP top-20 — retained in
+    grid-level statistics (`tree_count`, `trees_young_pct`) but excluded from
+    network-graph mycorrhizal-type fractions. Per-cell `am_pct`/`em_pct` are
+    computed from the matched subset only.
+  - Genus-only records (25 rows, 0.01%, all *Washingtonia sp.*) flagged as
+    `myco_type = 'unknown'`.
+  - 36 irrelevant columns dropped (address, height, canopy width, irrigation
+    type, category, etc.) — documented as SEL-005 in the cleaning report.
+  - 81.0% of records lack a planting date (`data_plantacio`); null dates are
+    flagged `colonisation_uncertain = True` rather than imputed.
+  - Reprojected coordinates to EPSG:25831 (ETRS89 / UTM 31N) for metre-unit
+    distance calculations.
+  - Spatially joined to a 400 m x 400 m grid (495 occupied cells) via
+    `geopandas.sjoin(predicate='within')`.
+  - No deduplication performed — the Ajuntament publishes pre-deduplicated
+    CSVs per snapshot; a SHA-256 row-hash check is deferred.
 
 - **Where is the preprocessing software / code available?**
-  `notebooks/01-data-profiling.ipynb` (this repo).
+  `notebooks/01-data-profiling.ipynb`, `notebooks/02-grid-trees.ipynb`,
+  `notebooks/03-scoring.ipynb`, `phase-3/data-cleaning-report.md`.
 
 ---
 

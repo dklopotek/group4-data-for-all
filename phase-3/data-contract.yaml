@@ -1,0 +1,409 @@
+# Phase 3 → Phase 4 Data Contract
+# Mycorrhizal Barcelona — Barrier-Reduction Priority Map
+# Date: 2026-05-26
+# Schema version: 1.2.0
+#   v1.2.0 — Deep-research-informed pivot (outputs/deep-research-platanus-prpi.md):
+#            (a) Inventory refreshed to arbrat-viari 2026_1T snapshot.
+#            (b) s4_shift_potential reframed as UPPER-BOUND hypothesis
+#                (Verbeek et al. 2025).
+#            (c) Public-health claim re-scoped: Platanus → rhinoconjunctivitis +
+#                food-allergy cross-reactivity via Pla a 3 (Scala et al. 2017);
+#                severe-asthma attribution weak (Osborne et al. 2017).
+#            (d) New operational scenario: cell_vpa_score, vpa_replacement_delta,
+#                species_preference_present, prpi_operational columns added,
+#                anchored to Cariñanos & Marinangeli (2021) VPA scale and
+#                Barcelona's Espais Verds Zelkova/Pistacia pilot palette.
+#   v1.1.0 — Added PRPI (Platanus Replacement Priority Index) as a 5th term
+#            folded into composite_score. New columns: n_platanus,
+#            platanus_pct, s4_shift_potential, s4_shift_ceiling_reached,
+#            prpi, replacement_priority, s5_contribution_pct.
+#            intervention_type enum extended with "species-replacement".
+
+contract:
+  name: "scored_grid"
+  version: "1.2.0"
+  description: >
+    400m × 400m grid over Barcelona with composite barrier scores,
+    sub-score decomposition, intervention recommendations,
+    mycorrhizal-host tree statistics, and Platanus replacement priority
+    (EM-optimistic + operational scenarios). Primary input to Phase 4
+    modeling.
+  file: "data/processed/scored_grid.geojson"
+  format: "GeoJSON"
+  crs: "EPSG:25831"
+  features: 494
+  geometry_type: "Polygon"
+  upstream_inventory_snapshot: "arbrat-viari 2026_1T (Open Data BCN, re-pulled 2026-05-26)"
+
+columns:
+  # --- Identifiers ---
+  - name: cell_id
+    dtype: str
+    description: "Grid cell identifier (e.g., C016_011)"
+    nullable: false
+    unique: true
+    example: "C016_011"
+
+  - name: district
+    dtype: str
+    description: "Barcelona district name (Catalan)"
+    nullable: true
+    example: "Sants-Montjuïc"
+
+  - name: barri
+    dtype: str
+    description: "Barcelona neighbourhood name (Catalan)"
+    nullable: true
+    example: "la Marina de Port"
+
+  # --- Geometry ---
+  - name: geometry
+    dtype: geometry (Polygon)
+    description: "400m × 400m cell polygon in EPSG:25831"
+    nullable: false
+    crs: "EPSG:25831"
+
+  # --- Tree statistics (per cell) ---
+  - name: total_trees
+    dtype: int
+    description: "Total trees in cell (all species, including unknown myco_type)"
+    nullable: false
+    range: [0, null]
+
+  - name: n_AM
+    dtype: int
+    description: "Number of arbuscular mycorrhizal host trees in cell"
+    nullable: false
+    range: [0, null]
+
+  - name: n_EM
+    dtype: int
+    description: "Number of ectomycorrhizal host trees in cell"
+    nullable: false
+    range: [0, null]
+
+  - name: n_unknown
+    dtype: int
+    description: "Number of trees in cell with unresolved mycorrhizal type (species not in MYCO_LOOKUP)"
+    nullable: false
+    range: [0, null]
+
+  - name: n_platanus
+    dtype: int
+    description: "Number of Platanus × acerifolia trees in cell (city's #1 species, 22.6% of inventory, all AM)"
+    nullable: false
+    range: [0, null]
+    note: "Public-health driver — Platanus is the dominant pollen-allergy species in Barcelona"
+
+  - name: am_pct
+    dtype: float
+    description: "Percentage of known-type trees that are AM hosts (0-100 scale)"
+    nullable: true
+    range: [0, 100]
+    note: "Computed from matched subset only — n_AM / (n_AM + n_EM) × 100"
+
+  - name: em_pct
+    dtype: float
+    description: "Percentage of known-type trees that are EM hosts (0-100 scale)"
+    nullable: true
+    range: [0, 100]
+
+  - name: trees_young_pct
+    dtype: float
+    description: "Percentage of trees planted within last 5 years (0-100 scale)"
+    nullable: true
+    range: [0, 100]
+    note: "Null if data_plantacio is missing for all trees in cell"
+
+  - name: species_richness
+    dtype: int
+    description: "Number of unique tree species in cell (matched subset only)"
+    nullable: false
+    range: [0, null]
+
+  - name: expected_myco_type
+    dtype: str
+    description: "Dominant mycorrhizal type in cell: 'AM', 'EM', 'Mixed', or 'Unknown'"
+    nullable: false
+    enum: ["AM", "EM", "Mixed", "Unknown"]
+    note: "Renamed from dominant_myco_type for clarity (expected, not confirmed)"
+
+  # --- Sub-scores (0-1 scale, higher = more barrier) ---
+  - name: s1_sealed
+    dtype: float
+    description: "Sealed surface barrier sub-score (0-1)"
+    nullable: false
+    range: [0, 1]
+    source: "Urban Atlas 2018 sealed_surface.tif"
+
+  - name: s2_lst_anomaly
+    dtype: float
+    description: "LST anomaly sub-score (0-1), z-score clipped at ±2σ"
+    nullable: false
+    range: [0, 1]
+    source: "Landsat 8/9 summer composite"
+
+  - name: s3_inverted_ndvi
+    dtype: float
+    description: "Inverted NDVI sub-score (0-1), 1 - mean_ndvi"
+    nullable: false
+    range: [0, 1]
+    source: "Sentinel-2 L2A summer composite"
+
+  - name: s4_mismatch
+    dtype: float
+    description: "Host-mycorrhizal mismatch sub-score"
+    nullable: false
+    enum: [0.0, 0.5, 0.6, 0.8]
+    note: "0.0=EM+GBIF, 0.5=AM-dominant (informationally null), 0.6=Mixed, 0.8=EM no GBIF"
+
+  # --- PRPI (Platanus Replacement Priority Index, v1.1) ---
+  - name: platanus_pct
+    dtype: float
+    description: "Percentage of trees in cell that are Platanus × acerifolia"
+    nullable: false
+    range: [0, 100]
+    source: "Computed from n_platanus / total_trees"
+    note: "Public-health driver and primary input to PRPI"
+
+  - name: s4_shift_potential
+    dtype: float
+    description: "UPPER-BOUND drop in AM% (0-1) under EM-optimistic assumption (Quercus ilex / Pinus halepensis). Hypothesis under ideal substrate, NOT a delivered ecological outcome — Verbeek et al. (2025) and Gaimaro et al. (2025) show urban AM communities shift composition rather than collapse and engineered substrate co-drives colonization with host identity"
+    nullable: false
+    range: [0, 1]
+    evidence_status: "hypothesis"
+    note: "Compare against prpi_operational (v1.2) for the species-preference variant. Zero where Platanus replacement cannot shift the cell out of AM-dominance — see s4_shift_ceiling_reached"
+
+  - name: s4_shift_ceiling_reached
+    dtype: bool
+    description: "True when cell remains ≥80% AM even after replacing all Platanus with EM — PRPI in these cells reflects pollen + feasibility only, no S4 break"
+    nullable: false
+
+  - name: prpi
+    dtype: float
+    description: "Platanus Replacement Priority Index (0-1) — EM-OPTIMISTIC scenario. Combines Platanus density, low canopy, S4 shift potential (upper-bound), planting feasibility"
+    nullable: false
+    range: [0, 1]
+    weights: {platanus: 0.40, ndvi: 0.20, s4_shift: 0.20, feasibility: 0.20}
+    source: "Anchored to Pla Director de l'Arbrat de Barcelona 2017-2037 (target: Platanus <12% of street trees by 2037)"
+    scenario: "EM-optimistic — assumes Platanus replaced with Quercus ilex / Pinus halepensis"
+
+  # --- v1.2 — VPA + operational scenario ---
+  - name: cell_vpa_score
+    dtype: float
+    description: "Count-weighted mean VPA (Value of Potential Allergenicity, Cariñanos & Marinangeli 2021) across all trees in cell, normalised to 0-1 (raw VPA / 5)"
+    nullable: false
+    range: [0, 1]
+    source: "Cariñanos & Marinangeli (2021), Urban Forestry & Urban Greening 63:127218"
+
+  - name: vpa_replacement_delta
+    dtype: float
+    description: "Expected drop in cell_vpa_score (0-1) if all Platanus replaced with the operational pilot palette (Zelkova/Pistacia/Sophora ≈ VPA class II, mean normalised 0.32)"
+    nullable: false
+    range: [0, 1]
+
+  - name: species_preference_present
+    dtype: float
+    description: "Fraction (0-1) of trees in cell already drawn from the operational pilot palette (SPECIES_PREFERENCE_WEIGHTS >= 0.8)"
+    nullable: false
+    range: [0, 1]
+    note: "High = cell already aligned with Barcelona's Espais Verds palette; Low = high room to improve"
+
+  - name: prpi_operational
+    dtype: float
+    description: "Platanus Replacement Priority Index — OPERATIONAL scenario (v1.2). Same weights as prpi, but uses vpa_replacement_delta (peer-reviewed allergenicity drop under pilot palette) instead of s4_shift_potential"
+    nullable: false
+    range: [0, 1]
+    weights: {platanus: 0.40, ndvi: 0.20, vpa_delta: 0.20, feasibility: 0.20}
+    scenario: "Operational — assumes Platanus replaced with Barcelona's Espais Verds pilot palette (Zelkova serrata, Pistacia chinensis, Sophora, Melia, jacarandas)"
+    source: "Cariñanos & Marinangeli 2021 + Espais Verds operational documentation 2024"
+
+  # --- Composite scores (three scenarios, v1.1 includes PRPI as 5th term) ---
+  - name: composite_score_A
+    dtype: float
+    description: "Composite barrier score — Scenario A (equal weights)"
+    nullable: false
+    range: [0, 1]
+    weights: {s1: 0.20, s2: 0.20, s3: 0.20, s4: 0.20, prpi: 0.20}
+
+  - name: composite_score_B
+    dtype: float
+    description: "Composite barrier score — Scenario B (sealed-dominant, PRIMARY)"
+    nullable: false
+    range: [0, 1]
+    weights: {s1: 0.45, s2: 0.20, s3: 0.15, s4: 0.05, prpi: 0.15}
+
+  - name: composite_score_C
+    dtype: float
+    description: "Composite barrier score — Scenario C (heat+canopy)"
+    nullable: false
+    range: [0, 1]
+    weights: {s1: 0.15, s2: 0.25, s3: 0.25, s4: 0.20, prpi: 0.15}
+
+  # --- Intervention classification ---
+  - name: top15_flag
+    dtype: bool
+    description: "Cell is in top-15 priority cells under Scenario B"
+    nullable: false
+
+  - name: intervention_type
+    dtype: str
+    description: "Recommended intervention type based on sub-score decomposition"
+    nullable: false
+    enum: ["de-paving", "cooling", "planting", "multi-strategy", "species-replacement"]
+
+  - name: intervention_profile
+    dtype: str
+    description: "Human-readable intervention breakdown across all 5 sub-scores"
+    nullable: true
+
+  - name: replacement_priority
+    dtype: bool
+    description: "Cell is a species-replacement candidate: PRPI > 0.5 AND s4_shift_potential > 0 AND s1_sealed < 0.7"
+    nullable: false
+    note: "Independent of intervention_type — flags cells where Platanus removal meets all three gates"
+
+  - name: colonisation_uncertain
+    dtype: bool
+    description: "≥30% of trees in cell planted <5 years ago — mycorrhizal colonisation not guaranteed"
+    nullable: false
+
+  # --- Sub-score contributions (percentage of composite score) ---
+  - name: s1_contribution_pct
+    dtype: float
+    description: "Percentage of composite_B from S1 (sealed surface)"
+    nullable: false
+    range: [0, 100]
+
+  - name: s2_contribution_pct
+    dtype: float
+    description: "Percentage of composite_B from S2 (LST anomaly)"
+    nullable: false
+    range: [0, 100]
+
+  - name: s3_contribution_pct
+    dtype: float
+    description: "Percentage of composite_B from S3 (inverted NDVI)"
+    nullable: false
+    range: [0, 100]
+
+  - name: s4_contribution_pct
+    dtype: float
+    description: "Percentage of composite_B from S4 (mismatch)"
+    nullable: false
+    range: [0, 100]
+
+  - name: s5_contribution_pct
+    dtype: float
+    description: "Percentage of composite_B from PRPI (species-replacement)"
+    nullable: false
+    range: [0, 100]
+
+  # --- Raster values ---
+  - name: mean_sealed
+    dtype: float
+    description: "Mean sealed surface fraction in cell (0-1)"
+    nullable: false
+    range: [0, 1]
+
+  - name: mean_lst_celsius
+    dtype: float
+    description: "Mean summer LST in cell (°C)"
+    nullable: true
+    note: "Null if no valid Landsat pixels in cell"
+
+  - name: lst_anomaly
+    dtype: float
+    description: "LST anomaly from city-wide mean (°C), renamed from lst_anomaly_celsius"
+    nullable: true
+
+  - name: mean_ndvi
+    dtype: float
+    description: "Mean summer NDVI in cell (0-1)"
+    nullable: true
+    note: "Null if no valid Sentinel-2 pixels in cell"
+
+  # --- GBIF ---
+  - name: gbif_records
+    dtype: int
+    description: "Number of GBIF fungal occurrence records in cell"
+    nullable: false
+    range: [0, null]
+
+  # --- Network (null if cell not in network graph) ---
+  - name: component_id
+    dtype: int
+    description: "Connected component ID (fungal network island)"
+    nullable: true
+
+  - name: component_size
+    dtype: int
+    description: "Number of trees in this cell's connected component"
+    nullable: true
+
+  # --- Cell-level metadata ---
+  - name: cell_bbox_minx
+    dtype: float
+    description: "Cell bounding box minimum X (EPSG:25831)"
+    nullable: false
+
+  - name: cell_bbox_miny
+    dtype: float
+    description: "Cell bounding box minimum Y (EPSG:25831)"
+    nullable: false
+
+  - name: cell_bbox_maxx
+    dtype: float
+    description: "Cell bounding box maximum X (EPSG:25831)"
+    nullable: false
+
+  - name: cell_bbox_maxy
+    dtype: float
+    description: "Cell bounding box maximum Y (EPSG:25831)"
+    nullable: false
+
+# --- Validation rules ---
+validation:
+  row_count: 495
+  crs_check: "gdf.crs == 'EPSG:25831'"
+  geometry_type: "Polygon"
+  no_null_cell_id: "cell_id.isna().sum() == 0"
+  composite_range: "all(composite_score_B.between(0, 1))"
+  top15_count: "top15_flag.sum() == 15"
+  weight_sum: "Scenario weights sum to 1.0 each"
+
+# --- Lineage ---
+lineage:
+  upstream_artifacts:
+    - "phase-2/data-inventory.md"
+    - "phase-2/schemas/ajuntament-trees.py"
+    - "phase-2/schemas/fungalroot.py"
+    - "phase-2/schemas/gbif-fungi.py"
+    - "phase-2/schemas/spatial-layers.yaml"
+    - "phase-2/geospatial-declarations.md"
+    - "phase-2/bias-and-annotation.md"
+  notebooks:
+    - "notebooks/01-data-profiling.ipynb"
+    - "notebooks/02-grid-trees.ipynb"
+    - "notebooks/03-scoring.ipynb"
+    - "notebooks/04-connectivity.ipynb"
+  input_data:
+    - "data/arbrat-viari.csv"
+    - "data/arbrat-zona.csv"
+    - "data/fungalroot.csv"
+    - "data/gbif-fungi.json"
+    - "data/urban-atlas/sealed_surface.tif"
+    - "data/landsat/lst_summer_composite.tif"
+    - "data/sentinel2/ndvi_summer_composite.tif"
+    - "data/bcn-boundary.geojson"
+    - "data/bcn-districts.geojson"
+
+# --- Known limitations ---
+limitations:
+  - "S4 mismatch sub-score is 0.5 (informationally null) for 53.1% of cells (AM-dominant)"
+  - "45,272 trees (24%) excluded from myco_type assignment — species not in MYCO_LOOKUP top-20"
+  - "AM graph covers only SANT MARTÍ district"
+  - "ALL bridge_scores = 0 — no inter-component bridging detected"
+  - "Spread simulation deprecated — replaced by static 500m buffer"
+  - "Landsat QA band and Sentinel-2 cloud mask not verified"
+  - "LST anomaly z-score computed relative to city-wide mean — not absolute temperature threshold"

@@ -1,13 +1,16 @@
 .DS_Store
 *.env
-data/raw/
+data/raw/*
+!data/raw/vpa-mediterranean-species.csv
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 *.csv
+!data/raw/vpa-mediterranean-species.csv
 *.xlsx
 *.zip
 *.fgb
+~$*
 data/urban-atlas/urban-atlas.fgb.partab
 data/urban-atlas/urban-atlas.fgb.partac
 scripts/download_data.py

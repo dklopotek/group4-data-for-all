@@ -166,24 +166,29 @@
   to GBIF.
 
 - **Is the raw data also available?**
-  Per-publishing-dataset — depends on each publisher. iNaturalist data
-  remains accessible on iNaturalist itself with photos.
+  Yes — GBIF download, DOI cited. The raw Darwin Core Archive or JSON API
+  response is preserved at `data/gbif-fungi.json` (Barcelona bbox, page 0)
+  and `data/gbif-fungi-all.json` (Catalonia, paginated). The GBIF download
+  DOI is recorded for citation.
 
 - **What preprocessing did WE do before adopting the dataset?**
-  *(Detailed in `notebooks/01-data-profiling.ipynb`.)* Planned:
-  (i) filter to Kingdom *Fungi*, Catalonia (then Barcelona subset),
-  eventDate 2015–2024;
-  (ii) keep only records with `decimalLatitude/Longitude` present and
-  `coordinateUncertaintyInMeters` either missing or ≤100m;
-  (iii) deduplicate against `gbifID`;
-  (iv) classify by `basisOfRecord` (HUMAN_OBSERVATION vs PRESERVED_SPECIMEN
-  vs others) for downstream weighting / filtering;
-  (v) compute observation-density per 400m grid cell (urban target) and
-  for the peri-urban reference patch.
+  - Filtered to Kingdom *Fungi*, Catalonia bounding box (then Barcelona
+    municipal subset), eventDate 2015-01-01 to 2024-12-31.
+  - 0% MATERIAL_SAMPLE records — all records are HUMAN_OBSERVATION. This
+    confirms the structural AM-blindness limit: no DNA-based identifications
+    exist in our subset.
+  - Records binned to 400 m grid-cell presence/absence only — no abundance
+    weighting applied, reducing the impact of taxonomic and observer skew
+    on pipeline outputs.
+  - NOT used as a barrier sub-score input. GBIF serves as observation-context
+    only, with the Collserola peri-urban reference patch as a qualitative
+    anchor for sanity-checking EM observations against inventory-based
+    expectations.
+  - Coordinate uncertainty filter applied per profiling findings.
 
 - **Where is the preprocessing software / code available?**
-  `notebooks/01-data-profiling.ipynb` (this repo). The GBIF download DOI
-  is recorded for citation.
+  `notebooks/01-data-profiling.ipynb`, `notebooks/02-grid-trees.ipynb`,
+  `notebooks/03-scoring.ipynb`, `phase-3/data-cleaning-report.md`.
 
 ---
 

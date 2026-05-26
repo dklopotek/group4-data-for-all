@@ -1,0 +1,41 @@
+species_name,vpa_class,vpa_numeric,allergen_notes,source
+Platanus × acerifolia,IV,4,"Pla a 1/2/3 panel; Pla a 3 nsLTP cross-reacts with peach/walnut food allergens",Cariñanos & Marinangeli 2021; Scala et al. 2017
+Quercus ilex,IV,4,"Que i 1 = Bet v 1 homolog; strong Fagales cross-reactivity (PR-10 family)",Cariñanos & Marinangeli 2021; González-Mancebo et al. 2020
+Celtis australis,IV,4,"Reclassified upward in 2021 update; previously underestimated",Cariñanos & Marinangeli 2021
+Cupressus sempervirens,V,5,"Cupressaceae panallergen; strong winter sensitizer in Mediterranean",Cariñanos & Marinangeli 2021
+Olea europaea,V,5,"Ole e 1 major allergen; one of dominant Mediterranean sensitizers",Cariñanos & Marinangeli 2021
+Pinus halepensis,II,2,"Large grains, low protein; documented but moderate clinical relevance",Cariñanos & Marinangeli 2021; Gastaminza et al. 2009
+Pinus pinea,II,2,"Similar to P. halepensis; low-to-moderate",Cariñanos & Marinangeli 2021
+Zelkova serrata,II,2,"Limited Mediterranean clinical data; provisional low",Cariñanos & Marinangeli 2021 (provisional)
+Pistacia chinensis,III,3,"Anacardiaceae; regional sensitizer in Mediterranean; male-only cultivars eliminate pollen burden",Cariñanos & Marinangeli 2021; Geller-Bernstein et al. 2010
+Tipuana tipu,I,1,"Low allergenicity; entomophilous pollination dominant",Cariñanos & Marinangeli 2021
+Jacaranda mimosifolia,I,1,"Entomophilous; low VPA",Cariñanos & Marinangeli 2021
+Melia azedarach,I,1,"Low VPA; entomophilous",Cariñanos & Marinangeli 2021
+Brachychiton populneus,I,1,"Low VPA",Cariñanos & Marinangeli 2021
+Sophora japonica,I,1,"Styphnolobium japonicum; entomophilous; low VPA",Cariñanos & Marinangeli 2021
+Styphnolobium japonicum,I,1,"Synonym of Sophora japonica",Cariñanos & Marinangeli 2021
+Magnolia grandiflora,I,1,"Entomophilous; very low VPA",Cariñanos & Marinangeli 2021
+Grevillea robusta,I,1,"Low VPA",Cariñanos & Marinangeli 2021
+Robinia pseudoacacia,II,2,"Moderate; documented occupational sensitization",Cariñanos & Marinangeli 2021
+Cercis siliquastrum,II,2,"Moderate; Mediterranean ornamental",Cariñanos & Marinangeli 2021
+Ligustrum lucidum,III,3,"Oleaceae cross-reactivity with Olea",Cariñanos & Marinangeli 2021
+Ligustrum japonicum,III,3,"Oleaceae cross-reactivity",Cariñanos & Marinangeli 2021
+Ulmus pumila,III,3,"Documented sensitizer; being phased out of BCN palette",Cariñanos & Marinangeli 2021
+Pyrus calleryana,II,2,"Cultivar 'Chanticleer' used in BCN; moderate VPA",Cariñanos & Marinangeli 2021 (provisional)
+Prunus cerasifera,II,2,"Rosaceae; moderate",Cariñanos & Marinangeli 2021
+Citrus × aurantium,II,2,"Sevilla dominant species; moderate; entomophilous-leaning",Cariñanos & Marinangeli 2021
+Tilia cordata,II,2,"Moderate; entomophilous-dominant",Cariñanos & Marinangeli 2021
+Tilia platyphyllos,II,2,"Similar to T. cordata",Cariñanos & Marinangeli 2021
+Quercus pubescens,IV,4,"Bet v 1 homolog; similar to Q. ilex",Cariñanos & Marinangeli 2021
+Acer campestre,III,3,"Moderate; documented Mediterranean sensitizer",Cariñanos & Marinangeli 2021
+Acer monspessulanum,III,3,"Similar to A. campestre",Cariñanos & Marinangeli 2021
+Fraxinus angustifolia,IV,4,"Oleaceae cross-reactivity with Olea",Cariñanos & Marinangeli 2021
+Fraxinus excelsior,IV,4,"Oleaceae cross-reactivity",Cariñanos & Marinangeli 2021
+Eucalyptus globulus,III,3,"Being phased out of BCN palette; moderate VPA",Cariñanos & Marinangeli 2021
+Ginkgo biloba,II,2,"Male trees only used; female fruit issue distinct from pollen allergy",Cariñanos & Marinangeli 2021
+Koelreuteria paniculata,II,2,"Moderate; ornamental",Cariñanos & Marinangeli 2021
+Lagerstroemia indica,I,1,"Entomophilous; very low VPA",Cariñanos & Marinangeli 2021
+Washingtonia robusta,I,1,"Low VPA; entomophilous-leaning",Cariñanos & Marinangeli 2021
+Washingtonia filifera,I,1,"Low VPA",Cariñanos & Marinangeli 2021
+Phoenix dactylifera,II,2,"Moderate; dioecious — male trees are the pollen source",Cariñanos & Marinangeli 2021
+Firmiana simplex,I,1,"Low VPA; in Sevilla palette",Cariñanos & Marinangeli 2021

@@ -1,0 +1,111 @@
+# Spatial-layer schema expectations (frictionless-style, manually authored)
+#
+# These are NOT executable Pandera schemas — raster and vector spatial formats
+# (GeoTIFF, FlatGeobuf, GeoJSON) are validated at the CRS + bounds level, not
+# per-cell or per-vertex. Each entry declares the native CRS, the expected
+# analysis CRS after reprojection, spatial extent, and nodata conventions.
+#
+# Seeded from data sheets and product specifications. Observed values to be
+# verified in Session 3 notebook 02 (grid generation).
+
+layers:
+
+  # --- Copernicus Urban Atlas 2018 ---
+  - name: urban-atlas-sealed-surface
+    source_file: data/urban-atlas/CLMS_UA_LCU_S2018_V025ha_ES002L2_BARCELONA_03035_V01_R00_20241115.fgb
+    format: FlatGeobuf
+    native_crs: EPSG:3035
+    analysis_crs: EPSG:25831
+    reprojection_method: bilinear
+    spatial_extent:
+      xmin: null  # deferred — verify in Session 3
+      ymin: null
+      xmax: null
+      ymax: null
+    resolution_m: 10
+    bands: 1
+    dtype: uint8
+    valid_range: [0, 100]
+    nodata_value: 255
+    expected_unit: "sealed-surface fraction (0–100%)"
+    validation_checks:
+      - "all pixel values in [0, 100] or equal nodata (255)"
+      - "CRS = EPSG:3035 before reprojection"
+      - "covers full BCN municipal extent after reprojection"
+
+  # --- Landsat 8/9 LST (Summer 2023 Composite) ---
+  - name: landsat-lst-summer2023
+    source_files:
+      - data/landsat/ST_B10_raw.tif
+      - data/landsat/lst_summer_composite.tif
+      - data/landsat/lst_summer2023_celsius.tif
+    format: GeoTIFF
+    native_crs: EPSG:32631
+    analysis_crs: EPSG:25831
+    reprojection_method: bilinear
+    spatial_extent:
+      path: 198
+      row: 031
+    resolution_m: 100
+    resolution_m_resampled: 30
+    bands: 1 (ST_B10)
+    dtype: float32 (processed), uint16 (raw ST_B10)
+    valid_range_celsius: [-20, 65]
+    nodata_value: NaN (processed)
+    expected_unit: "degrees Celsius (processed)"
+    validation_checks:
+      - "CRS = EPSG:32631 before reprojection"
+      - "LST values in valid range [-20, 65] °C"
+      - "cloud-cover fraction < 15% over Barcelona scene (Mediterranean summer)"
+      - "scene count ≥ 3 for composite (check in notebook 02)"
+
+  # --- Sentinel-2 L2A NDVI (Summer 2023 Composite) ---
+  - name: sentinel2-ndvi-summer2023
+    source_files:
+      - data/sentinel2/B04_red.tif
+      - data/sentinel2/B08_nir.tif
+      - data/sentinel2/ndvi_summer_composite.tif
+      - data/sentinel2/ndvi_summer2023.tif
+    format: GeoTIFF
+    native_crs: EPSG:32631
+    analysis_crs: EPSG:25831
+    reprojection_method: bilinear
+    tile: T31TDF
+    resolution_m: 10
+    bands: 2 (B04 Red, B08 NIR) → 1 (NDVI)
+    dtype: float32
+    valid_range: [-1.0, 1.0]
+    nodata_value: NaN
+    expected_unit: "unitless NDVI"
+    validation_checks:
+      - "CRS = EPSG:32631 before reprojection"
+      - "NDVI values in valid range [-1.0, 1.0]"
+      - "cloud-mask applied (SCL classes 8, 9, 10 excluded)"
+      - "scene count ≥ 3 for composite (check in notebook 02)"
+
+  # --- BCN Administrative Boundaries ---
+  - name: bcn-boundary
+    source_file: data/bcn-boundary.geojson
+    format: GeoJSON
+    native_crs: EPSG:4326
+    analysis_crs: EPSG:25831
+    reprojection_method: not applicable (vector)
+    geometry_type: Polygon (municipal) / MultiPolygon (districts)
+    validation_checks:
+      - "CRS = EPSG:4326 in GeoJSON coordinates"
+      - "single Polygon for municipal boundary"
+      - "area within 95–105 km² after reprojection to EPSG:25831"
+      - "10 district polygons in bcn-districts.geojson with codi_districte 1–10"
+
+  - name: bcn-districts
+    source_file: data/bcn-districts.geojson
+    format: GeoJSON
+    native_crs: EPSG:4326
+    analysis_crs: EPSG:25831
+    reprojection_method: not applicable (vector)
+    geometry_type: MultiPolygon (one per district)
+    validation_checks:
+      - "CRS = EPSG:4326 in GeoJSON coordinates"
+      - "exactly 10 features"
+      - "codi_districte values 1–10 with matching nom_districte"
+      - "all geometries valid (no self-intersections, no zero-area rings)"

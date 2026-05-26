@@ -1,0 +1,54 @@
+{
+  "@context": {
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "name": "sc:name",
+    "description": "sc:description",
+    "url": "sc:url",
+    "version": "sc:version",
+    "datePublished": "sc:datePublished",
+    "license": "sc:license",
+    "creator": "sc:creator",
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "dataType": "cr:dataType",
+    "fileFormat": "sc:encodingFormat",
+    "contentSize": "sc:contentSize",
+    "contentUrl": "sc:contentUrl",
+    "citation": "sc:citation"
+  },
+  "@type": "sc:Dataset",
+  "name": "Copernicus Urban Atlas 2018 — Barcelona Functional Urban Area",
+  "description": "Pan-European harmonised land-use/land-cover product at 10m resolution for Functional Urban Areas (FUAs). The sealed-surface fraction layer (0–100%) quantifies impervious surface cover per 10m pixel from very-high-resolution satellite imagery. Barcelona FUA extent. Used as the sealed-surface barrier sub-score input (SQ2) in the Mycorrhizal Barcelona project. 2018 vintage; 2021 update available but not yet ingested.",
+  "url": "https://land.copernicus.eu/en/products/urban-atlas/urban-atlas-2018",
+  "version": "2018 (V01, published 2024-11-15)",
+  "datePublished": "2024-11-15",
+  "license": "https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice",
+  "citation": "Copernicus Land Monitoring Service (2024). Urban Atlas 2018 — Barcelona FUA. European Environment Agency (EEA), Copernicus Programme.",
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "Copernicus Land Monitoring Service / European Environment Agency",
+    "url": "https://land.copernicus.eu/"
+  },
+  "distribution": [
+    {
+      "@type": "sc:FileObject",
+      "name": "CLMS_UA_LCU_S2018_V025ha_ES002L2_BARCELONA_03035_V01_R00_20241115.fgb",
+      "description": "Urban Atlas 2018 Barcelona FUA — FlatGeobuf format. Sealed surface layer + land-use classification. 206MB.",
+      "contentUrl": "https://land.copernicus.eu/en/products/urban-atlas/urban-atlas-2018",
+      "encodingFormat": "application/octet-stream",
+      "contentSize": "205988280"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "sealed_surface",
+      "description": "Raster layer: 10m sealed-surface fraction (0–100%) over Barcelona FUA extent. Native CRS: EPSG:3035.",
+      "field": [
+        {"name": "sealed_surface_fraction", "dataType": "sc:Integer", "description": "Sealed surface fraction 0–100%. Valid range [0, 100]. Nodata = 255."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "@context": {
+    "sc": "https://schema.org/",
+    "cr": "http://mlcommons.org/croissant/",
+    "name": "sc:name",
+    "description": "sc:description",
+    "url": "sc:url",
+    "version": "sc:version",
+    "datePublished": "sc:datePublished",
+    "license": "sc:license",
+    "creator": "sc:creator",
+    "distribution": "sc:distribution",
+    "recordSet": "cr:recordSet",
+    "field": "cr:field",
+    "dataType": "cr:dataType",
+    "fileFormat": "sc:encodingFormat",
+    "contentSize": "sc:contentSize",
+    "contentUrl": "sc:contentUrl",
+    "sameAs": "sc:sameAs",
+    "citation": "sc:citation"
+  },
+  "@type": "sc:Dataset",
+  "name": "Ajuntament de Barcelona Tree Inventory (Arbrat Viari + Arbrat Zona)",
+  "description": "Municipal tree inventory for Barcelona, Spain, comprising street trees (Arbrat Viari, ~145,000 records) and park trees (Arbrat Zona, ~44,000 records) in quarterly snapshots. Each record represents one tree with species identification, WGS84 and ETRS89/UTM31N coordinates, management metadata (size class, irrigation, planting date), and administrative location (district, neighbourhood). This is a municipal asset register — not an ecological survey — intended for tree-care scheduling and public information. Used as the PRIMARY dataset for the Mycorrhizal Barcelona barrier-reduction priority map.",
+  "url": "https://opendata-ajuntament.barcelona.cat/data/en/dataset/arbrat-viari",
+  "version": "2024-Q4 snapshot (retrieved 2026-05-10)",
+  "datePublished": "2024",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "citation": "© Ajuntament de Barcelona, Open Data BCN, CC-BY 4.0. Arbrat viari / Arbrat de parcs (snapshot 2024-Q4).",
+  "creator": {
+    "@type": "sc:Organization",
+    "name": "Ajuntament de Barcelona — Servei d'Arbrat, Direcció d'Espais Verds i Biodiversitat",
+    "url": "https://ajuntament.barcelona.cat/ecologiaurbana/"
+  },
+  "distribution": [
+    {
+      "@type": "sc:FileObject",
+      "name": "arbrat-viari.csv",
+      "description": "Street tree inventory CSV export from Open Data BCN portal",
+      "contentUrl": "https://opendata-ajuntament.barcelona.cat/data/en/dataset/arbrat-viari",
+      "encodingFormat": "text/csv",
+      "contentSize": "43173450",
+      "sha256": "79fce0d273d863eac4386376730eff0ab61f9c6cda37569d8683943dafad2da3"
+    },
+    {
+      "@type": "sc:FileObject",
+      "name": "arbrat-zona.csv",
+      "description": "Park tree inventory CSV export from Open Data BCN portal",
+      "contentUrl": "https://opendata-ajuntament.barcelona.cat/data/en/dataset/arbrat-parcs",
+      "encodingFormat": "text/csv",
+      "contentSize": "14010218",
+      "sha256": "fb228e178ae67a86a96cf03767c686e86c993a6263514000f8c4e007607e3604"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "name": "trees",
+      "description": "Combined street + park tree records (~189,090 rows). One row = one tree at one snapshot.",
+      "field": [
+        {"name": "codi", "dataType": "sc:Text", "description": "Unique tree identifier within snapshot"},
+        {"name": "latitud", "dataType": "sc:Float", "description": "WGS84 latitude (41.34–41.47)"},
+        {"name": "longitud", "dataType": "sc:Float", "description": "WGS84 longitude (2.08–2.23)"},
+        {"name": "x_etrs89", "dataType": "sc:Float", "description": "ETRS89/UTM31N easting"},
+        {"name": "y_etrs89", "dataType": "sc:Float", "description": "ETRS89/UTM31N northing"},
+        {"name": "tipus_element", "dataType": "sc:Text", "description": "Element type (ARBRE VIARI, PALMERA VIARI, ARBRE ZONA, PALMERA ZONA)"},
+        {"name": "espai_verd", "dataType": "sc:Text", "description": "Green space or park name (~60% missing)"},
+        {"name": "adreca", "dataType": "sc:Text", "description": "Nearest street address"},
+        {"name": "cat_especie_id", "dataType": "sc:Integer", "description": "Species ID code"},
+        {"name": "cat_nom_cientific", "dataType": "sc:Text", "description": "Scientific species name; 0.01% genus-only"},
+        {"name": "cat_nom_castella", "dataType": "sc:Text", "description": "Castilian common name (~2% missing)"},
+        {"name": "cat_nom_catala", "dataType": "sc:Text", "description": "Catalan common name (~2.2% missing)"},
+        {"name": "categoria_arbrat", "dataType": "sc:Text", "description": "Tree size/quality class (EXEMPLAR, PRIMERA, SEGONA, TERCERA)"},
+        {"name": "data_plantacio", "dataType": "sc:Text", "description": "Planting date (81% missing)"},
+        {"name": "tipus_aigua", "dataType": "sc:Text", "description": "Irrigation water type (~94% missing)"},
+        {"name": "tipus_reg", "dataType": "sc:Text", "description": "Irrigation method"},
+        {"name": "catalogacio", "dataType": "sc:Text", "description": "Cataloguing status (99.5% missing)"},
+        {"name": "codi_barri", "dataType": "sc:Float", "description": "Neighbourhood code"},
+        {"name": "nom_barri", "dataType": "sc:Text", "description": "Neighbourhood name"},
+        {"name": "codi_districte", "dataType": "sc:Float", "description": "District code (1–10)"},
+        {"name": "nom_districte", "dataType": "sc:Text", "description": "District name"},
+        {"name": "geom", "dataType": "sc:Text", "description": "WKT geometry string (may be absent in non-portal exports)"}
+      ]
+    }
+  ],
+  "sameAs": "https://opendata-ajuntament.barcelona.cat/data/en/dataset/arbrat-parcs"
+}

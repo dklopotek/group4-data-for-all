@@ -5,25 +5,25 @@
 
 claims:
   P1:
-    # owner:
-    # claimed:
-    # status:
+    owner: Gemini CLI
+    claimed: 2026-05-26
+    status: claimed
   P2:
-    # owner:
-    # claimed:
-    # status:
+    owner: Gemini CLI
+    claimed: 2026-05-26
+    status: claimed
   P3:
-    # owner:
-    # claimed:
-    # status:
+    owner: Gemini CLI
+    claimed: 2026-05-26
+    status: claimed
   P4:
-    # owner:
-    # claimed:
-    # status:
+    owner: Gemini CLI
+    claimed: 2026-05-26
+    status: claimed
   P5:
-    # owner:
-    # claimed:
-    # status:
+    owner: Gemini CLI
+    claimed: 2026-05-26
+    status: claimed
   D-DOMINIKA:
     owner: Dominika
     claimed: 2026-05-13
@@ -33,10 +33,10 @@ claims:
     claimed: 2026-05-13
     status: claimed
   DO1:
-    # owner:
-    # claimed:
-    # status:
+    owner: Gemini CLI
+    claimed: 2026-05-26
+    status: claimed
   DO2:
-    # owner:
-    # claimed:
-    # status:
+    owner: Gemini CLI
+    claimed: 2026-05-26
+    status: claimed
