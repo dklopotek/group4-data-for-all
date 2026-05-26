@@ -1,188 +1,166 @@
 # Phase 4 Modeling Guidelines — Mycorrhizal Barcelona
 
-Per CRISP-DM Phase 4 (Chapman et al. 2000, p. 31–33): Modeling. **Guidelines only — do NOT train models.** This document defines the modeling approach, evaluation strategy, and caveats for whoever executes Phase 4.
-
-**Date:** 2026-05-26
-**Status:** SUPERSEDED by `phase-4/analytical-question.md` + `phase-4/test-design.md` + `outputs/model-card-v1.md` after Session 4 (2026-05-26 PM).
-
----
-
-## ADDENDUM — 2026-05-26 (post Session 4 lecture)
-
-This document was written PRE-LECTURE as conservative Phase 4 scoping; it argued against training a supervised regressor on the composite because the target is itself derived. Session 4 lecture explicitly required a trained model with spatial splits, baselines, and a model card.
-
-Resolution: the lecture overrode this doc. The new Core B path predicts `composite_score_B` from RAW raster + tree-inventory features (the upstream inputs), NOT from the engineered sub-scores, with an explicit leakage exclusion list in `phase-4/analytical-question.md §5`. The eval R² of 0.999 confirms this doc's circularity warning IS valid within a similar geographic cluster; the test R² of 0.877 on a held-out spatial cluster shows the linear approximation degrades but does NOT collapse, which is itself the Phase 4 finding.
-
-The P0 sensitivity-analysis task below remains valid and is pre-registered in `phase-4/test-design.md §4` (Core A wrap-up, deferred from Session 4 to a follow-up).
-
-The rest of this file is preserved as historical scoping context only. The canonical Phase 4 record is `phase-4/test-design.md`.
+**Date:** 2026-05-26 (rewritten post Session 4 lecture)
+**Status:** CURRENT — lecture-aligned. Supersedes the pre-lecture draft of this file.
+**Canonical Phase 4 record:** `phase-4/analytical-question.md` + `phase-4/test-design.md` + `outputs/model-card-v1.md`.
 
 ---
 
----
+## 1. What Phase 4 Does (per Session 4 lecture)
 
-## 1. What Phase 4 Must Answer
+Session 4 (Lecture_4.md) defines Phase 4 as: **split → baseline → train one model → assess → write a model card with ≥ 3 NOTs**. The lecture is the rubric. This file follows it.
 
-The Phase 3 output (`data/scored_grid.geojson`) is a constructed index — it IS the deliverable. Phase 4's job is to **validate the index's internal structure**, not to build a predictive model on external labels (none exist).
+The pipeline ships TWO analytical cores per `crispdm-4-modeling §4`:
 
-Three modeling tasks ordered by priority:
-
-| Priority | Task | Type | Input | Output |
-|----------|------|------|-------|--------|
-| P0 | Sensitivity analysis | Sensitivity | `scored_grid.geojson` (all 3 scenarios) | Jaccard stability report |
-| P1 | Sub-score decomposition validation | Exploratory | `scored_grid.geojson` | PCA / correlation matrix / variance decomposition |
-| P2 | Spatial pattern analysis | Spatial stats | `scored_grid.geojson` + `network_islands.geojson` | Moran's I, LISA, spatial cross-correlogram |
-
-**DO NOT train a classifier/regressor.** There is no ground-truth label for "mycorrhizal barrier." Any supervised model trained on the composite score is circular.
+| Core | Family | Status | Canonical artefact |
+|---|---|---|---|
+| **B (headline)** | Interpretable regression — `LinearRegression` predicting `composite_score_B` from raw raster + tree-inventory features | **DONE** Session 4 | `outputs/model-card-v1.md` + `phase-4/test-design.md` |
+| **A (wrap-up)** | Composite-indicator finalization for PRPI — sensitivity grid + stability + face validation per OECD/JRC (2008) | DEFERRED to follow-up session | Pre-registered in `phase-4/test-design.md §4–§6`; second model card pending at `outputs/model-card-prpi-v1.md` |
 
 ---
 
-## 2. P0 — Sensitivity Analysis
+## 2. Core B (DONE) — lecture-mandated regression
 
-### 2.1 Weight sensitivity
+Headline (test cluster, n = 88, k-means k = 5 split, seed 42):
 
-The pipeline produces three composite scores (A/B/C). Phase 4 must quantify how much the choice of weights matters.
+| Estimator | R² | MAE | RMSE |
+|---|---|---|---|
+| **LinearRegression** | **0.877** | **0.0106** | **0.0509** |
+| BaselineSpatialNearest | -0.290 | 0.130 | 0.165 |
+| BaselineMean | -0.616 | 0.142 | 0.185 |
+| BaselineDomainHeuristic | -0.622 | 0.143 | 0.185 |
 
-**Method:**
-1. Compute top-N cells (N=15, 30, 50) for each scenario.
-2. Compute pairwise Jaccard similarity: `|intersection| / |union|` for each N.
-3. Compute Kendall's τ rank correlation between scenario pairs (full 495-cell ranking).
-4. Report: which scenario pairs are most/least concordant? Which cells switch in/out of top-15 across scenarios?
+Pre-registered pass criterion (beat all three baselines on test R² AND test MAE) — **PASS**.
 
-**Current partial result (from notebook 05):**
-- Top-15 Jaccard A-B: 0.364, B-C: 0.364, A-C: 0.538
-- Rankings are weight-sensitive — scenario choice matters.
+Code: `src/split_data.py` + `src/baselines.py` + `src/train_model.py`. Reproduce with `python src/clean_data.py && python src/split_data.py && python src/train_model.py`.
 
-**Additional sensitivity dimensions:**
-- AM/EM edge threshold (±5m from 15m/35m defaults)
-- Barrier sealed_pct threshold (±0.1 from 0.7)
-- LST z-score clipping range (±0.5σ from ±2σ)
-- MYCO_LOOKUP extension (add 10 most frequent species beyond top-20)
-
-### 2.2 Grid resolution sensitivity
-
-Re-run scoring at 200m and 800m grids. Quantify MAUP effect:
-- How many top-15 cells at 400m remain top-quartile at 200m and 800m?
-- Does the intervention_type assignment change with resolution?
+Leakage controls and feature list: see `phase-4/analytical-question.md §5`.
 
 ---
 
-## 3. P1 — Sub-Score Decomposition
+## 3. Core A (DEFERRED) — PRPI composite finalization
 
-### 3.1 Variance structure
+This is the work for the next session. Pre-registered in `phase-4/test-design.md` and summarized here as the methodology checklist.
 
-**Method:**
-1. Principal Component Analysis (PCA) on the 4 sub-scores (495 × 4 matrix).
-2. Report variance explained per PC.
-3. Interpretation: if PC1 explains >80%, a single composite index is justified. If <50%, the sub-scores measure independent dimensions and the weighted sum conflates them.
+### 3.1 Sensitivity grid
 
-**Hypothesis:** S1 (sealed) and S3 (inverted NDVI) will be highly correlated (sealed surface → low vegetation). S2 (LST) will correlate with S1 (sealed surfaces heat up). S4 (mismatch) will be weakly correlated with S1-S3 (biological, not physical).
+Run `3 × 4 × 2 = 24` specifications of the PRPI composite and quantify per-cell rank stability:
 
-### 3.2 Correlation matrix
+| Fork | Variants |
+|---|---|
+| Normalization | min-max, min-max winsorized 5/95, z-score |
+| Weighting | Scenario A equal, **Scenario B sealed-dominant (default)**, Scenario C heat+canopy, PCA on 4 sub-scores |
+| Aggregation | linear weighted sum (default), geometric weighted product |
 
-Compute Spearman ρ between all 39 columns of `scored_grid.geojson`. Flag:
-- ρ > 0.8: near-redundant columns (consider dropping for Phase 4 models).
-- ρ < 0.05 with composite_B: columns contributing no information to the primary score.
-- Unexpected correlations: e.g., species_richness should correlate with total_trees (larger cells have more species), not with S4 (biological signal should be independent).
+Per-cell **rank-stability count** = how many of 24 specs place the cell in the same tier as the default. ≥ 22/24 → ROBUST. < 18/24 → FRAGILE (flagged in PRPI model card §7).
 
-### 3.3 Sub-score calibration
+Internal consistency: Cronbach's α across the 4 sub-scores within Scenario B (Nardo et al. 2005).
 
-For each sub-score, plot histogram + ECDF across 495 cells:
-- S1 (sealed): expected right-skewed (many cells have high sealing).
-- S2 (LST anomaly): expected normal-ish (z-score construction).
-- S3 (inverted NDVI): expected left-skewed (most cells have moderate vegetation).
-- S4 (mismatch): expected mode at 0.5 (AM-dominant majority).
+### 3.2 Grid-resolution sensitivity (MAUP)
 
-Flag sub-scores with unexpected distributions — they indicate a construction bug or a real data surprise.
+Re-run scoring at 200m and 800m grids. Track:
+- Top-15 cells at 400m → fraction remaining in top-quartile at 200m and 800m.
+- `intervention_type` reassignment rate across resolutions.
 
----
+### 3.3 Sub-score decomposition
 
-## 4. P2 — Spatial Pattern Analysis
+PCA on the 4 sub-scores (494 × 4). Report variance explained per component. If PC1 > 80% → a single composite is justified; if < 50% → sub-scores are independent and weighted-sum conflates them.
 
-### 4.1 Global spatial autocorrelation
+Spearman ρ between all numeric columns of `scored_grid.parquet`. Flag:
+- ρ > 0.8 → near-redundant column.
+- ρ < 0.05 with `composite_score_B` → no information contribution.
+- Theoretically unexpected correlations.
 
-**Method:** Moran's I on composite_score_B across 495 cells.
-- Spatial weights: queen contiguity (8-neighbour) on 400m grid.
-- Report I statistic, p-value, and interpretation.
-- Expected: strong positive autocorrelation (barriers cluster spatially — sealed surfaces, heat islands are contiguous).
+Histograms + ECDF per sub-score, with expected shapes (skill §7 internal-consistency check).
 
-### 4.2 Local spatial autocorrelation (LISA)
+### 3.4 Spatial diagnostics
 
-**Method:** Local Moran's I (Anselin 1995) per cell.
-- Map: High-High clusters (barrier hotspots), Low-Low clusters (low-barrier zones), High-Low outliers (isolated barrier cell in permeable area), Low-High outliers (permeable cell in barrier zone).
-- Policy interpretation: High-High clusters are priority intervention zones (de-paving one cell helps neighbours). Low-High outliers are isolated oases — protect, don't develop.
+Per `crispdm-4-modeling §5 Route 4D`:
 
-### 4.3 Network-spatial cross-correlation
+- **Global Moran's I** on `composite_score_B` with queen-contiguity weights on the 400m grid.
+- **Local Moran's I (LISA)** per cell. Map High-High clusters (priority intervention zones) and Low-High outliers (isolated low-barrier cells in barrier zones — protect, don't develop).
+- **FDR correction** on local p-values (Caldas de Castro & Singer 2006).
+- **MAUP rerun** at one alternate resolution.
 
-**Method:** Join `network_islands.geojson` (component spatial extents) to `scored_grid.geojson`.
-- Spatial cross-correlogram: correlation between composite_B and component_size as function of distance.
-- Test: do large fungal network islands occur in low-barrier areas? (Expected: yes — barriers fragment networks.)
+### 3.5 Stability checks (carryover from Core B)
 
----
+- Jackknife: refit Core B Linear model dropping each of the 3 train clusters in turn; report coefficient stability.
+- Gaussian noise injection (σ = 0.02 on features); refit; report test R² delta.
 
-## 5. What NOT to Do
+### 3.6 Construct validity
 
-### 5.1 Do NOT train a random forest / XGBoost on composite_score_B
-
-The composite score is a linear weighted sum. Any nonlinear model trained to predict it from the sub-scores will recover the weights — this is circular reasoning, not modeling.
-
-### 5.2 Do NOT use random train/test split
-
-Grid cells are spatially autocorrelated. Random split leaks spatial information — a model trained on 80% of cells will have seen the neighbours of the 20% test cells. Use spatial block cross-validation:
-- Divide Barcelona into 5 contiguous spatial blocks (not random cells).
-- Train on 4 blocks, test on 1.
-- Report mean ± std performance across folds.
-
-### 5.3 Do NOT claim predictive power from an unsupervised index
-
-The composite score has no ground truth. "Accuracy" is meaningless. Report stability, consistency, and sensitivity — not F1 scores.
-
-### 5.4 Do NOT build a regression model to predict bridge_score
-
-ALL bridge_scores are zero. The network model is structural — it produces zero bridging regardless of regression covariates. Fix the network parameters first (ADR-004 remediation path).
-
-### 5.5 Do NOT claim "the model identifies priority areas"
-
-The composite score identifies priority areas, based on documented construction choices. Phase 4 validates the score's stability, not its "accuracy." The score IS the model — there is no separate model to validate.
+- Convergent: Pearson(predicted score, `mean_sealed`) — should be strongly positive.
+- Discriminant: Pearson(predicted score, `species_richness`) — should be weak.
+- Face validation: Jaccard overlap between top-15 predicted vs `top15_flag` from Phase 3. < 0.5 → investigate.
 
 ---
 
-## 6. Evaluation Rubric
+## 4. What Phase 4 must NOT do
 
-Phase 4 deliverables are evaluated on:
+Lecture lines 411–415:
 
-| Criterion | Weight | Description |
-|-----------|--------|-------------|
-| Sensitivity thoroughness | 40% | Weight, threshold, resolution, and MYCO_LOOKUP sensitivity all tested |
-| Spatial validity | 25% | Spatial CV used; Moran's I computed; MAUP acknowledged |
-| Variance understanding | 20% | PCA/correlation shows understanding of sub-score structure |
-| Limitation honesty | 15% | Every known Phase 3 limitation carried forward and discussed |
-
-**No model performance metric exists.** The grade is on analytical rigor, not predictive accuracy.
+- ❌ Generate fake / synthetic data (that is Session 5).
+- ❌ Make galleries.
+- ❌ Make UIs.
+- ❌ Tune any secondary models — exactly one model gets tuned.
+- ❌ Sweep multiple hyperparameters on the chosen model — one parameter only (`fit_intercept`).
 
 ---
 
-## 7. Deliverables Checklist
+## 5. Deliverables checklist
 
-- [ ] `phase-4/sensitivity-report.md` — weight + threshold + resolution sensitivity
-- [ ] `phase-4/variance-decomposition.md` — PCA + correlation matrix + sub-score calibration
-- [ ] `phase-4/spatial-analysis.md` — Moran's I + LISA map + network correlation
-- [ ] `phase-4/limitations.md` — updated limitations from Phase 3 + new findings from Phase 4
-- [ ] `phase-4/notebooks/06-sensitivity.ipynb` (optional) — reproducible sensitivity code
-- [ ] `phase-4/notebooks/07-spatial-stats.ipynb` (optional) — reproducible spatial analysis
+Session 4 (Core B) — DONE:
+
+- [x] `phase-4/analytical-question.md`
+- [x] `phase-4/test-design.md` (pre-registered + results appended)
+- [x] `src/split_data.py`, `src/baselines.py`, `src/train_model.py`
+- [x] `outputs/model-card-v1.md` (5 NOTs)
+- [x] `outputs/phase-4/{metrics.csv, per_district.csv, predictions.parquet, model_artifact.joblib}`
+- [x] `data/splits/{cluster_assignments, train, eval, test}.parquet`
+- [x] `requirements.txt` updated (`scikit-learn`)
+- [x] Pushed to GitHub for instructor review
+
+Core A (follow-up session) — PENDING:
+
+- [ ] `outputs/phase-4/sensitivity-grid.csv` — 24-spec rank-stability outputs
+- [ ] `outputs/phase-4/variance-decomposition.md` — PCA + correlation matrix + sub-score calibration
+- [ ] `outputs/phase-4/spatial-analysis.md` — Moran's I + LISA + FDR + MAUP
+- [ ] `outputs/phase-4/stability.md` — jackknife + noise injection
+- [ ] `outputs/model-card-prpi-v1.md` — Mitchell card for the PRPI composite
+- [ ] `phase-4/limitations.md` — Phase-3 limitations carried forward + new Phase-4 findings
 
 ---
 
-## 8. Key References for Phase 4
+## 6. Evaluation criteria (per lecture)
+
+Lecture lines 383–391 + 415–417:
+
+| Criterion | What it means |
+|---|---|
+| Defensible split | Spatial cluster split, not random rows. **Done** (k = 5 k-means). |
+| Defensible baseline | Beats baselines on the chosen metrics. **Done** (3 baselines, all beaten). |
+| One tuned model | Linear regression, one hyperparameter swept. **Done**. |
+| Train / eval / test metrics for every estimator | One segmented metrics table. **Done** (`outputs/phase-4/metrics.csv`). |
+| ≥ 3 things the model is NOT for | In the model card. **Done** (5 NOTs). |
+| Reproducible from one command | Yes. `python src/clean_data.py && python src/split_data.py && python src/train_model.py`. |
+| Pushed to GitHub | Yes. Commit `3a4b9bb`, addendum `b77b554`. |
+
+---
+
+## 7. Key references
 
 - Anselin, L. (1995). Local Indicators of Spatial Association — LISA. *Geographical Analysis*, 27(2), 93–115.
-- Arlot, S. & Celisse, A. (2010). A survey of cross-validation procedures for model selection. *Statistics Surveys*, 4, 40–79. (Spatial CV: §5.2)
-- Roberts, D. R. et al. (2017). Cross-validation strategies for data with spatial, temporal, or phylogenetic structure. *Ecography*, 40(8), 913–929. (Spatial block CV: §3.2)
-- Tobler, W. R. (1970). A computer movie simulating urban growth in the Detroit region. *Economic Geography*, 46(sup1), 234–240. (Tobler's First Law: why spatial independence is violated)
-- O'Sullivan, D. & Unwin, D. J. (2010). *Geographic Information Analysis*. 2nd ed. Wiley. (Moran's I, LISA, spatial weights)
+- Arlot, S. & Celisse, A. (2010). A survey of cross-validation procedures for model selection. *Statistics Surveys*, 4, 40–79.
+- Caldas de Castro, M. & Singer, B. H. (2006). Controlling the false discovery rate. *Geographical Analysis*, 38(2), 180–208.
+- Chapman, P. et al. (2000). *CRISP-DM 1.0: Step-by-Step Data Mining Guide*. SPSS.
+- Mitchell, M. et al. (2019). Model cards for model reporting. *FAT* '19*, 220–229.
+- Nardo, M. et al. (2005). *Tools for Composite Indicators Building*. JRC, EUR 21682 EN.
+- OECD & JRC (2008). *Handbook on Constructing Composite Indicators*. OECD Publishing.
+- Roberts, D. R. et al. (2017). Cross-validation strategies for data with spatial, temporal, or phylogenetic structure. *Ecography*, 40(8), 913–929.
+- Rudin, C. (2019). Stop explaining black box machine learning models for high stakes decisions and use interpretable models instead. *Nature Machine Intelligence*, 1(5), 206–215.
+- Saltelli, A. et al. (2008). *Global Sensitivity Analysis: The Primer*. Wiley.
+- Tobler, W. R. (1970). A computer movie simulating urban growth in the Detroit region. *Economic Geography*, 46(sup1), 234–240.
 
 ---
 
-**Date:** 2026-05-26
-**Guidelines by:** Claude (Phase 4 preparation, no execution)
-**Status:** READY FOR PHASE 4 EXECUTION — do NOT train models
+**Rewritten by:** Claude (Opus 4.7, 1M ctx) at user request to override the pre-lecture stance and align this file with Session 4 lecture rubric. The earlier "do NOT train models" framing is removed.
