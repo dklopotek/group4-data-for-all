@@ -38,7 +38,7 @@ A transparent, two-layer map that ranks Barcelona cells for **where to sequence 
 
 ## Ethical considerations
 
-- **Equity:** v1 weights all residents equally. Allergy sensitivity is higher in children and the elderly, and exposure burden may track deprivation — an **equity-weighted v2** is the most important extension (deferred).
+- **Equity / at-risk weighting:** v1 weights all residents equally. We **tested** an allergy-prevalence reweighting (population × age-band AR prevalence; `src/atrisk_layer.py`) and found it **redundant with plain population** at 400 m (Spearman 0.999, top-15 Jaccard 0.875 vs the population-based priority) — Barcelona neighbourhoods do not differ enough in age structure to re-order the map, so age-weighting is **not worth adding** (`outputs/phase-6/atrisk_results.md`). A distinct, still-untested extension is **socioeconomic-vulnerability** weighting (deprivation, not age); whether that re-orders is an open question. No sub-city allergy data exists (privacy); any at-risk layer is modeled, not measured.
 - **Exposure ≠ harm:** the product ranks *potential exposure*, not diagnosed allergy or clinical impact.
 
 ## Caveats and limitations (the NOT list — ≥3 required, 6 given)
