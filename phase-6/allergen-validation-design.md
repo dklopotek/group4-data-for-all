@@ -54,6 +54,20 @@ Write `outputs/phase-6/allergen_priority_results.md` + `.json` with: layer summa
 
 ---
 
+## v2 addendum — at-risk (allergy-prevalence) layer (pre-registered 2026-06-05, before build)
+
+**Motivation:** replace the flat population EXPOSURE layer with an *at-risk* layer = population reweighted by allergic-rhinitis (AR) prevalence, so cells with more allergy-susceptible residents rank higher. Spatial variation comes from local AGE STRUCTURE (AR prevalence is strongly age-dependent), since no sub-city AR data exists (only city-wide; see below).
+
+**Data:** `data/raw/2026_pad_mdbas_edat-q.csv` (population by 5-year age band per census section, Open Data BCN). No sex split used (kept as a v3 sensitivity). Empirical sub-city AR data does NOT exist; the finest open signal is the city-wide CatSalut antihistamine age×sex profile (`data/raw/catsalut_receptes_bcnciutat_respiratori.csv`), used only for city-wide curve calibration, not spatial join.
+
+**AR prevalence weights by age (literature-anchored):** 0-4: 0.04; 5-9: 0.089 (GAN 6-7yr); 10-14: 0.146 (GAN 13-14yr); 15-44: 0.22 (Bauchau & Durham 2004 ~23% EU adult; ESCA); 45-64: 0.18; 65-69: 0.10; 70+: 0.05-0.08 (decline with age). Platanus-sensitized share 0.37 (Puiggros 2015, Barcelona) is a CONSTANT multiplier — affects scale/interpretation, not ranking. `at_risk_section = sum_band(pop_band x prev_band)`, areal-interpolated to cells.
+
+**Tests (criteria fixed before running):**
+- **V2-1 (does prevalence re-order vs plain population?):** Spearman(at_risk_cell, population_cell) and Jaccard of top-15 priority_v2 (source x at_risk) vs priority_v1 (source x population). Pre-registered call: prevalence MATERIALLY re-orders iff top-15 Jaccard < 0.70 AND Spearman(at_risk, population) < 0.95. If not, the honest conclusion is "age-weighting is redundant with population at this resolution — not worth adding; keep v1."
+- **V2-2 (city-wide calibration, honesty check):** correlate the literature age-prevalence curve with the empirical antihistamine prescriptions-per-capita-by-age profile. Report the correlation and any divergence (prescriptions skew older than prevalence — chronic medication use; report, do not force agreement).
+
+**Reporting:** `outputs/phase-6/atrisk_results.{md,json}`. Verdict reported either way. No measured-AR spatial claim.
+
 ## Results
 
 **VERDICT: exposure earns its place (materially re-orders + non-redundant).** T1: Spearman 0.8909, top-15 Jaccard 0.3043 -> re-orders=True. T3 burden margin over density-only (top-15): 0.0464. Full: `outputs/phase-6/allergen_priority_results.md`.
