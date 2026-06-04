@@ -83,18 +83,18 @@ Deferred to a later milestone (out of this roadmap).
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | BRIEF-01 | Phase 1 | Pending |
-| ROB-01 | Phase 1 | Pending |
-| ROB-02 | Phase 1 | Pending |
-| ROB-03 | Phase 1 | Pending |
-| ROB-04 | Phase 1 | Pending |
-| ROB-05 | Phase 1 | Pending |
-| ROB-06 | Phase 1 | Pending |
-| ROB-07 | Phase 1 | Pending |
-| ROB-08 | Phase 1 | Pending |
-| VAL-01 | Phase 1 | Pending |
-| VAL-02 | Phase 1 | Pending |
-| VAL-03 | Phase 1 | Pending |
-| VAL-04 | Phase 1 | Pending |
+| ROB-01 | Phase 1 | Complete |
+| ROB-02 | Phase 1 | Complete |
+| ROB-03 | Phase 1 | Complete (alpha 0.60) |
+| ROB-04 | Phase 1 | Complete |
+| ROB-05 | Phase 1 | Complete |
+| ROB-06 | Phase 1 | Complete |
+| ROB-07 | Phase 1 | Complete |
+| ROB-08 | Phase 1 | Complete |
+| VAL-01 | Phase 1 | Complete (r=0.94) |
+| VAL-02 | Phase 1 | Complete (r=0.25) |
+| VAL-03 | Phase 1 | Complete (Jaccard 0.36, flagged) |
+| VAL-04 | Phase 1 | Complete |
 | EXT-01 | Phase 1 | Complete |
 | EXT-02 | Phase 1 | Complete (verdict FAIL) |
 | EXT-03 | Phase 1 | Complete |

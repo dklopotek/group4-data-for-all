@@ -1,0 +1,53 @@
+{
+  "baseline_test_r2": 0.8769,
+  "jackknife_coef": {
+    "mean_sealed": {
+      "mean": 0.4192,
+      "std": 0.0003
+    },
+    "mean_ndvi": {
+      "mean": -0.4624,
+      "std": 0.0008
+    },
+    "lst_anomaly": {
+      "mean": 0.0118,
+      "std": 0.0
+    },
+    "am_pct": {
+      "mean": 0.0033,
+      "std": 0.0
+    },
+    "em_pct": {
+      "mean": 0.0034,
+      "std": 0.0
+    },
+    "platanus_pct": {
+      "mean": 0.0009,
+      "std": 0.0
+    },
+    "cell_vpa_score": {
+      "mean": 0.0025,
+      "std": 0.0022
+    },
+    "species_richness": {
+      "mean": -0.0,
+      "std": 0.0
+    },
+    "total_trees": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "trees_young_pct": {
+      "mean": 0.0,
+      "std": 0.0
+    }
+  },
+  "noise_sigma0.02_test_r2": 0.8761,
+  "noise_delta": -0.0008,
+  "alt_seed_test_r2": {
+    "1": 0.8774,
+    "7": 0.8774,
+    "123": 0.8769
+  },
+  "alt_cut_drop_SANTS - MONTJU\u00cfC_test_r2": 0.8778
+}

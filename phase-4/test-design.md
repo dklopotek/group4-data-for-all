@@ -150,3 +150,29 @@ The very high eval R² (0.999) confirms what `analytical-question.md §5` warned
 
 These deferrals are flagged in `outputs/model-card-v1.md §9 (limitations)`.
 
+
+
+## Results (ROB/VAL, appended 2026-06-04)
+
+**Correctness gate:** default spec reproduces `composite_score_B` at corr = 1.0.
+
+**ROB-01..04 sensitivity grid (24 specs):** cells tagged {'ROBUST': 321, 'MODERATE': 97, 'FRAGILE': 76} (ROBUST >=22/24, FRAGILE <18/24). Artifact `outputs/phase-4/sensitivity-grid.csv`, figure `outputs/sensitivity-rank-stability.png`.
+
+**ROB-03 Cronbach's alpha (4 sub-scores):** 0.5986.
+
+**ROB-05 jackknife:** per-feature coef mean +/- std across 3 train-cluster refits (full table `outputs/phase-4/stability.json`). **ROB-06 noise (sigma 0.02 of train SD):** test-R2 0.8761 (delta -0.0008). **ROB-07 alt seeds:** test-R2 {1: 0.8774, 7: 0.8774, 123: 0.8769}. **ROB-08 alt-cut:** alt_cut_drop_SANTS - MONTJUÏC_test_r2 = 0.8778 vs baseline 0.8769.
+
+**VAL-01 convergent** r(pred, sealed) = 0.9439. **VAL-02 discriminant** r(pred, richness) = 0.2527. **VAL-03 Jaccard** top-15 pred vs flag = 0.3636 (below 0.5: True). **VAL-04 OOD** districts with mean|resid|>0.10: [].
+
+
+## Results (ROB/VAL, appended 2026-06-04)
+
+**Correctness gate:** default spec reproduces `composite_score_B` at corr = 1.0.
+
+**ROB-01..04 sensitivity grid (24 specs):** cells tagged {'ROBUST': 321, 'MODERATE': 97, 'FRAGILE': 76} (ROBUST >=22/24, FRAGILE <18/24). Artifact `outputs/phase-4/sensitivity-grid.csv`, figure `outputs/sensitivity-rank-stability.png`.
+
+**ROB-03 Cronbach's alpha (4 sub-scores):** 0.5986.
+
+**ROB-05 jackknife:** per-feature coef mean +/- std across 3 train-cluster refits (full table `outputs/phase-4/stability.json`). **ROB-06 noise (sigma 0.02 of train SD):** test-R2 0.8761 (delta -0.0008). **ROB-07 alt seeds:** test-R2 {1: 0.8774, 7: 0.8774, 123: 0.8769}. **ROB-08 alt-cut:** alt_cut_drop_SANTS - MONTJUÏC_test_r2 = 0.8778 vs baseline 0.8769.
+
+**VAL-01 convergent** r(pred, sealed) = 0.9439. **VAL-02 discriminant** r(pred, richness) = 0.2527. **VAL-03 Jaccard** top-15 pred vs flag = 0.3636 (below 0.5: True). **VAL-04 OOD** districts with mean|resid|>0.10: [].
