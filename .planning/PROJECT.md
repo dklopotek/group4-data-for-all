@@ -71,7 +71,8 @@ interpretability, not predictive accuracy, are what make the ranking usable.
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| GSD roadmap = Session 5 = CRISP-DM Phase 5 Evaluation (lecture rubric), defer Phase 6 | Session 5 lecture defines this session as Evaluation; lecture > skill (locked). Phase 4 sensitivity/stability folds in as evidence | — Pending |
+| GSD roadmap = Session 5 = CRISP-DM Phase 5 Evaluation (lecture rubric), defer Phase 6 | Session 5 lecture defines this session as Evaluation; lecture > skill (locked). Phase 4 sensitivity/stability folds in as evidence | ✓ Good |
+| **Pivot**: mycorrhizal thesis → Platanus pollen-allergen exposure priority | Mycorrhizal thesis falsified on 3 independent lines (`docs/failure-and-pivot.md`); allergen product is decision-relevant, plane-tree central, and the data carries signal | ✓ Good — v1 shipped, exposure earns its place (T1 re-orders, T2 non-redundant) |
 | Skip 4-agent domain research | Domain exhaustively known (prior deep-research in memory); web backends unavailable in env | — Pending |
 | Coarse granularity, YOLO mode | Small remaining scope; matches recommend-don't-ask | — Pending |
 | Sensitivity grid = 24 specs (3 norm × 4 weight × 2 agg) | Pre-registered in test-design.md §4; skill demands sensitivity on every composite choice | — Pending |
