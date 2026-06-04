@@ -33,20 +33,22 @@ interpretability, not predictive accuracy, are what make the ranking usable.
 
 ### Active
 
-<!-- This milestone: Session 5 = close CRISP-DM Phase 4 (Core A wrap-up). -->
+<!-- This milestone: Session 5 = CRISP-DM Phase 5 (Evaluation), per the Session 5 lecture rubric. Hybrid Track A (model) + Track B (ranking conclusion). -->
 
-- [ ] Run pre-registered Core A sensitivity grid (24 specs) with per-cell rank-stability + ROBUST/FRAGILE tags + Cronbach's alpha
-- [ ] Run Core B stability checks (jackknife on 3 train clusters, Gaussian-noise injection) + 3-seed meta-sensitivity on the spatial split
-- [ ] Run construct-validity probes (convergent, discriminant, Jaccard vs Phase-3 top-15, OOD residual-by-district)
-- [ ] Write PRPI model card (`outputs/model-card-prpi-v1.md`), distinct from the Core B regression card
-- [ ] Append all results to the pre-registered `phase-4/test-design.md` (negative results included) and update model-card-v1 §7/§9 gaps
+- [ ] Return to the brief — restate decision, actor, "good enough" bar, cost of being wrong; classify Track A/B/hybrid
+- [ ] Robustness & sensitivity — 24-spec composite grid + ROBUST/FRAGILE tags + Cronbach's alpha; jackknife, noise, 3-seed, alternative-cut tests
+- [ ] Construct validity & threats — convergent/discriminant/Jaccard/OOD probes; name + rule out confounding, selection bias, spurious correlation, cherry-picking
+- [ ] Failure & stress (Track A) — failure gallery of 4-5 worst predictions; stress test for graceful degradation
+- [ ] Process & reproducibility audit — CRISP-DM walk-back, weakest-link/error audit, fresh-clone reproduction, peer-review packet
+- [ ] Verdict & docs — fill Track A model card, PRPI card, Track B conclusion brief, append test-design Results, write planner-readable evaluation report with deploy/iterate/stop + confidence
 
 ### Out of Scope
 
-- CRISP-DM Phase 5 (Evaluation) and Phase 6 (Deployment) — deferred to a later milestone; this milestone closes Phase 4 only
+- Decision-facing UI / dashboard — lecture explicitly says do NOT build the UI this session; evaluation comes first (deferred to Phase 6)
+- CRISP-DM Phase 6 (Deployment) — deferred to a later milestone
 - Cross-data / parallel-dataset validation and peri-urban OOD patch (Collserola/Garraf/El Prat) — no dataset in pipeline; logged in model-card limitations
-- Any frontend / UI / web app — teacher will not review UI; pipeline strategy is what's graded (locked project constraint)
 - Re-running or re-deriving Phases 1-3 — outputs are the frozen single source of truth (`scored_grid.parquet`)
+- Collecting new data — lecture: no new data unless looping back to an earlier phase
 - Deep-learning / regularization sweeps — lecture caps tuning at one hyperparameter; linear model is the interpretability gate
 
 ## Context
@@ -68,7 +70,7 @@ interpretability, not predictive accuracy, are what make the ranking usable.
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| GSD roadmap scopes Session 5 only (close Phase 4), defer Phase 5/6 | Keep the milestone shippable; Phases 1-4 already exist as code/docs | — Pending |
+| GSD roadmap = Session 5 = CRISP-DM Phase 5 Evaluation (lecture rubric), defer Phase 6 | Session 5 lecture defines this session as Evaluation; lecture > skill (locked). Phase 4 sensitivity/stability folds in as evidence | — Pending |
 | Skip 4-agent domain research | Domain exhaustively known (prior deep-research in memory); web backends unavailable in env | — Pending |
 | Coarse granularity, YOLO mode | Small remaining scope; matches recommend-don't-ask | — Pending |
 | Sensitivity grid = 24 specs (3 norm × 4 weight × 2 agg) | Pre-registered in test-design.md §4; skill demands sensitivity on every composite choice | — Pending |

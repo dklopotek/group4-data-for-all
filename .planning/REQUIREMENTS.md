@@ -1,85 +1,113 @@
-# Requirements: Mycorrhizal Barcelona — Session 5 (Phase 4 Core A close-out)
+# Requirements: Mycorrhizal Barcelona — Session 5 (CRISP-DM Phase 5: Evaluation)
 
 **Defined:** 2026-06-04
 **Core Value:** A capital-planning analyst can defensibly rank 400m cells for intervention, with every scoring and modeling choice traceable and stress-tested.
 
-**Source of truth:** `phase-4/test-design.md` (pre-registered before build). Every requirement below corresponds to a pre-registered test that MUST run and report — including unfriendly results.
+**Grading rubric:** Session 5 lecture (Evaluation). Lecture > skill when they conflict (locked).
+**Project type:** HYBRID — Track A (linear regression model = supporting evidence) + Track B (priority ranking / composite = the headline conclusion). Both get evaluated.
+**Source of truth for pre-registered tests:** `phase-4/test-design.md`. Every pre-registered test MUST run and report — including unfriendly results. No UI this session (lecture: do not build the decision-facing UI yet).
 
 ## v1 Requirements
 
-Requirements for this milestone. Each maps to a roadmap phase.
+Requirements for this milestone (Session 5 = Evaluation). Each maps to a roadmap phase.
 
-### Sensitivity (Core A — PRPI composite)
+### Return to the Brief
 
-- [ ] **SENS-01**: Compute the full 24-spec sensitivity grid (3 normalizations × 4 weightings × 2 aggregations) over `scored_grid.parquet`, writing per-cell composite + rank-tier for each spec to `outputs/phase-4/sensitivity-grid.csv`
-- [ ] **SENS-02**: Add a per-cell rank-stability count (specs matching the default Scenario-B tier out of 24) and tag each cell ROBUST (≥22/24) or FRAGILE (<18/24)
-- [ ] **SENS-03**: Compute Cronbach's alpha across the 4 sub-scores within Scenario B and report it as the internal-consistency statistic
-- [ ] **SENS-04**: Produce a sensitivity figure (rank-stability distribution) saved under `outputs/`
+- [ ] **BRIEF-01**: Recover and restate the original brief from Phase-1 docs — the decision being made, who acts on it and how, what "good enough" means, and the cost of being wrong — and classify the project as Track A / Track B / hybrid with justification
 
-### Stability (Core B — regression)
+### Robustness & Sensitivity
 
-- [ ] **STAB-01**: Jackknife refit dropping each of the 3 train clusters in turn; report per-feature coefficient mean ± std across refits
-- [ ] **STAB-02**: Inject Gaussian noise (σ=0.02) into all features, refit, and report the test-R² delta vs the locked model
-- [ ] **STAB-03**: Re-run the spatial split under 3 alternative k-means seeds and report the resulting test-R² distribution (test-cluster representativeness)
+- [ ] **ROB-01**: Compute the full 24-spec sensitivity grid (3 normalizations × 4 weightings × 2 aggregations) over `scored_grid.parquet`, writing per-cell composite + rank-tier per spec to `outputs/phase-4/sensitivity-grid.csv`
+- [ ] **ROB-02**: Add per-cell rank-stability count (specs matching the default Scenario-B tier out of 24) and tag each cell ROBUST (≥22/24) or FRAGILE (<18/24)
+- [ ] **ROB-03**: Compute Cronbach's alpha across the 4 sub-scores within Scenario B (internal consistency)
+- [ ] **ROB-04**: Produce a rank-stability distribution figure under `outputs/`
+- [ ] **ROB-05**: Jackknife refit dropping each of the 3 train clusters; report per-feature coefficient mean ± std
+- [ ] **ROB-06**: Inject Gaussian noise (σ=0.02) into all features, refit, report test-R² delta vs the locked model
+- [ ] **ROB-07**: Re-run the spatial split under 3 alternative k-means seeds; report the test-R² distribution
+- [ ] **ROB-08**: Defensible alternative-cut test (e.g. alternative `mean_sealed` threshold / drop one district) — does the headline verdict hold or does the sign flip? (lecture: "remove a year, weekdays only, alt definition")
 
-### Construct Validity (both cores)
+### Construct Validity & Threats to Validity
 
-- [ ] **CVAL-01**: Convergent check — Pearson correlation between predicted score and `mean_sealed` (expect strong positive)
-- [ ] **CVAL-02**: Discriminant check — Pearson correlation between predicted score and `species_richness` (expect weak)
-- [ ] **CVAL-03**: Jaccard overlap of top-15 predicted cells vs Phase-3 `top15_flag`; flag if below 0.5
-- [ ] **CVAL-04**: OOD probe — residual distribution by district on the test cluster; flag any district with mean |residual| > 0.10
+- [ ] **VAL-01**: Convergent check — Pearson correlation between predicted score and `mean_sealed` (expect strong positive)
+- [ ] **VAL-02**: Discriminant check — Pearson correlation between predicted score and `species_richness` (expect weak)
+- [ ] **VAL-03**: Jaccard overlap of top-15 predicted vs Phase-3 `top15_flag`; flag if below 0.5
+- [ ] **VAL-04**: OOD probe — residual distribution by district on the test cluster; flag any district with mean |residual| > 0.10
+- [ ] **VAL-05**: Name and rule out the 4 threats to validity — confounding (e.g. sealed ↔ heat ↔ density), selection bias (tree inventory logs only managed street/park trees), spurious correlation, cherry-picking — each with specific evidence
 
-### Reporting (model cards + pre-registration close-out)
+### Failure & Stress (Track A)
 
-- [ ] **CARD-01**: Write `outputs/model-card-prpi-v1.md` — Mitchell et al. (2019) card for the PRPI composite itself (≥3 NOT statements; robustness drawn from SENS-01/02)
-- [ ] **CARD-02**: Append a `## Results` section to `phase-4/test-design.md` covering §4 sensitivity, §5 construct validity, and §6 stability — negative results included, no edits to the pre-registered design except dated addenda
-- [ ] **CARD-03**: Update `outputs/model-card-v1.md` §7/§9 to close the previously-flagged sensitivity/stability gaps now that the tests have run
+- [ ] **FAIL-01**: Failure gallery — 4-5 worst test-cell predictions, each with input, what made it hard, predicted vs actual, and one-off vs systematic diagnosis
+- [ ] **STRESS-01**: Stress test under shifted / extreme / missing-feature inputs; report whether error stays under tolerance (graceful degradation) or collapses
+
+### Process & Reproducibility Audit
+
+- [ ] **AUDIT-01**: CRISP-DM process walk-back + error audit — did Phase-3 cleaning decisions shape results? was removed data anomalous or crucial? name the weakest link, where rigor was traded for time, and untested assumptions taken on faith
+- [ ] **REPRO-01**: Reproducibility check — fresh-clone / fresh-env run reproduces the report numbers (document command + match); plus a peer-review handoff packet for another group
+
+### Verdict & Documentation
+
+- [ ] **DOC-01**: Fill the Track A model-card evaluation section in `outputs/model-card-v1.md` — metrics table, failure gallery, stress results, segment differentials (confirmed by analysis, not guessed)
+- [ ] **DOC-02**: Write the PRPI composite model card `outputs/model-card-prpi-v1.md` (Mitchell template, ≥3 NOT statements; robustness from ROB-01/02)
+- [ ] **DOC-03**: Write the Track B conclusion brief — falsifiable claim + evidence + threats ruled out + explicit "what we are NOT claiming"
+- [ ] **DOC-04**: Append a `## Results` section to `phase-4/test-design.md` covering §4 sensitivity, §5 construct validity, §6 stability — negatives retained, dated addenda only
+- [ ] **VERDICT-01**: Write the evaluation report a planner can read without opening notebooks — brief + success criteria + evidence + where it failed + deploy/iterate/stop recommendation with a stated confidence level
 
 ## v2 Requirements
 
 Deferred to a later milestone (out of this roadmap).
 
-### Evaluation & Deployment
+### Deployment & Cross-validation
 
-- **EVAL-01**: CRISP-DM Phase 5 evaluation + 8-artifact handoff packet
-- **DEPL-01**: CRISP-DM Phase 6 deployment / instructor-demo packaging
+- **DEPL-01**: CRISP-DM Phase 6 deployment / decision-facing UI (lecture: not this session)
 - **XVAL-01**: Cross-data validation + peri-urban OOD patch (Collserola/Garraf/El Prat)
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Frontend / UI / web app | Teacher reviews pipeline strategy, not UI (locked project constraint) |
+| Decision-facing UI / dashboard | Lecture: do not build the UI this session — evaluation first |
 | Re-deriving Phases 1-3 | `scored_grid.parquet` is the frozen single source of truth |
+| Collecting new data | Lecture: no new data unless looping back to an earlier phase |
 | Deep learning / regularization sweeps | Lecture caps tuning at one hyperparameter; linear model is the interpretability gate |
-| New raster/data ingestion | Snapshot data frozen; Session 5 is analysis-only over existing artifacts |
 
 ## Traceability
 
-Populated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SENS-01 | TBD | Pending |
-| SENS-02 | TBD | Pending |
-| SENS-03 | TBD | Pending |
-| SENS-04 | TBD | Pending |
-| STAB-01 | TBD | Pending |
-| STAB-02 | TBD | Pending |
-| STAB-03 | TBD | Pending |
-| CVAL-01 | TBD | Pending |
-| CVAL-02 | TBD | Pending |
-| CVAL-03 | TBD | Pending |
-| CVAL-04 | TBD | Pending |
-| CARD-01 | TBD | Pending |
-| CARD-02 | TBD | Pending |
-| CARD-03 | TBD | Pending |
+| BRIEF-01 | Phase 1 | Pending |
+| ROB-01 | Phase 1 | Pending |
+| ROB-02 | Phase 1 | Pending |
+| ROB-03 | Phase 1 | Pending |
+| ROB-04 | Phase 1 | Pending |
+| ROB-05 | Phase 1 | Pending |
+| ROB-06 | Phase 1 | Pending |
+| ROB-07 | Phase 1 | Pending |
+| ROB-08 | Phase 1 | Pending |
+| VAL-01 | Phase 1 | Pending |
+| VAL-02 | Phase 1 | Pending |
+| VAL-03 | Phase 1 | Pending |
+| VAL-04 | Phase 1 | Pending |
+| VAL-05 | Phase 2 | Pending |
+| FAIL-01 | Phase 2 | Pending |
+| STRESS-01 | Phase 2 | Pending |
+| AUDIT-01 | Phase 2 | Pending |
+| REPRO-01 | Phase 2 | Pending |
+| DOC-01 | Phase 3 | Pending |
+| DOC-02 | Phase 3 | Pending |
+| DOC-03 | Phase 3 | Pending |
+| DOC-04 | Phase 3 | Pending |
+| VERDICT-01 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 14 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 14 ⚠️
+- v1 requirements: 23 total
+- Mapped to phases: 23 ✓
+- Unmapped: 0
+
+**By phase:**
+- Phase 1 — Return to Brief & Quantitative Robustness: 13 (BRIEF-01, ROB-01..08, VAL-01..04)
+- Phase 2 — Adversarial Evaluation: 5 (VAL-05, FAIL-01, STRESS-01, AUDIT-01, REPRO-01)
+- Phase 3 — Verdict & Documentation: 5 (DOC-01..04, VERDICT-01)
 
 ---
 *Requirements defined: 2026-06-04*
-*Last updated: 2026-06-04 after initial definition*
+*Last updated: 2026-06-04 — traceability mapped to rebuilt Phase 5 Evaluation roadmap (3 coarse phases)*
