@@ -56,4 +56,4 @@ Write `outputs/phase-6/allergen_priority_results.md` + `.json` with: layer summa
 
 ## Results
 
-_(pending — `src/allergen_priority.py`)_
+**VERDICT: exposure earns its place (materially re-orders + non-redundant).** T1: Spearman 0.8909, top-15 Jaccard 0.3043 -> re-orders=True. T3 burden margin over density-only (top-15): 0.0464. Full: `outputs/phase-6/allergen_priority_results.md`.
