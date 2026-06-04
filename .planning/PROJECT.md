@@ -38,6 +38,7 @@ interpretability, not predictive accuracy, are what make the ranking usable.
 - [ ] Return to the brief — restate decision, actor, "good enough" bar, cost of being wrong; classify Track A/B/hybrid
 - [ ] Robustness & sensitivity — 24-spec composite grid + ROBUST/FRAGILE tags + Cronbach's alpha; jackknife, noise, 3-seed, alternative-cut tests
 - [ ] Construct validity & threats — convergent/discriminant/Jaccard/OOD probes; name + rule out confounding, selection bias, spurious correlation, cherry-picking
+- [ ] **External validation (keystone)** — predict external GBIF fungal occurrence (never used in the composite); test whether biotic/host layers add signal beyond the sealed+greenness null. PASS → re-weighted biotic claim earned; FAIL → reframe confirmed empirically
 - [ ] Failure & stress (Track A) — failure gallery of 4-5 worst predictions; stress test for graceful degradation
 - [ ] Process & reproducibility audit — CRISP-DM walk-back, weakest-link/error audit, fresh-clone reproduction, peer-review packet
 - [ ] Verdict & docs — fill Track A model card, PRPI card, Track B conclusion brief, append test-design Results, write planner-readable evaluation report with deploy/iterate/stop + confidence

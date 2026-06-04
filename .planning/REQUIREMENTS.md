@@ -34,6 +34,14 @@ Requirements for this milestone (Session 5 = Evaluation). Each maps to a roadmap
 - [ ] **VAL-04**: OOD probe — residual distribution by district on the test cluster; flag any district with mean |residual| > 0.10
 - [ ] **VAL-05**: Name and rule out the 4 threats to validity — confounding (e.g. sealed ↔ heat ↔ density), selection bias (tree inventory logs only managed street/park trees), spurious correlation, cherry-picking — each with specific evidence
 
+### External Validation (does the data carry mycorrhizal signal?)
+
+The keystone test (lit-review §9 #4): predict an EXTERNAL fungal outcome the composite never used, and ask whether the biotic/host layers add signal beyond the abiotic null. Pre-registered in `phase-5/external-validation-design.md`; implemented in `src/external_validation.py`.
+
+- [ ] **EXT-01**: Build the external GBIF fungal target — spatial-join the 1,024 geo-located GBIF occurrences to grid cells (EPSG:25831), compute per-cell observed fungal richness, presence, and effort to `data/processed/gbif_external_target.parquet`; confirm via leakage check that none of these feed the composite or the Core-B features
+- [ ] **EXT-02**: Fit the pre-registered nested models (M0 abiotic null = sealed + ndvi + effort; M1 + biotic/host) on the observed subset; report ΔAdjusted-R², partial-F and p, and VIF against the pre-registered PASS criterion (ΔAdj-R² ≥ 0.05 AND partial-F p < 0.05); state the PASS/FAIL verdict and what it means for defend/rebuild/reframe
+- [ ] **EXT-03**: Run the pre-registered confound + robustness pass — presence/absence logistic with 5-fold CV-AUC + LR test over all cells, effort-controlled and drop-effort variants, log-richness variant, and Moran's I on residuals; the PASS/FAIL verdict must survive (or be flagged as fragile)
+
 ### Failure & Stress (Track A)
 
 - [ ] **FAIL-01**: Failure gallery — 4-5 worst test-cell predictions, each with input, what made it hard, predicted vs actual, and one-off vs systematic diagnosis
@@ -87,6 +95,9 @@ Deferred to a later milestone (out of this roadmap).
 | VAL-02 | Phase 1 | Pending |
 | VAL-03 | Phase 1 | Pending |
 | VAL-04 | Phase 1 | Pending |
+| EXT-01 | Phase 1 | Pending |
+| EXT-02 | Phase 1 | Pending |
+| EXT-03 | Phase 1 | Pending |
 | VAL-05 | Phase 2 | Pending |
 | FAIL-01 | Phase 2 | Pending |
 | STRESS-01 | Phase 2 | Pending |
@@ -99,15 +110,15 @@ Deferred to a later milestone (out of this roadmap).
 | VERDICT-01 | Phase 3 | Pending |
 
 **Coverage:**
-- v1 requirements: 23 total
-- Mapped to phases: 23 ✓
+- v1 requirements: 26 total
+- Mapped to phases: 26 ✓
 - Unmapped: 0
 
 **By phase:**
-- Phase 1 — Return to Brief & Quantitative Robustness: 13 (BRIEF-01, ROB-01..08, VAL-01..04)
+- Phase 1 — Return to Brief & Quantitative Robustness: 16 (BRIEF-01, ROB-01..08, VAL-01..04, EXT-01..03)
 - Phase 2 — Adversarial Evaluation: 5 (VAL-05, FAIL-01, STRESS-01, AUDIT-01, REPRO-01)
 - Phase 3 — Verdict & Documentation: 5 (DOC-01..04, VERDICT-01)
 
 ---
 *Requirements defined: 2026-06-04*
-*Last updated: 2026-06-04 — traceability mapped to rebuilt Phase 5 Evaluation roadmap (3 coarse phases)*
+*Last updated: 2026-06-04 — added EXT-01..03 (GBIF external validation) to Phase 1; pre-registered in phase-5/external-validation-design.md*
