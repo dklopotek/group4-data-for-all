@@ -105,7 +105,7 @@ Deferred to a later milestone (out of this roadmap).
 | REPRO-01 | Phase 2 | Pending |
 | DOC-01 | Phase 3 | Pending |
 | DOC-02 | Phase 3 | Pending |
-| DOC-03 | Phase 3 | Pending |
+| DOC-03 | Phase 3 | Complete (draft) |
 | DOC-04 | Phase 3 | Pending |
 | VERDICT-01 | Phase 3 | Pending |
 
