@@ -102,4 +102,8 @@ Negative results stay in the report.
 
 ## Results
 
-_(pending build — `scripts/external_validation.py`)_
+**Verdict: FAIL.** Richness Delta Adj-R2 = -0.0195 (criterion >= 0.05), partial-F p = 0.98917 (criterion < 0.05). Observed cells 99/494. Robust under log-richness (p=0.57) and drop-effort (p=0.54); Moran's I on residuals n.s. (I=-0.047, p=0.21). Full table + interpretation: `outputs/phase-5/external_validation_results.md`.
+
+### Dated addendum — 2026-06-04 (post-build, design flaw logged honestly)
+
+The §3 **presence model is circular** and its result (AUC=1.0, both models) must be discounted: `gbif_present` was pre-registered as `effort >= 1` while `log_effort` was a covariate, so effort predicts presence by construction. This was not caught at pre-registration time. Per the contract, the design is NOT silently re-run; the flaw is recorded and the **richness model on the observed subset carries the verdict** (it is sound and effort-controlled). The §5 negative-binomial robustness was not run (statsmodels not installed on the build venv); the OLS log-richness variant was substituted and is reported. These deferrals/flaws do not change the FAIL verdict — every variant agrees the biotic block adds no signal.

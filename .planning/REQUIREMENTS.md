@@ -95,9 +95,9 @@ Deferred to a later milestone (out of this roadmap).
 | VAL-02 | Phase 1 | Pending |
 | VAL-03 | Phase 1 | Pending |
 | VAL-04 | Phase 1 | Pending |
-| EXT-01 | Phase 1 | Pending |
-| EXT-02 | Phase 1 | Pending |
-| EXT-03 | Phase 1 | Pending |
+| EXT-01 | Phase 1 | Complete |
+| EXT-02 | Phase 1 | Complete (verdict FAIL) |
+| EXT-03 | Phase 1 | Complete |
 | VAL-05 | Phase 2 | Pending |
 | FAIL-01 | Phase 2 | Pending |
 | STRESS-01 | Phase 2 | Pending |

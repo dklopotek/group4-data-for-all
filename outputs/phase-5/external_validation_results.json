@@ -1,0 +1,62 @@
+{
+  "leakage": "LEAKAGE WARNING: ['prpi', 's4_mismatch'] are composite inputs",
+  "n_cells_total": 494,
+  "n_cells_observed": 99,
+  "n_gbif_species_total": 70,
+  "richness_primary": {
+    "M0_adj_r2": 0.6972,
+    "M1_adj_r2": 0.6777,
+    "delta_adj_r2": -0.0195,
+    "partial_F": 0.178,
+    "partial_F_p": 0.98917,
+    "PASS": false
+  },
+  "presence_secondary": {
+    "M0_cv_auc": 1.0,
+    "M1_cv_auc": 1.0,
+    "delta_auc": 0.0,
+    "LR": 0.22,
+    "LR_p": 0.99996,
+    "PASS": false
+  },
+  "robustness": {
+    "log_richness": {
+      "d_adj_r2": -0.0009174082120938509,
+      "partial_f_p": 0.5675098614034368
+    },
+    "drop_effort": {
+      "d_adj_r2": -0.010375231517304573,
+      "partial_f_p": 0.5444817526858892
+    }
+  },
+  "morans_I_resid": {
+    "I": -0.04743565357805596,
+    "p": 0.214
+  },
+  "vif": {
+    "mean_sealed": 165.74,
+    "mean_ndvi": 92.22,
+    "log_effort": 1.22,
+    "am_pct": Infinity,
+    "em_pct": Infinity,
+    "platanus_pct": 698.93,
+    "s4_mismatch": 1.22,
+    "prpi": 627.91,
+    "species_richness": 3.8,
+    "total_trees": 5.19
+  },
+  "m1_coefficients_std": {
+    "intercept": 3.4848,
+    "mean_sealed": -3.0048,
+    "mean_ndvi": -2.9642,
+    "log_effort": 6.9445,
+    "am_pct": 0.1209,
+    "em_pct": -0.1209,
+    "platanus_pct": 6.8825,
+    "s4_mismatch": -0.0602,
+    "prpi": -6.7994,
+    "species_richness": -0.5412,
+    "total_trees": 0.2067
+  },
+  "VERDICT": "FAIL"
+}
