@@ -68,6 +68,26 @@ Write `outputs/phase-6/allergen_priority_results.md` + `.json` with: layer summa
 
 **Reporting:** `outputs/phase-6/atrisk_results.{md,json}`. Verdict reported either way. No measured-AR spatial claim.
 
+## v3 addendum — equity (deprivation) weighting (pre-registered 2026-06-05, before build)
+
+**Motivation:** age/sex weighting was redundant because they barely vary in space. Income/deprivation is one of Barcelona's most spatially variable features and is likely decorrelated from the plane-lined boulevards, so it CAN reorder. But equity weighting changes the OBJECTIVE — from "max exposure relieved" (efficiency) to "max exposure relieved among the worst-off" (equity). It is a value choice, so v1 is kept and v3 is presented alongside it, not as a replacement.
+
+**Data:** `data/raw/atles_renda_bruta_persona.csv` (INE Atlas gross income per person, by census section, 2023; 1,068 sections). Key = `Codi_Districte.zfill(2) + Seccio_Censal.zfill(3)`. Missing-income sections imputed with city median (count reported). `deprivation_std = minmax(max_income - income)` per cell after areal-weighted interpolation (poorest cell = 1, richest = 0).
+
+**Layers:** v1 efficiency `priority_v1 = source_std x exposure_std`; v3 equity `priority_v3 = source_std x exposure_std x deprivation_std` (aggressive). A floored variant `deprivation_w = 0.5 + 0.5*deprivation_std` is run as sensitivity.
+
+**Honesty note fixed before running:** aggressive equity weighting multiplies by a high-variance, decorrelated factor, so reordering is EXPECTED and is not itself the finding. The reportable, decision-relevant quantities are the tradeoff and the decorrelation, below.
+
+**Pre-registered tests / quantities (fixed before running):**
+- **V3-1 (decorrelation — the precondition):** corr(deprivation_std, source_std) and corr(deprivation_std, exposure_std). For deprivation to add genuine new information it must be decorrelated from both (|r| < 0.7). If it is strongly correlated, it adds little (report honestly).
+- **V3-2 (reorder, expected):** Spearman(priority_v3, priority_v1), Jaccard top-15/50. Reported, but framed as expected given V3-1.
+- **V3-3 (equity-efficiency tradeoff — THE finding):**
+  - *Efficiency cost:* total exposure burden = Σ(source_std x exposure_std). Report the share captured by the top-15/50 cells of the EQUITY ranking vs the EFFICIENCY ranking. The gap = exposure relief sacrificed for equity.
+  - *Equity gain:* share of top-15/50 cells falling in the most-deprived income TERCILE under v1 vs v3. The increase = the equity the reweighting buys.
+- **Sensitivity:** floored deprivation weight [0.5,1]; rank-based deprivation. The direction of the tradeoff must hold.
+
+**Reporting:** `outputs/phase-6/equity_results.{md,json}` + an equity priority table `outputs/phase-6/priority_zones_equity.csv`. Both maps (efficiency + equity) reported; the planner chooses the objective. No claim that one is "correct".
+
 ## Results
 
 **VERDICT: exposure earns its place (materially re-orders + non-redundant).** T1: Spearman 0.8909, top-15 Jaccard 0.3043 -> re-orders=True. T3 burden margin over density-only (top-15): 0.0464. Full: `outputs/phase-6/allergen_priority_results.md`.
