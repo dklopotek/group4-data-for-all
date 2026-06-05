@@ -38,7 +38,10 @@ A transparent, two-layer map that ranks Barcelona cells for **where to sequence 
 
 ## Ethical considerations
 
-- **Equity / at-risk weighting:** v1 weights all residents equally. We **tested** an allergy-prevalence reweighting (population × age-band AR prevalence; `src/atrisk_layer.py`) and found it **redundant with plain population** at 400 m (Spearman 0.999, top-15 Jaccard 0.875 vs the population-based priority) — Barcelona neighbourhoods do not differ enough in age structure to re-order the map, so age-weighting is **not worth adding** (`outputs/phase-6/atrisk_results.md`). A distinct, still-untested extension is **socioeconomic-vulnerability** weighting (deprivation, not age); whether that re-orders is an open question. No sub-city allergy data exists (privacy); any at-risk layer is modeled, not measured.
+- **Equity / at-risk weighting (tested two ways):**
+  - *Age-prevalence (rejected):* reweighting population by age-band allergic-rhinitis prevalence (`src/atrisk_layer.py`) was **redundant with plain population** (Spearman 0.999, top-15 Jaccard 0.875) — Barcelona's age structure barely varies in space, so it cannot re-order. Not worth adding (`outputs/phase-6/atrisk_results.md`).
+  - *Sex:* women receive ~1.6× the per-capita antihistamine prescriptions of men (`outputs/phase-6/sex_atrisk.md`), but the sex ratio is near-constant across neighbourhoods, so it also adds no mappable signal.
+  - *Deprivation / income (adopted as an equity variant, v3):* income is decorrelated from plane density (r = −0.008; `src/equity_layer.py`), so it carries genuine new information. An **equity-weighted variant** lifts the most-deprived-tercile share of the top-15 from **40% → 60% while sacrificing only ~0.5 pp (~3% relative) of total exposure relief** (`outputs/phase-6/equity_results.md`). This is a value choice: v1 (efficiency, max relief) and v3 (equity, relief for the worst-off) are **both reported; the planner chooses**. No sub-city allergy data exists (privacy); all at-risk layers are modeled, not measured.
 - **Exposure ≠ harm:** the product ranks *potential exposure*, not diagnosed allergy or clinical impact.
 
 ## Caveats and limitations (the NOT list — ≥3 required, 6 given)
