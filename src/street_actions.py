@@ -5,10 +5,18 @@ mature plane trees and how many. It is an INVENTORY + FEASIBILITY ALLOCATION lay
 priority claim -- there is deliberately NO priority/score column at street grain (ecological
 fallacy; see phase-6/section-street-design.md, the honesty gate C2).
 
-The optional `suggested_remove` column allocates a city policy target (A2: remove ~23,013 of
-40,444 planes to hit the 12%-by-2037 stock goal) proportionally to SECTION priority, then splits
-each section's quota across its streets by mature share -- capped so you can never be told to
-remove more mature planes than a street has. It is a swappable policy input, not a finding.
+The optional `suggested_remove` column allocates the city policy target proportionally to SECTION
+priority, then splits each section's quota across its streets by mature share -- capped so you can
+never be told to remove more mature planes than a street has. It is a swappable policy input, not a
+finding.
+
+A2 (policy anchor, sourced -- Pla Director de l'Arbrat 2017-2037; ElNacional/Beteve May 2026):
+Barcelona has 43,722 Platanus = 27.45% of TOTAL urban trees, to be cut to 12% by 2037 -- a ~56.3%
+reduction of the plane stock (~24,500 trees city-wide). We apply that policy REDUCTION RATE to the
+STREET-tree stock we can see (arbrat-viari.csv; the 43,722 city figure also includes park/forest
+planes outside this inventory), so the street target = rate x street plane count. The city's stated
+primary rationale is biodiversity / monoculture disease-risk, NOT allergy -- this product optimizes
+allergen-exposure relief as a CO-BENEFIT of a removal programme run for other reasons.
 
 Depends on outputs/phase-6/section_priority.parquet (run src/section_priority.py first).
 Deterministic, ASCII-only. Run:  python src/street_actions.py
@@ -29,7 +37,13 @@ CRS = "EPSG:25831"
 
 MATURE = {"EXEMPLAR", "PRIMERA"}     # must match section_priority.py A1
 TOPK_SECTIONS = 60                   # sections that get a street worklist
-TARGET_REMOVE = 23_013               # A2 policy anchor (illustrative, swappable)
+
+# A2 policy anchor (Pla Director de l'Arbrat 2017-2037; sourced May 2026).
+CITY_PLATANUS_TOTAL = 43_722         # all urban trees (street + parks), per Ajuntament
+PCT_NOW = 27.45                      # Platanus share of total urban trees now (%)
+PCT_TARGET_2037 = 12.0               # target share by 2037 (%)
+REMOVAL_RATE = 1.0 - PCT_TARGET_2037 / PCT_NOW   # ~0.563 of the plane stock removed
+# street removal target = rate x street plane stock (computed in main from the inventory)
 
 
 def street_of(adreca: str) -> str:
@@ -59,8 +73,12 @@ def main():
     if sec.crs is None:
         sec = sec.set_crs(CRS)
 
-    # section-level removal quota: city target apportioned by priority, capped at mature stock
-    quota = largest_remainder(sec["priority"].to_numpy(float), TARGET_REMOVE)
+    # street removal target = policy reduction RATE applied to the street plane stock we can see
+    street_planes = int(sec["plane_count"].sum())
+    target_remove = round(REMOVAL_RATE * street_planes)
+
+    # section-level removal quota: target apportioned by priority, capped at mature stock
+    quota = largest_remainder(sec["priority"].to_numpy(float), target_remove)
     sec = sec.copy()
     sec["section_quota"] = np.minimum(quota, sec["mature_count"].to_numpy(int))
 
@@ -129,16 +147,18 @@ def main():
     print(f"  street-match coverage: {100*coverage:.1f}%")
     print(f"  #1 section {top1['key']} ({top1['district_lbl']}): "
           f"street planes sum={top1_planes} vs section plane_count={int(top1['plane_count'])}")
+    print(f"  policy rate {REMOVAL_RATE:.3f} (27.45%->12% by 2037) x {street_planes} street planes "
+          f"-> street target {target_remove}")
     print(f"  total suggested_remove (top-{TOPK_SECTIONS}): {int(actions['suggested_remove'].sum())} "
-          f"(of city target {TARGET_REMOVE})")
+          f"(of street target {target_remove})")
     print(f"  HONESTY GATE: no priority/score column at street grain -> PASS")
     print("\n  sample (top section, top streets by mature):")
     print(actions.head(8).to_string(index=False))
 
-    _append_design(actions, coverage, top1, top1_planes)
+    _append_design(actions, coverage, top1, top1_planes, street_planes, target_remove)
 
 
-def _append_design(actions, coverage, top1, top1_planes):
+def _append_design(actions, coverage, top1, top1_planes, street_planes, target_remove):
     if not DESIGN.exists():
         return
     txt = DESIGN.read_text(encoding="utf-8")
@@ -149,8 +169,10 @@ def _append_design(actions, coverage, top1, top1_planes):
         f"- Street-match coverage from free-text `adreca`: **{100*coverage:.1f}%**.\n"
         f"- Spot-check #1 section {top1['key']} ({top1['district_lbl']}): per-street planes "
         f"sum = {top1_planes} = section plane_count {int(top1['plane_count'])} (consistent).\n"
-        f"- {len(actions)} street rows across the top-60 sections; total suggested removal "
-        f"{int(actions['suggested_remove'].sum())} planes (illustrative, A2 policy anchor).\n"
+        f"- A2 policy rate {REMOVAL_RATE:.3f} (27.45%->12% of urban trees by 2037, Pla Director) "
+        f"x {street_planes} street planes -> street target {target_remove}. "
+        f"{len(actions)} street rows across the top-60 sections; suggested removal "
+        f"{int(actions['suggested_remove'].sum())} planes there (allocation, not a finding).\n"
         f"- Output: `outputs/phase-6/street_removal_actions.csv` (worklist) + "
         f"`street_removal_points.geojson` (QA map).\n"
     )

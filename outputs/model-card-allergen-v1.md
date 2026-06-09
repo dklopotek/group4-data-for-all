@@ -68,7 +68,12 @@ Unit Problem measured in our own product**: the 400 m map carries the people-wei
 section map is the operational unit, where priority is closer to "largest mature clusters first." Both
 are shipped with this caveat. **The street worklist is an action/inventory layer only — it carries no
 priority or score column (ecological fallacy gate); `suggested_remove` is an illustrative, swappable
-policy allocation, not a finding.** See paper §8 and `phase-6/section-street-design.md`.
+policy allocation, not a finding.** Policy anchor (sourced, Pla Director 2017–2037): 43,722 planes =
+27.45% of *total urban trees* → 12% by 2037 (~56% cut); we apply that rate (0.563) to the street stock
+(→ ~22,757). **The city's stated primary rationale is biodiversity / monoculture disease-risk, not
+allergy** — this product optimizes exposure relief as a *co-benefit* of a removal programme run for
+other reasons. (The Sant Jordi 2026 nuisance was the plane *fruit*, distinct from the spring *pollen*
+modelled here.) See paper §8, §2.4 and `phase-6/section-street-design.md`.
 
 ## How this product differs from the failed predecessor
 

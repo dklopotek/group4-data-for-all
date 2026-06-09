@@ -9,7 +9,7 @@ service, so monitoring = source-drift watch + dependency rot + a release trigger
 | Street-tree inventory (`arbrat-viari.csv`) | New plantings/removals shift plane counts & maturity | Annual (matches city inventory updates) | Re-run `section_priority.py` + `street_actions.py`; bump MINOR |
 | Population register (Padro) | Demographic shift changes exposure | Annual (new Padro) | Re-run; bump MINOR |
 | Census-section polygons | Boundary revision changes the join | On municipal re-districting | Re-verify the section-key join (1,068 expected); bump MAJOR if grain changes |
-| *Pla Director* removal target | Policy revision changes `TARGET_REMOVE` | On policy update | Edit `street_actions.py` constant; re-run allocation only |
+| *Pla Director* removal target | Policy revision changes the reduction rate (now 27.45%→12%) | On policy update | Edit `PCT_NOW`/`PCT_TARGET_2037` in `street_actions.py`; re-run allocation only |
 
 ## Dependencies monitored
 - Rebuild the pinned env from `release/requirements-lock.txt` annually; if geopandas/GDAL breaks the

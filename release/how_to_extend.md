@@ -16,10 +16,13 @@ becomes available. The script already runs `broad_mature` and `uniform_maturity`
 so you can see the effect immediately in the printed verdicts.
 
 ## 3. Change the removal target (policy input)
-`src/street_actions.py` `TARGET_REMOVE = 23_013` is the illustrative `Pla Director` allocation
-(28%→12% of stock by 2037). Replace with the city's actual annual or programme figure; the
-`largest_remainder` apportionment and the per-street caps handle the rest. This is a **policy input,
-not a finding** — changing it never changes a priority, only the `suggested_remove` annotation.
+`src/street_actions.py` derives the target from the *Pla Director* policy **rate**, not a fixed count:
+`REMOVAL_RATE = 1 − PCT_TARGET_2037/PCT_NOW` (12/27.45 → 0.563), applied to the street plane stock
+(→ ~22,757). To use the city's actual annual or programme figure, either edit `PCT_NOW`/`PCT_TARGET_2037`
+or set `target_remove` directly in `main()`. The `largest_remainder` apportionment and per-street caps
+handle the rest. This is a **policy input, not a finding** — changing it never changes a priority, only
+the `suggested_remove` annotation. (Sourced figures: 43,722 planes = 27.45% of total urban trees → 12%
+by 2037; city rationale is biodiversity, not allergy — see paper §8.3.)
 
 ## Adding a whole new layer (a new sub-pipeline)
 Follow the layer-audition gate (paper §7.3): a new layer earns inclusion only if it (a) re-orders the

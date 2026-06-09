@@ -6,7 +6,7 @@
 
 ## The decision
 
-Barcelona's *Pla Director de l'Arbrat 2017–2037* commits the city to reducing plane trees (*Platanus × acerifolia*) from ~27% to <12% of the street-tree stock. That reduction will happen over years, tree by tree, on a finite annual budget. **The decision this product supports: in what spatial order should the city sequence plane removals/replacements so that each removal delivers the most pollen-allergen-exposure relief to people?**
+Barcelona's *Pla Director de l'Arbrat 2017–2037* commits the city to reducing plane trees (*Platanus × acerifolia*) from 27.45% to <12% of the **total urban-tree** stock (43,722 specimens; a ~56% cut), under a rule that no single species exceed 15% of the stock. The city's stated primary rationale is biodiversity and monoculture disease-risk, not allergy. That reduction will happen over years, tree by tree, on a finite annual budget. **The decision this product supports: in what spatial order should the city sequence plane removals/replacements so that each removal delivers the most pollen-allergen-exposure relief to people (a co-benefit of a removal programme run for other reasons)?** _(Denominator corrected 2026-06-09: earlier drafts said "street-tree stock"; the 27.45%/12% figures are of total urban trees per the Pla Director.)_
 
 ## Who acts, and how
 

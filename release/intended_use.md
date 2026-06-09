@@ -6,8 +6,12 @@ working with urban public-health planners.
 
 ## What decision it informs
 **The spatial order in which to sequence the city's already-committed plane-tree (*Platanus*)
-reduction** (Pla Director de l'Arbrat 2017–2037, ~28% → 12% of the street-tree stock), so that each
-removal relieves the most pollen-allergen exposure for residents. The product delivers:
+reduction** (Pla Director de l'Arbrat 2017–2037: 43,722 planes = 27.45% of total urban trees → 12% by
+2037, a ~56% cut, under a no-species-above-15% rule), so that each removal relieves the most
+pollen-allergen exposure for residents. **The city's stated primary rationale is biodiversity and
+monoculture disease-risk, not allergy** — this product supplies only the *sequencing* and treats
+allergen-exposure relief as a co-benefit, never as the city's justification to remove. The product
+delivers:
 1. **Census sections ranked** by `source × exposure` priority (`section_priority.csv`) — the where.
 2. A **per-street mature-plane worklist** for the top sections (`street_removal_actions.csv`) — the what.
 3. An interactive map for exploration/presentation (`deployment_map.html`).

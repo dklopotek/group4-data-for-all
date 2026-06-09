@@ -19,3 +19,4 @@ rationale. (Phase-by-phase detail lives in `phase-6/phase-{1..5}-audit.md` and t
 | 12 | 6 | Report the section-grain T1/T4 **failure** honestly (MAUP) | Pre-registration is binding; don't re-tune to pass | paper §8.2 |
 | 13 | 6 | Build the interactive map despite the no-UI course rule | User's explicit call ("go full on"); flagged as out-of-scope aid | `build_deploy_map.py` header |
 | 14 | 6 | DOI/Zenodo left PENDING, not faked | Requires team institutional accounts; honesty | `publication_plan.md` |
+| 15 | 6 | Corrected the policy anchor + reframed as a co-benefit (2026-06-09) | Sourced figures: 43,722 planes = 27.45% of *total urban* trees → 12% by 2037 (~56%); city rationale is **biodiversity/monoculture-risk, not allergy**; *Sant Jordi* was fruit not pollen. Worklist now driven by the reduction *rate* (0.563) on street stock, not a hardcoded count | paper §8.3, §2.4; `section-street-design.md` A2 |

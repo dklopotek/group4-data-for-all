@@ -85,10 +85,18 @@ explicitly NOT a priority claim.
   canopy → higher pollen yield). `SEGONA`/`TERCERA` are smaller classes. This is an **assumption**,
   tested as a T4 arm (broaden to include `SEGONA`; and a uniform-maturity arm where every plane counts
   equally). 1 Platanus row has a null category → counted as non-mature (reported).
-- **A2 — City removal target.** Policy anchor: Platanus 27.9% → 12% of the street-tree stock by 2037.
-  Illustrative target stock = 12% × 145,257 total street trees ≈ 17,431 planes → remove ≈ **23,013** of
-  40,444. Used only to scale the *suggested* allocation; it is a **policy input, not a finding**, and is
-  swappable (`how_to_extend`).
+- **A2 — City removal target (sourced, corrected 2026-06-09).** Pla Director de l'Arbrat 2017–2037
+  (ElNacional / Beteve, May 2026): Barcelona has **43,722 Platanus = 27.45% of *total urban trees***
+  (street + parks/forest), to be cut to **12% by 2037 → a ~56.3% reduction** of the plane stock
+  (~24,500 city-wide). Two caveats make us drive the worklist off the **rate**, not a fixed count:
+  (i) our `arbrat-viari.csv` is **street trees only** (40,444 planes), a subset of the 43,722; and
+  (ii) the **city's stated primary rationale is biodiversity / monoculture disease-risk and climate
+  resilience — *not* allergy** (allergy is politically salient but explicitly contextual; the Sant
+  Jordi 2026 nuisance was the *fruit*, not spring pollen). So the street target =
+  `(1 − 12/27.45) × street_plane_count ≈ 0.563 × 40,433 ≈ 22,757`, computed in code. It scales the
+  *suggested* allocation only — a **policy input, not a finding**, swappable (`how_to_extend`). Framing:
+  this product optimizes allergen-exposure relief as a **co-benefit** of a removal programme the city
+  runs for other reasons.
 - **A3 — Address = street identity.** `adreca` minus the house number identifies a street. Free-text;
   unmatched/garbled addresses are accepted and the street-match coverage % is reported, not hidden.
 
