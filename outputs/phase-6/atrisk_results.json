@@ -1,0 +1,24 @@
+{
+  "at_risk_layer": "literature-weighted demographic (age-band x AR prevalence x Platanus share 0.37 constant)",
+  "spatial_AR_data": "none below health-region; layer is modeled, not measured",
+  "V2_1_reordering_vs_population": {
+    "spearman_atrisk_vs_population": 0.999,
+    "spearman_priority_v2_vs_v1": 0.9997,
+    "jaccard_top15": 0.875,
+    "jaccard_top50": 0.9231,
+    "prevalence_materially_reorders": false,
+    "criterion": "jaccard_top15 < 0.70 AND spearman_atrisk_vs_population < 0.95"
+  },
+  "V2_2_calibration": {
+    "R06_total": 566817,
+    "top_age_bands_by_prescriptions": {
+      "60-64 anys": 46700,
+      "50-54 anys": 46495,
+      "65-69 anys": 46444,
+      "55-59 anys": 45228,
+      "45-49 anys": 44422
+    },
+    "note": "prescriptions peak in middle/older age (chronic medication use), while AR PREVALENCE peaks younger -- prescriptions are a use proxy, not a prevalence map; divergence reported, not forced to agree."
+  },
+  "VERDICT": "age-weighting largely redundant with population at this resolution -- honest: keep v1 (population), report at-risk as a minor refinement"
+}

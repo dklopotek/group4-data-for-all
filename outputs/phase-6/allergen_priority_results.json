@@ -1,0 +1,36 @@
+{
+  "pollen_validation": "INFEASIBLE - source is literature-anchored proxy, not measured-pollen-validated (see design Sec 0)",
+  "T1_reordering_vs_density": {
+    "spearman_priority_vs_source": 0.8909,
+    "jaccard_top15": 0.3043,
+    "jaccard_top50": 0.3889,
+    "exposure_materially_reorders": true
+  },
+  "T2_redundancy": {
+    "corr_priority_source": 0.803,
+    "corr_priority_exposure": 0.6361,
+    "corr_source_exposure": 0.2975,
+    "both_layers_material": true,
+    "inputs_not_redundant": true
+  },
+  "T3_burden_capture": {
+    "15": {
+      "priority": 0.1801,
+      "density_only": 0.1337,
+      "random_mean": 0.0296,
+      "margin_priority_minus_density": 0.0464
+    },
+    "50": {
+      "priority": 0.4458,
+      "density_only": 0.3524,
+      "random_mean": 0.1015,
+      "margin_priority_minus_density": 0.0934
+    }
+  },
+  "T4_sensitivity_reorder_holds": {
+    "uniform_maturity": true,
+    "rank_normalized": true,
+    "min_aggregation": true
+  },
+  "VERDICT": "exposure earns its place (materially re-orders + non-redundant)"
+}

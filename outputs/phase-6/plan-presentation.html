@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finishing the Project — Plan & Context</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c2330; --ink:#e6edf3; --mut:#8b949e;
+    --line:#30363d; --grn:#3fb950; --grn2:#2ea043; --amb:#d29922; --red:#f85149;
+    --blu:#58a6ff; --pur:#bc8cff; --teal:#39c5cf;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;
+       -webkit-font-smoothing:antialiased}
+  .slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+         padding:6vh 7vw;border-bottom:1px solid var(--line);scroll-snap-align:start;position:relative}
+  .kicker{font-family:var(--mono);font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;
+          color:var(--teal);margin-bottom:.8rem}
+  h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;margin:.2rem 0 1rem;font-weight:800;letter-spacing:-.02em}
+  h2{font-size:clamp(1.5rem,3.4vw,2.4rem);margin:.2rem 0 1.2rem;font-weight:750;letter-spacing:-.01em}
+  p{font-size:clamp(1rem,1.5vw,1.18rem);color:#cdd9e5;max-width:60ch}
+  .big{font-size:clamp(1.1rem,1.8vw,1.35rem);color:var(--ink)}
+  .mut{color:var(--mut)}
+  .grid{display:grid;gap:1.1rem}
+  .cards3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:1.3rem 1.4rem}
+  .card h3{margin:.1rem 0 .5rem;font-size:1.15rem}
+  .card.small p{font-size:1rem}
+  .tag{display:inline-block;font-family:var(--mono);font-size:.72rem;padding:.2rem .55rem;border-radius:999px;
+       border:1px solid var(--line);color:var(--mut);margin-right:.4rem}
+  .tag.ok{color:var(--grn);border-color:#1f6f33;background:#0e2916}
+  .tag.now{color:var(--amb);border-color:#6b5111;background:#2a2008}
+  .tag.go{color:var(--blu);border-color:#1f4f8f;background:#0b1f3a}
+  .pill{font-family:var(--mono);font-size:.85rem;color:var(--mut)}
+  .nav{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;
+       gap:11px;z-index:50}
+  .nav a{width:11px;height:11px;border-radius:50%;background:#30363d;border:1px solid #444c56;display:block;
+         transition:.2s}
+  .nav a:hover,.nav a.active{background:var(--teal);transform:scale(1.25)}
+  .formula{font-family:var(--mono);font-size:clamp(1.1rem,2.4vw,1.8rem);background:var(--panel);
+           border:1px solid var(--line);border-radius:12px;padding:1.1rem 1.4rem;display:inline-block;margin:.6rem 0}
+  .formula b{color:var(--grn)} .formula i{color:var(--blu);font-style:normal} .formula u{color:var(--pur);text-decoration:none}
+  .legend{display:flex;gap:1.3rem;flex-wrap:wrap;margin:.7rem 0;font-size:.9rem;color:var(--mut)}
+  .sw{display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:-1px;margin-right:.4rem}
+  .note{border-left:3px solid var(--teal);padding:.5rem 0 .5rem 1rem;color:#cdd9e5;background:#0f1722;border-radius:0 8px 8px 0}
+  .row{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center}
+  .grow{flex:1 1 320px;min-width:280px}
+  ul.clean{list-style:none;padding:0;margin:.4rem 0}
+  ul.clean li{padding:.42rem 0;border-bottom:1px dashed var(--line);display:flex;gap:.7rem;align-items:flex-start}
+  ul.clean li::before{content:"▹";color:var(--teal);margin-top:.1rem}
+  .checks li::before{content:"✓";color:var(--grn)}
+  .scroller{height:100vh;overflow-y:scroll;scroll-snap-type:y proximity}
+  code{font-family:var(--mono);background:#0b1018;border:1px solid var(--line);border-radius:6px;padding:.05rem .4rem;color:var(--teal)}
+  .footstep{position:absolute;bottom:18px;left:7vw;color:var(--mut);font-family:var(--mono);font-size:.78rem}
+  .verdict{font-weight:800}
+  .down{position:absolute;bottom:20px;right:7vw;color:var(--mut);font-size:.8rem;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="scroller" id="sc">
+
+<!-- 1 -->
+<section class="slide" id="s1">
+  <div class="kicker">Group 4 · MaAI01 · Finishing CRISP-DM A→Z</div>
+  <h1>From a dead mushroom map<br>to a pollen-relief plan<br>Barcelona can act on.</h1>
+  <p class="big">This deck explains — in plain words — what we built, the honest twist we found,
+     and exactly what I'll finish tonight to close the whole framework.</p>
+  <div style="margin-top:1.4rem" class="row">
+    <span class="tag ok">Phases 1–5 done</span>
+    <span class="tag now">Phase 6 — Deployment — tonight</span>
+    <span class="tag go">+ a real interactive map (your call)</span>
+  </div>
+  <div class="down">scroll ↓</div>
+  <div class="footstep">1 / 9</div>
+</section>
+
+<!-- 2 -->
+<section class="slide" id="s2">
+  <div class="kicker">The one decision</div>
+  <h2>Where should the city cut plane trees first?</h2>
+  <div class="row">
+    <div class="grow">
+      <p>Barcelona has already committed to <b>removing plane trees</b> (Platanus) — they cause a big
+      share of the city's spring pollen allergies. The trees come out over years. <b>The only question
+      we answer:</b></p>
+      <div class="note big">"Given we're removing planes anyway — <b>in what order</b> should we cut,
+      so each removal relieves the most pollen for the most people?"</div>
+      <p class="mut">User: a capital-planning analyst at Espais Verds (Barcelona city greenery).
+      Not a dashboard-watcher — someone sequencing a multi-year work plan.</p>
+    </div>
+    <div class="grow">
+      <div class="formula">
+        priority = <b>Source</b> × <i>People</i>
+      </div>
+      <ul class="clean">
+        <li><span style="color:var(--grn)"><b>Source</b></span> = how many big mature plane trees are here (the pollen)</li>
+        <li><span style="color:var(--blu)"><i>People</i></span> = how many residents live here (who breathes it)</li>
+        <li>Multiply → the spots where cutting helps the most people the most</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footstep">2 / 9</div>
+</section>
+
+<!-- 3 -->
+<section class="slide" id="s3">
+  <div class="kicker">The story in three acts</div>
+  <h2>We falsified our own first idea. On purpose.</h2>
+  <svg viewBox="0 0 1000 230" width="100%" style="max-width:980px;margin:.5rem 0">
+    <!-- track -->
+    <line x1="60" y1="115" x2="940" y2="115" stroke="#30363d" stroke-width="3"/>
+    <!-- act 1 -->
+    <circle cx="180" cy="115" r="13" fill="#bc8cff"/>
+    <text x="180" y="70" fill="#bc8cff" font-size="15" text-anchor="middle" font-family="monospace">SESSIONS 1–4</text>
+    <text x="180" y="155" fill="#e6edf3" font-size="15" text-anchor="middle" font-weight="700">Thesis</text>
+    <text x="180" y="178" fill="#8b949e" font-size="13" text-anchor="middle">rank cells for</text>
+    <text x="180" y="195" fill="#8b949e" font-size="13" text-anchor="middle">mushroom (fungi) recovery</text>
+    <!-- act 2 -->
+    <circle cx="500" cy="115" r="13" fill="#f85149"/>
+    <text x="500" y="70" fill="#f85149" font-size="15" text-anchor="middle" font-family="monospace">SESSION 5 — EVAL</text>
+    <text x="500" y="155" fill="#e6edf3" font-size="15" text-anchor="middle" font-weight="700">Falsification</text>
+    <text x="500" y="178" fill="#8b949e" font-size="13" text-anchor="middle">external test = flat null;</text>
+    <text x="500" y="195" fill="#8b949e" font-size="13" text-anchor="middle">map just tracked paved surface</text>
+    <!-- act 3 -->
+    <circle cx="820" cy="115" r="13" fill="#3fb950"/>
+    <text x="820" y="70" fill="#3fb950" font-size="15" text-anchor="middle" font-family="monospace">SESSION 6 — PIVOT</text>
+    <text x="820" y="155" fill="#e6edf3" font-size="15" text-anchor="middle" font-weight="700">Pivot · shipped</text>
+    <text x="820" y="178" fill="#8b949e" font-size="13" text-anchor="middle">same data, new question:</text>
+    <text x="820" y="195" fill="#8b949e" font-size="13" text-anchor="middle">pollen-relief priority map</text>
+    <polygon points="330,108 360,115 330,122" fill="#8b949e"/>
+    <polygon points="650,108 680,115 650,122" fill="#8b949e"/>
+  </svg>
+  <p class="big">The headline result <b>is</b> the honesty: we killed our own model when the evidence
+  said so, then reused the data for a question the data <i>can</i> answer. That's what an Evaluation
+  phase is supposed to reward.</p>
+  <div class="footstep">3 / 9</div>
+</section>
+
+<!-- 4 -->
+<section class="slide" id="s4">
+  <div class="kicker">Where we are</div>
+  <h2>Five phases done. One left: Deployment.</h2>
+  <svg viewBox="0 0 1000 150" width="100%" style="max-width:980px;margin:.6rem 0">
+    <g font-family="var(--sans)" font-size="14" text-anchor="middle">
+      <!-- 5 done -->
+      <g>
+        <rect x="20"  y="45" width="150" height="58" rx="10" fill="#0e2916" stroke="#1f6f33"/>
+        <text x="95"  y="70" fill="#3fb950" font-weight="700">1 Business</text>
+        <text x="95"  y="90" fill="#3fb950">Understanding</text>
+      </g>
+      <g>
+        <rect x="185" y="45" width="150" height="58" rx="10" fill="#0e2916" stroke="#1f6f33"/>
+        <text x="260" y="70" fill="#3fb950" font-weight="700">2 Data</text>
+        <text x="260" y="90" fill="#3fb950">Understanding</text>
+      </g>
+      <g>
+        <rect x="350" y="45" width="150" height="58" rx="10" fill="#0e2916" stroke="#1f6f33"/>
+        <text x="425" y="70" fill="#3fb950" font-weight="700">3 Data</text>
+        <text x="425" y="90" fill="#3fb950">Preparation</text>
+      </g>
+      <g>
+        <rect x="515" y="45" width="150" height="58" rx="10" fill="#0e2916" stroke="#1f6f33"/>
+        <text x="590" y="70" fill="#3fb950" font-weight="700">4 Modeling</text>
+        <text x="590" y="90" fill="#3fb950">(+ killed)</text>
+      </g>
+      <g>
+        <rect x="680" y="45" width="150" height="58" rx="10" fill="#0e2916" stroke="#1f6f33"/>
+        <text x="755" y="70" fill="#3fb950" font-weight="700">5 Evaluation</text>
+        <text x="755" y="90" fill="#3fb950">verdict shipped</text>
+      </g>
+      <!-- 6 now -->
+      <g>
+        <rect x="845" y="38" width="150" height="72" rx="10" fill="#2a2008" stroke="#d29922" stroke-width="2"/>
+        <text x="920" y="64" fill="#d29922" font-weight="800">6 Deployment</text>
+        <text x="920" y="84" fill="#d29922">handoff +</text>
+        <text x="920" y="101" fill="#d29922">tonight</text>
+      </g>
+    </g>
+  </svg>
+  <p>"Deployment" here is <b>not</b> a server or a model API. It's a clean <b>handoff package</b>: the
+  data product a planner can open, a final report, a monitoring plan — plus, because you asked, an
+  <b>interactive map</b> on top.</p>
+  <div class="footstep">4 / 9</div>
+</section>
+
+<!-- 5 -->
+<section class="slide" id="s5">
+  <div class="kicker">The deployment gap</div>
+  <h2>A 400m square isn't an instruction.</h2>
+  <div class="row">
+    <div class="grow">
+      <p>The shipped map scores <b>494 squares of a 400m grid</b>. A planner can't act on "intervene in
+      this square" — it's not a real boundary, and the squares are arbitrary.</p>
+      <p>So tonight I push the product to where action lives:</p>
+      <ul class="clean">
+        <li><b>Priority → census sections</b> (1,068 real admin units; also the <i>native</i> grain of
+        the population data, so we drop a fudgy interpolation step)</li>
+        <li><b>Action → per street</b>: for top sections, the actual mature plane trees on each street,
+        from the city's 40,444-tree inventory</li>
+      </ul>
+    </div>
+    <div class="grow">
+      <div class="card">
+        <h3>The line we don't cross</h3>
+        <p><b style="color:var(--grn)">Section</b> = a priority claim ✓ &nbsp; (defensible)</p>
+        <p><b style="color:var(--red)">Street</b> = a priority claim ✗ &nbsp; (ecological fallacy)</p>
+        <p class="mut">Street output is an <b>inventory + feasibility list</b> ("here are the planes you
+        <i>could</i> cut on this street"), never a "this street ranks #3" score. Enforced by a grep gate.</p>
+      </div>
+    </div>
+  </div>
+  <div class="footstep">5 / 9</div>
+</section>
+
+<!-- 6 -->
+<section class="slide" id="s6">
+  <div class="kicker">The honest finding (the interesting bit)</div>
+  <h2>The answer changes with the map's grain. That's MAUP.</h2>
+  <div class="row">
+    <div class="grow" style="flex:1 1 540px">
+      <svg viewBox="0 0 560 300" width="100%" style="max-width:560px">
+        <text x="140" y="22" fill="#58a6ff" font-size="14" text-anchor="middle" font-family="monospace">400m SQUARES</text>
+        <text x="420" y="22" fill="#d29922" font-size="14" text-anchor="middle" font-family="monospace">CENSUS SECTIONS</text>
+        <!-- left: evenish bars (people reshuffle) -->
+        <g>
+          <rect x="40"  y="120" width="34" height="130" fill="#3fb950"/>
+          <rect x="84"  y="95"  width="34" height="155" fill="#3fb950"/>
+          <rect x="128" y="135" width="34" height="115" fill="#3fb950"/>
+          <rect x="172" y="110" width="34" height="140" fill="#3fb950"/>
+          <rect x="216" y="150" width="34" height="100" fill="#3fb950"/>
+          <text x="140" y="278" fill="#8b949e" font-size="12.5" text-anchor="middle">source spread out →</text>
+          <text x="140" y="295" fill="#8b949e" font-size="12.5" text-anchor="middle">people can re-order the top</text>
+        </g>
+        <!-- divider -->
+        <line x1="290" y1="40" x2="290" y2="255" stroke="#30363d" stroke-dasharray="4 5"/>
+        <!-- right: one giant spike -->
+        <g>
+          <rect x="330" y="50"  width="34" height="200" fill="#d29922"/>
+          <text x="347" y="44" fill="#d29922" font-size="11" text-anchor="middle" font-family="monospace">594</text>
+          <rect x="374" y="205" width="34" height="45" fill="#8b949e"/>
+          <rect x="418" y="215" width="34" height="35" fill="#8b949e"/>
+          <rect x="462" y="222" width="34" height="28" fill="#8b949e"/>
+          <rect x="506" y="228" width="34" height="22" fill="#8b949e"/>
+          <text x="435" y="278" fill="#8b949e" font-size="12.5" text-anchor="middle">one section dominates →</text>
+          <text x="435" y="295" fill="#8b949e" font-size="12.5" text-anchor="middle">people barely move the top</text>
+        </g>
+      </svg>
+    </div>
+    <div class="grow">
+      <p>At fine grain, a few sections (e.g. Av. Diagonal) hold a <b>massive cluster</b> of mature planes
+      — the top section has <b>594</b>, the rest of the top-50 average ~63. That spike is so tall that
+      multiplying by population can't change who's #1.</p>
+      <p>So the ranking quietly collapses to <i>"wherever the most planes are."</i> The
+      <b>same method gives a different answer at a different zoom</b> — the classic
+      <b>Modifiable Areal Unit Problem</b>.</p>
+      <div class="note"><b>We caught it in our own product.</b> Most projects never test for this.
+      Verdict, stated honestly: <span class="verdict" style="color:var(--blu)">400m map = the evidence
+      that people-weighting helps</span>; <span class="verdict" style="color:var(--amb)">section map =
+      the unit a planner acts on</span>. Both shipped, with this caveat written down.</div>
+    </div>
+  </div>
+  <div class="footstep">6 / 9</div>
+</section>
+
+<!-- 7 -->
+<section class="slide" id="s7">
+  <div class="kicker">The plan tonight — A→Z</div>
+  <h2>Four blocks. Then it's a finished project.</h2>
+  <div class="grid cards3">
+    <div class="card"><span class="tag now">A · built ✓ partly</span>
+      <h3>Make it deployable</h3>
+      <ul class="clean checks">
+        <li>section priority (1,068) — done, tests run</li>
+        <li>per-street plane action lists — next</li>
+        <li>fix district labels</li>
+      </ul>
+    </div>
+    <div class="card"><span class="tag">B</span>
+      <h3>Deployment docs</h3>
+      <ul class="clean">
+        <li>deployment + monitoring plan</li>
+        <li>intended-use + limitations</li>
+        <li>re-run / extend guides, decision log</li>
+      </ul>
+    </div>
+    <div class="card"><span class="tag">C</span>
+      <h3>Close the loop</h3>
+      <ul class="clean">
+        <li>project retrospective</li>
+        <li>extend the paper → phases 1–6 (final report)</li>
+        <li>update model card</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:#1f4f8f"><span class="tag go">D · your call</span>
+      <h3>Interactive map</h3>
+      <ul class="clean">
+        <li>click a section → its priority + streets</li>
+        <li>toggle 400m vs section (show MAUP live)</li>
+        <li>self-contained HTML, opens in a browser</li>
+      </ul>
+    </div>
+  </div>
+  <p class="mut" style="margin-top:1rem">Everything runs on data already on disk. No invented numbers —
+  every figure traces to a script you can re-run. I report unfriendly results as loudly as friendly ones.</p>
+  <div class="footstep">7 / 9</div>
+</section>
+
+<!-- 8 -->
+<section class="slide" id="s8">
+  <div class="kicker">What you'll have at the end</div>
+  <h2>The handoff package.</h2>
+  <div class="row">
+    <div class="grow">
+      <ul class="clean">
+        <li><code>section_priority.csv</code> — sections ranked, open in Excel/QGIS</li>
+        <li><code>street_removal_actions.csv</code> — the planner's worklist</li>
+        <li><b>interactive map</b> — explore + present</li>
+        <li>final report — phases 1→6, the whole story</li>
+      </ul>
+    </div>
+    <div class="grow">
+      <ul class="clean">
+        <li>intended-use + limitations (what NOT to use it for)</li>
+        <li>monitoring + maintenance plan</li>
+        <li>retrospective — what we'd do next</li>
+        <li>everything committed to git, reproducible</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note big">Bottom line for the grade: a defensible <b>deploy / iterate / stop</b> story,
+  with the MAUP caveat made explicit — honesty over polish.</div>
+  <div class="footstep">8 / 9</div>
+</section>
+
+<!-- 9 -->
+<section class="slide" id="s9">
+  <div class="kicker">What I need from you</div>
+  <h2>Almost nothing — read this, then I run.</h2>
+  <div class="grid cards3">
+    <div class="card small"><h3>1. Glance at this deck</h3>
+      <p>If the story matches what you want to present tomorrow, I'm clear to go.</p></div>
+    <div class="card small"><h3>2. One optional input</h3>
+      <p>The "remove ~23k planes by 2037" target is a placeholder policy number. If you have the real
+      figure, tell me — otherwise I label it illustrative & swappable.</p></div>
+    <div class="card small"><h3>3. Nothing else</h3>
+      <p>You picked "finish A→Z." I'll build all four blocks and only stop you for a genuine veto.</p></div>
+  </div>
+  <p class="big" style="margin-top:1.4rem">Say the word and I close the whole framework. 🍄→🌳</p>
+  <div class="footstep">9 / 9</div>
+</section>
+
+</div>
+<nav class="nav" id="nav"></nav>
+<script>
+  const ids=[...document.querySelectorAll('.slide')].map(s=>s.id);
+  const nav=document.getElementById('nav');
+  ids.forEach((id,i)=>{const a=document.createElement('a');a.href='#'+id;a.title='Slide '+(i+1);nav.appendChild(a);});
+  const dots=[...nav.children];
+  const sc=document.getElementById('sc');
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+    const i=ids.indexOf(e.target.id);dots.forEach(d=>d.classList.remove('active'));
+    if(dots[i])dots[i].classList.add('active');}})},{root:sc,threshold:.5});
+  document.querySelectorAll('.slide').forEach(s=>io.observe(s));
+</script>
+</body>
+</html>

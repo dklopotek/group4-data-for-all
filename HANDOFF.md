@@ -1,70 +1,57 @@
-# Handoff — Session 4 closed · CRISP-DM Phase 4 Core B shipped · ready for Session 5
+# Handoff — Session 5/6: mycorrhizal thesis falsified, pivoted to Platanus allergen-priority (v1 + v3 equity)
 
-**Created:** 2026-05-26 by Claude Code session (Opus 4.7, 1M ctx)
+**Created:** 2026-06-05 by Claude Code session
 **Branch:** main
-**Last commit (Phase 3):** 859bda9 — Session 3 closeout: ship CRISP-DM Phase 3 pipeline + PRPI v1.2
-**Phase 4 commit:** pending (this commit)
+**Last commit:** d4e8c2c — phase-6: model card -- record equity variant (deprivation) finding
 
 ## Goal
-Build a barrier-reduction priority map for urban mycorrhizal fungi across Barcelona's 400m grid that a capital-planning analyst at Ajuntament Espais Verds / Barcelona Regional can use to allocate Eixos Verds / Superilla budget. CRISP-DM Phases 1–4 are complete. Session 4 turns the `scored_grid.parquet` into a predictive-model validation artifact with proper spatial splits, baselines, and a defensible model card.
+Deliver a defensible CRISP-DM seminar project for Barcelona. The original "Mycorrhizal Barcelona" thesis was tested and falsified this session; we pivoted to a **Platanus pollen-allergen exposure priority** product (where to sequence the city's 2017-2037 plane-tree reduction so each removal relieves the most allergen exposure). Product is now considered DONE at v1 (efficiency) + v3 (equity). **Next session's job:** complete/formalize the CRISP-DM framework documentation so all six phases reflect the pivoted product and the evaluation we actually did.
 
-## Current state — Phase 4 Core B (predictive validation) DONE
-
-**Predictive model trained.** Linear regression over 10 raw features (no leakage from Phase 3 sub-scores) predicts `composite_score_B` on held-out spatial clusters. End-to-end runs via `python src/clean_data.py && python src/split_data.py && python src/train_model.py`.
-
-**Headline metrics (test cluster, n = 88 cells in Sarrià-Sant Gervasi + Les Corts):**
-
-| Estimator | R² | MAE | RMSE |
-|---|---|---|---|
-| **LinearRegression** | **0.877** | **0.0106** | **0.0509** |
-| BaselineSpatialNearest | -0.290 | 0.130 | 0.165 |
-| BaselineMean | -0.616 | 0.142 | 0.185 |
-| BaselineDomainHeuristic | -0.622 | 0.143 | 0.185 |
-
-Pre-registered pass criterion (beat all three baselines on test R² AND test MAE) **PASS**.
-
-**Substantive finding.** Eval R² 0.999 → test R² 0.877. The 6× MAE gap (0.0017 → 0.0106) is the honest spatial generalization cost — `composite_score_B` is approximately linear in raw raster inputs within similar geography but degrades on out-of-sample geography. Implication: the Phase 3 composite carries little information beyond a linear re-skin of `mean_sealed` and friends, AND its absolute calibration depends on the geographic mix of training cells.
-
-**Pipeline / build status:** all three Phase 4 scripts run from a clean checkout against the Phase 3 parquet. `python src/train_model.py` exits 0 and writes 4 artefacts under `outputs/phase-4/` plus 4 parquets under `data/splits/`. No formal pytest yet (carried over from Session 3).
+## Current state
+- **GSD planning** initialized in `.planning/` (PROJECT.md, REQUIREMENTS.md, ROADMAP.md, config.json, STATE.md). Roadmap is framed as Session-5 = CRISP-DM Phase 5 Evaluation; the pivot product lives under `phase-6/` + `outputs/phase-6/`.
+- **Two falsification results, fully documented:** mycorrhizal composite is ~91% sealed surface (internal); external GBIF test FAIL (`outputs/phase-5/external_validation_results.md`); 44-source lit-review (`outputs/reports/lit-review-mycorrhizal-prioritization.md`). Failure narrative: `docs/failure-and-pivot.md`.
+- **Pivot product (Platanus allergen priority), all scripts run exit-0 on the hermes venv:**
+  - v1 priority = SOURCE (plane density x maturity) x EXPOSURE (residential population). Exposure EARNS its place (re-orders vs naive density, top-15 Jaccard 0.30; both layers non-redundant). `outputs/phase-6/allergen_priority_results.md`.
+  - v3 equity variant = v1 x deprivation (income). Near-free equity win: deprived-tercile share of top-15 40%->60% for only ~0.5pp (~3% relative) exposure-relief cost. `outputs/phase-6/equity_results.md`.
+  - Model card: `outputs/model-card-allergen-v1.md` (6 NOTs, equity trade documented).
+- **Build/test status:** no pytest exists (carried over from earlier sessions). All `src/*.py` pipeline scripts were run this session and exited 0. Numbers in the result `.md`/`.json` files match what the scripts printed.
+- Working tree clean except 3 pre-existing modified files unrelated to this work (Seek_Deep_CHINA.md, notebooks/01, notebooks/02) and the untracked `data/processed/allergen_layers.parquet` (gitignored, regenerable).
 
 ## Files in flight
-None at this commit. All Phase 4 artefacts are committed and on disk.
+None incomplete. Everything is committed. Key files the next session will read:
+- `docs/failure-and-pivot.md` — the honest failure record (REQUIRED reading; user explicitly wanted failure documented).
+- `docs/plans/2026-06-04-platanus-allergen-priority-design.md` — pivot design.
+- `phase-6/business-understanding.md` — CRISP-DM Phase 1 (re-run for pivot).
+- `phase-6/allergen-validation-design.md` — pre-registered evaluation incl. v2 (at-risk) and v3 (equity) addenda + appended results.
+- `src/allergen_source.py`, `src/exposure_layer.py`, `src/allergen_priority.py`, `src/atrisk_layer.py`, `src/equity_layer.py`, `src/sex_atrisk.py` — the pivot pipeline.
+- `outputs/phase-6/*.md|json` — all results. `outputs/model-card-allergen-v1.md` — the card.
 
 ## What changed this session
-
-1. **Lecture > skill priority established.** When the Session 4 lecture rubric and the `crispdm-4-modeling` skill conflict, lecture wins (the lecture is the grading rubric). Saved as `~/.claude/projects/.../memory/feedback-lecture-priority.md`.
-2. **Recommend-don't-ask feedback recorded.** User wants me to drive Phase decisions with rationale, not Socratic Q&A. Saved as `feedback-recommend-dont-ask.md`.
-3. **Whisper transcription wired up.** Local whisper.exe at hermes venv now used to auto-transcribe Telegram voice messages. Saved as `reference-whisper-local.md`.
-4. **phase-4/analytical-question.md** — canonical one-sentence question, decision-maker, success criterion, leakage check, routing.
-5. **phase-4/test-design.md** — pre-registered split / baselines / model / sensitivity grid / construct validity protocol. Results appended post-build.
-6. **src/split_data.py** — k-means spatial cluster split (k=5, seed 42) on cell centroids in EPSG:25831. Writes `data/splits/cluster_assignments.parquet` + `train.parquet` / `eval.parquet` / `test.parquet`. Test cluster frozen at split time.
-7. **src/baselines.py** — three sklearn-style baselines: `BaselineMean`, `BaselineSpatialNearest` (cKDTree on centroids), `BaselineDomainHeuristic` (sealed > 0.7 → 90th percentile, else mean).
-8. **src/train_model.py** — fits the three baselines + tunes `fit_intercept` on eval for `LinearRegression`. Writes `metrics.csv`, `per_district.csv`, `predictions.parquet`, `model_artifact.joblib`. Single tuned model per Lecture 4 line 415.
-9. **outputs/model-card-v1.md** — Mitchell et al. (2019) template with 5 NOTs (lecture demands ≥ 3), per-segment metrics, robustness statement, interpretability statement, MAUP / edge-effects / equity / snapshot limitations, versioning, reviewers.
-10. **requirements.txt** — added `scikit-learn>=1.5,<2.0` for Phase 4.
+1. Initialized GSD project scaffolding (`.planning/`), reframed Session 5 = CRISP-DM Phase 5 Evaluation per the lecture (lecture > skill, locked).
+2. Evaluated and FALSIFIED the mycorrhizal thesis on 3 independent lines (lit-review, internal redundancy, pre-registered external GBIF test = FAIL).
+3. Ran the deferred ROB/VAL pack (sensitivity grid 321/97/76 ROBUST/MOD/FRAGILE, jackknife/noise/seed stability, construct validity) — commit 37d9a82.
+4. Pivoted (brainstorming skill -> approved design) to the Platanus allergen-priority product; built it CRISP-DM-style and documented the failure.
+5. Layer selection, each tested with the same honesty check (does it re-order / add info?): EXPOSURE adopted; AGE-prevalence rejected (redundant, Jaccard 0.875); SEX no mappable signal (women 1.6x antihistamines but ratio flat in space); BIKE LANES killed at design via karpathy critique; DEPRIVATION adopted as equity variant v3 (decorrelated r=-0.008, near-free equity win).
 
 ## What we tried that didn't work
-- **Unicode "─" in `print()` statement in `src/train_model.py`.** Same Windows cp1252 trap as Session 3. Replaced with `--`. Do not re-introduce Unicode in console output without setting `PYTHONIOENCODING=utf-8`.
-- **`py -3.12 -c "import sklearn"`.** Fails — only 3.11 (Astral) and 3.13 are installed. Phase 4 was run on the hermes-agent 3.11 venv (`C:\Users\Rafik\AppData\Local\hermes\hermes-agent\venv\Scripts\python.exe`) which already had geopandas. `pip install scikit-learn` added to that venv. Future sessions: confirm interpreter before `pip install`.
-- **Raw bash `cd src && python train_model.py` from the agent shell.** Works, but `git diff HANDOFF.md` then fails with "unknown revision" because the agent shell pwd has changed. Use `git -C <project-root>` to keep git calls path-stable, OR avoid `cd` and use absolute script paths.
-- **Asking the user 4 multi-choice questions on Telegram for Phase 4 routing.** User explicitly pushed back via voice ("you would have to help me answer these"). New default: recommend with rationale, ask only for veto. See `feedback-recommend-dont-ask.md`.
-- **Asking the user to type out a Telegram voice note.** Transcription is wired up via local whisper. Do NOT ask the user to type a voice they already recorded — transcribe it.
+- **The whole mycorrhizal thesis.** Falsified. Do NOT revive AM->EM host-mismatch as a predictor — external GBIF test p=0.99. (Carry only as a stated hypothesis.)
+- **Age-prevalence at-risk layer.** Redundant with population (Spearman 0.999). Do not re-add as a spatial weight; age structure is spatially flat in Barcelona.
+- **Sex weighting.** Real epidemiological signal (women 1.6x) but sex ratio ~constant across cells -> no mappable layer.
+- **Bike-lane exposure layer.** Rejected at design under karpathy review: ~2-3% travel-mode receptor, no cyclist-volume data, no validation path. Do not build unless cyclist flow-count data appears.
+- **External pollen validation.** No open machine-readable Barcelona Platanus pollen series exists (XAC gives only 0-4 forecast; EAN access-controlled). Source layer is a literature-anchored emission proxy, NOT measured-pollen-validated. Do not claim measured validation.
+- **Windows cp1252 console:** keep ASCII-only in all `print()` (no unicode). Use the hermes venv python: `C:\Users\Rafik\AppData\Local\hermes\hermes-agent\venv\Scripts\python.exe` (3.11; has geopandas/sklearn). `py -3.12` is NOT installed.
 
 ## Open questions / decisions pending
-1. **Core A (PRPI composite finalization) not yet built.** Sensitivity grid (24 specs: 3 normalizations × 4 weight schemes × 2 aggregations) and jackknife / noise stability are pre-registered in `phase-4/test-design.md §4–§6` but deferred from Session 4 to keep Core B closeout shippable. Next session, run them and produce a second model card `outputs/model-card-prpi-v1.md`.
-2. **Sensitivity coverage of Core B.** Pre-registered jackknife (drop-one train cluster) and Gaussian-noise injection were not executed this session. Flagged as a gap in `outputs/model-card-v1.md §7`. Quick to add — one short script.
-3. **Test-cluster representativeness.** k-means seed 42 produced a wealthy NW test cluster. A different seed gives a different cluster; consider running 3 alternative seeds as a meta-sensitivity check and reporting the test-R² distribution.
-4. **Notebook 06-modeling.ipynb (optional).** Could be a narrative walk-through of the Phase 4 pipeline for the instructor demo, parallel to the `src/*.py` canonical implementation. Not on the critical path.
-5. **Peri-urban OOD test patch (carryover from Session 2 agenda).** Collserola / Garraf / El Prat cells not in pipeline. Worth pulling in for Session 5 as an out-of-distribution probe.
-6. **Push to GitHub for instructor + Salvador review** — done this session per Lecture 4 action items.
+1. How to present CRISP-DM phases for the pivoted product — do we renumber (the old Phases 1-4 were the mycorrhizal build; phase-6/ holds the pivot) or write a unifying CRISP-DM doc that frames the failure as the Phase-5 evaluation outcome and the pivot as a new Phase-1-through-5 cycle? (User wants to decide this next session.)
+2. Whether to ship a Phase-6 deployment/UI later (lecture said not this session).
+3. Optional v2/v3 extensions: street-axis aggregation for Eixos Verds; equity floored-weight as default.
 
 ## Next steps
-1. **Run pre-registered Core A sensitivity grid** (`phase-4/test-design.md §4`). Output: `outputs/phase-4/sensitivity-grid.csv` + per-cell rank-stability column.
-2. **Run pre-registered Core B stability checks** (`phase-4/test-design.md §6`): jackknife on train clusters + Gaussian noise injection. Output: append `## Stability` section to `phase-4/test-design.md`.
-3. **Write `outputs/model-card-prpi-v1.md`** — Mitchell card for the PRPI composite itself, distinct from the Core B regression model card.
-4. **Construct-validity probes** (`phase-4/test-design.md §5`): convergent / discriminant correlations + Jaccard overlap of top-15 predicted vs Phase 3 `top15_flag`.
-5. **Phase 5 (Evaluation) handoff packet.** Per skill §11, the 8 exit artefacts must cross from Phase 4 to Phase 5 BEFORE the review. Inventory what's done vs what's pending; close gaps before Session 5.
+1. **Decide the CRISP-DM documentation structure** for the pivot (see Open Question 1) — likely a single `docs/crispdm-summary.md` mapping each of the 6 phases to what was actually done across the mycorrhizal cycle (Phases 1-4 + the Phase-5 falsification) and the pivot cycle (allergen Phase 1 business-understanding -> Phase 5 evaluation), with the failure as the hinge.
+2. Fill any thin CRISP-DM phases for the pivot product: Phase 2 (data understanding — the allergen data inventory: tree inventory, population, income, the no-pollen-data finding) and Phase 3 (data preparation — the layer-build steps) are currently implicit in scripts/results; formalize them into short phase docs if the rubric wants them.
+3. Write the one-page planner verdict / evaluation report that folds v1 (efficiency) + v3 (equity) + the trade into a single readable deliverable (was offered, user deferred).
+4. Optional: socioeconomic equity floored-weight as the shipped default; street-axis aggregation.
 
 ## How to resume
 Paste into the new Claude Code session:
-> Read `HANDOFF.md` at the project root and continue from "Next steps" item 1. Lecture > skill priority is locked. Do not re-explore territory listed under "What we tried that didn't work" unless the listed condition is met.
+> Read `HANDOFF.md` at the project root and continue from "Next steps" item 1. Lecture > skill is locked; recommend-don't-ask is locked. Do not re-explore territory listed under "What we tried that didn't work" unless the listed condition is met.

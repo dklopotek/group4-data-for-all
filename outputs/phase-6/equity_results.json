@@ -1,0 +1,34 @@
+{
+  "income_missing_sections_imputed": 0,
+  "V3_1_decorrelation": {
+    "corr_deprivation_source": -0.0077,
+    "corr_deprivation_exposure": 0.1733,
+    "decorrelated_from_both": true
+  },
+  "V3_2_reorder": {
+    "spearman_v3_vs_v1": 0.9623,
+    "jaccard_top15": 0.6667,
+    "jaccard_top50": 0.7241
+  },
+  "V3_3_tradeoff": {
+    "15": {
+      "efficiency_map_burden_captured": 0.1801,
+      "equity_map_burden_captured": 0.1748,
+      "exposure_relief_sacrificed": 0.0052,
+      "deprived_tercile_share_efficiency": 0.4,
+      "deprived_tercile_share_equity": 0.6
+    },
+    "50": {
+      "efficiency_map_burden_captured": 0.4458,
+      "equity_map_burden_captured": 0.4371,
+      "exposure_relief_sacrificed": 0.0087,
+      "deprived_tercile_share_efficiency": 0.28,
+      "deprived_tercile_share_equity": 0.36
+    }
+  },
+  "sensitivity_jaccard_top15_vs_v1": {
+    "floored_weight": 0.875,
+    "rank_based": 0.5
+  },
+  "VERDICT": "deprivation is a genuine, decorrelated layer; equity weighting redirects priority toward the most-deprived tercile at a measured exposure-relief cost (see V3_3). Efficiency (v1) and equity (v3) are both valid objectives; the planner chooses."
+}

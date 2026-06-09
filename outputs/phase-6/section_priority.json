@@ -1,0 +1,54 @@
+{
+  "grain": "census_section",
+  "n_sections": 1068,
+  "sections_with_planes": 827,
+  "platanus_joined": 40433,
+  "platanus_unmatched_to_section": 11,
+  "city_population_joined": 1729963.0,
+  "sections_without_population": 0,
+  "mature_set_A1": [
+    "EXEMPLAR",
+    "PRIMERA"
+  ],
+  "source_definition": "source_raw = mature Platanus count per section (A1)",
+  "T1_reordering_vs_density": {
+    "spearman_priority_vs_source": 0.9701,
+    "jaccard_top15": 0.5789,
+    "jaccard_top50": 0.5152,
+    "exposure_materially_reorders": false
+  },
+  "T2_redundancy": {
+    "corr_priority_source": 0.8685,
+    "corr_priority_exposure": 0.3075,
+    "corr_source_exposure": 0.0866,
+    "both_layers_material": true,
+    "inputs_not_redundant": true
+  },
+  "T3_burden_capture": {
+    "15": {
+      "priority": 0.2764,
+      "density_only": 0.2274,
+      "random_mean": 0.0135,
+      "margin_priority_minus_density": 0.049
+    },
+    "50": {
+      "priority": 0.4406,
+      "density_only": 0.406,
+      "random_mean": 0.0454,
+      "margin_priority_minus_density": 0.0346
+    }
+  },
+  "T4_sensitivity_reorder_holds": {
+    "broad_mature": false,
+    "uniform_maturity": false,
+    "rank_normalized": true
+  },
+  "T4_holds_majority": false,
+  "C1_grain": {
+    "n_sections_expected_~1068": 1068,
+    "rollup_spearman_vs_cell_product": 0.4669,
+    "rollup_interpretation": "REVIEW",
+    "n_sections_compared": 1068
+  },
+  "VERDICT": "section-grain exposure largely redundant (honest limitation)"
+}

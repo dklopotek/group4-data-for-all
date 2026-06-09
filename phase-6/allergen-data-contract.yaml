@@ -1,0 +1,180 @@
+# phase-6/allergen-data-contract.yaml
+# CRISP-DM Phase 3 -> Phase 4 handoff contract (PIVOT PRODUCT)
+# Producer: src/allergen_source.py + exposure_layer.py + equity_layer.py
+# Consumer: src/allergen_priority.py (modeling) + src/equity_layer.py (v3)
+# Version: 1.0.0 (semver; bump on breaking schema change)
+
+contract_version: 1.0.0
+artifact:
+  name: allergen_layers
+  format: GeoParquet
+  location: data/processed/allergen_layers.parquet
+  rows_approx: 494                 # analysis cells (400 m grid over Barcelona)
+  note: >
+    Layer table. The priority itself (source_std * exposure_std) is computed at
+    modeling time by src/allergen_priority.py; v3 deprivation_std is written here
+    by src/equity_layer.py. priority/priority_std are NOT persisted to this parquet.
+
+schema:
+  cell_id:
+    type: string
+    nullable: false
+    unique: true
+    description: stable id of the 400 m analysis cell (e.g. C025_033)
+  district:
+    type: string
+    nullable: false
+    description: Barcelona district name
+  geometry:
+    type: geometry
+    geometry_type: Polygon
+    crs: EPSG:25831                # ETRS89 / UTM zone 31N (Catalonia canonical)
+    nullable: false
+  n_platanus:
+    type: int64
+    unit: count
+    range: [0, 600]
+    nullable: false
+    description: plane trees in cell (NaN->0 at clean, CLN-003)
+  plane_density:
+    type: float64
+    unit: count
+    nullable: false
+    description: n_platanus as float; the DENSITY-ONLY baseline
+  trees_young_pct:
+    type: float64
+    unit: percent
+    range: [0, 100]
+    nullable: false
+    description: young-tree share (median-imputed if missing, CLN-001)
+  maturity:
+    type: float64
+    unit: dimensionless
+    range: [0, 1]
+    nullable: false
+    derived_from: [trees_young_pct]
+    formula_ref: CON-001            # 1 - trees_young_pct/100
+  source_raw:
+    type: float64
+    unit: dimensionless
+    nullable: false
+    derived_from: [plane_density, maturity]
+    formula_ref: CON-002            # plane_density * maturity
+  source_std:
+    type: float64
+    unit: dimensionless
+    range: [0, 1]
+    nullable: false
+    derived_from: [source_raw]
+    description: min-max standardized SOURCE layer (emission proxy)
+  mean_sealed:
+    type: float64
+    unit: dimensionless
+    range: [0, 1]
+    nullable: false
+    description: sealed-surface fraction (median-imputed if missing, CLN-002)
+  feasibility:
+    type: float64
+    unit: dimensionless
+    range: [0, 1]
+    nullable: false
+    derived_from: [mean_sealed]
+    formula_ref: CON-003            # 1 - mean_sealed ; ANNOTATION, never scored
+  exposure_pop:
+    type: float64
+    unit: count
+    range: [0, 15000]
+    nullable: false
+    derived_from: [padro_2026_population, census_section_boundaries]
+    formula_ref: INT-001            # areal-weighted interpolation
+    description: residential population allocated to cell
+  exposure_std:
+    type: float64
+    unit: dimensionless
+    range: [0, 1]
+    nullable: false
+    derived_from: [exposure_pop]
+  cell_income:
+    type: float64
+    unit: eur_per_person
+    nullable: false
+    derived_from: [ine_atlas_income_2023, padro_2026_population]
+    formula_ref: INT-002            # population-weighted mean income
+  deprivation_std:
+    type: float64
+    unit: dimensionless
+    range: [0, 1]
+    nullable: false
+    derived_from: [cell_income]
+    formula_ref: CON-005            # minmax(max_income - cell_income); poorest=1
+
+resolution:
+  spatial_m: 400
+  rule: "coarsest consumer unit is census section; 400 m grid >= 2x section detail; areal/pop-weighted interpolation declared (MAUP)"
+  finer_resolution_unsupported: true
+  maup: "results conditional on 400 m cell size and census-section partition; alternative cell size not tested (declared limitation)"
+
+crs:
+  canonical: EPSG:25831
+  source_crses_seen: [EPSG:25831]   # boundaries native; tabular joined
+  reprojection_policy: "no interior reprojection; grid + boundaries both EPSG:25831"
+
+freshness:
+  population_vintage: 2026-01-01
+  income_vintage: 2023
+  inventory_vintage: carried from Cycle A (scored_grid.parquet)
+  upstream_refresh_cadence: annual (population, income)
+  one_shot: true                    # seminar deliverable
+
+quality_slos:
+  missingness_max_pct: 0            # all nulls imputed-with-mechanism or structural-zero (no nulls in output)
+  geometry_validity_pct: 100
+  duplicate_cell_id_count: 0
+  section_join_match: "1068/1068 (assert in exposure_layer.py)"
+  population_allocated_pct_min: 99  # 99.1% observed; residual = municipal-edge clipping
+  schema_drift_tolerance: 0
+
+leakage:
+  status: not_applicable
+  reason: >
+    Composite indicator over the complete fixed population of cells; no train/test
+    split, no held-out inference. Min-max is fit over exactly the cells it
+    transforms, so no statistics leak. (Cycle A had a split; handled there.)
+
+sensitivity:
+  location: phase-6/allergen-validation-design.md (T4) + outputs/phase-6/allergen_priority_results.md
+  construction_choices_tested:
+    - uniform_maturity:   "priority = density x exposure -> T1 verdict holds"
+    - rank_normalized:    "rank instead of min-max -> T1 verdict holds"
+    - min_aggregation:    "min(src,expo) instead of product -> T1 verdict holds"
+  equity_v3:
+    floored_weight_jaccard_top15_vs_v1: 0.875
+    rank_based_jaccard_top15_vs_v1: 0.5
+
+lineage:
+  decision_log: phase-6/phase-3-audit.md (sec 1)
+  row_accounting: phase-6/phase-3-audit.md (sec 2)
+  upstream_artifacts:
+    - data/processed/scored_grid.parquet         # Cycle A inventory
+    - data/raw/2026_pad_mdbas.csv                # population
+    - data/raw/Unitats_Administratives_BCN_geojson/0301100100_UNITATS_ADM_POLIGONS.json
+    - data/raw/atles_renda_bruta_persona.csv     # income
+  provenance_record: data/raw/SOURCES.md
+
+datasheet:
+  path: outputs/model-card-allergen-v1.md   # Mitchell-card serves as the product datasheet
+  template: "Mitchell et al. 2019 model card (non-ML adaptation) + 6-item NOT list"
+
+identifier:
+  type: internal
+  value: allergen_layers_v1
+  doi: none (seminar; not published)
+
+rebuild:
+  command: "python src/allergen_source.py && python src/exposure_layer.py && python src/equity_layer.py"
+  then_model: "python src/allergen_priority.py"
+  determinism: "deterministic; only randomness is the RANDOM baseline in allergen_priority.py (seed 42, 200 draws)"
+  interpreter: "C:/Users/Rafik/AppData/Local/hermes/hermes-agent/venv/Scripts/python.exe (3.11, geopandas/sklearn)"
+
+contacts:
+  owner: Group 4 (MaAI01 25-26 seminar)

@@ -1,0 +1,11 @@
+{
+  "convergent_r_pred_vs_sealed": 0.9439,
+  "discriminant_r_pred_vs_richness": 0.2527,
+  "jaccard_top15_pred_vs_flag": 0.3636,
+  "jaccard_below_0.5": true,
+  "ood_mean_abs_resid_by_district": {
+    "LES CORTS": 0.0011,
+    "SARRI\u00c0 - SANT GERVASI": 0.0174
+  },
+  "ood_districts_over_0.10": []
+}

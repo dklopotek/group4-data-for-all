@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Barcelona Platanus Pollen-Allergen Exposure Priority (Mycorrhizal Barcelona, CRISP-DM 1-6)"
+abstract: >-
+  A batch geospatial pipeline that sequences Barcelona's committed plane-tree (Platanus) reduction
+  by modeled pollen-allergen exposure relief. Notable for a documented, pre-registered falsification
+  of its original mycorrhizal-fungi thesis at the Evaluation phase, and a measured Modifiable Areal
+  Unit Problem at deployment (the exposure re-ordering result is grain-dependent).
+type: software
+version: 1.0.0
+date-released: "2026-06-09"
+license: MIT
+authors:
+  - name: "Group 4, MaAI01 25-26 (CRISP-DM seminar)"
+    # Individual member names to be completed by the team before circulation.
+keywords:
+  - CRISP-DM
+  - composite indicators
+  - pre-registration
+  - falsification
+  - urban aerobiology
+  - Platanus
+  - spatial prioritization
+  - MAUP
+references:
+  - type: report
+    title: "CRISP-DM 1.0: Step-by-step data mining guide"
+    authors:
+      - family-names: Chapman
+        given-names: Pete
+    year: 2000
+identifiers:
+  - type: other
+    value: "Zenodo DOI: PENDING"
+    description: "Code DOI to be minted via GitHub release integration."
