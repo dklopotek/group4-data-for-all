@@ -1,0 +1,109 @@
+{
+  "n": 1068,
+  "layers": [
+    "mature_density",
+    "pop_density",
+    "income",
+    "mean_sealed",
+    "mean_ndvi"
+  ],
+  "k_scan": [
+    {
+      "k": 3,
+      "silhouette": 0.2996,
+      "calinski_harabasz": 341.3,
+      "davies_bouldin": 1.2417
+    },
+    {
+      "k": 4,
+      "silhouette": 0.3168,
+      "calinski_harabasz": 333.4,
+      "davies_bouldin": 1.1407
+    },
+    {
+      "k": 5,
+      "silhouette": 0.2368,
+      "calinski_harabasz": 330.0,
+      "davies_bouldin": 1.243
+    },
+    {
+      "k": 6,
+      "silhouette": 0.2217,
+      "calinski_harabasz": 313.9,
+      "davies_bouldin": 1.2472
+    },
+    {
+      "k": 7,
+      "silhouette": 0.2158,
+      "calinski_harabasz": 295.0,
+      "davies_bouldin": 1.2319
+    },
+    {
+      "k": 8,
+      "silhouette": 0.2089,
+      "calinski_harabasz": 279.9,
+      "davies_bouldin": 1.2301
+    }
+  ],
+  "chosen_k": 4,
+  "silhouette_criterion": 0.25,
+  "chosen_silhouette": 0.3168,
+  "stability_ARI": {
+    "kmeans_seed42_vs_seed7": 1.0,
+    "kmeans_vs_gmm": 0.323,
+    "kmeans_vs_spatial_ward": 0.5299
+  },
+  "profiles_raw_means": {
+    "0": {
+      "mature_density": 766.9,
+      "pop_density": 40987.06,
+      "income": 28783.67,
+      "mean_sealed": 0.85,
+      "mean_ndvi": 0.12
+    },
+    "1": {
+      "mature_density": 112.01,
+      "pop_density": 53306.09,
+      "income": 23583.06,
+      "mean_sealed": 0.83,
+      "mean_ndvi": 0.1
+    },
+    "2": {
+      "mature_density": 148.82,
+      "pop_density": 29927.66,
+      "income": 20557.09,
+      "mean_sealed": 0.62,
+      "mean_ndvi": 0.15
+    },
+    "3": {
+      "mature_density": 157.31,
+      "pop_density": 23749.47,
+      "income": 46112.87,
+      "mean_sealed": 0.65,
+      "mean_ndvi": 0.15
+    }
+  },
+  "archetypes": {
+    "0": {
+      "name": "high-source / low-pop / higher-income",
+      "action": "defer (park-like)",
+      "n_sections": 145
+    },
+    "1": {
+      "name": "low-source / high-pop / lower-income",
+      "action": "monitor",
+      "n_sections": 631
+    },
+    "2": {
+      "name": "high-source / low-pop / lower-income",
+      "action": "defer (park-like)",
+      "n_sections": 208
+    },
+    "3": {
+      "name": "high-source / low-pop / higher-income",
+      "action": "defer (park-like)",
+      "n_sections": 84
+    }
+  },
+  "VERDICT": "usable segmentation: silhouette 0.3168 >= 0.25, 4 interpretable archetypes"
+}

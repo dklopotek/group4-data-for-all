@@ -75,6 +75,24 @@ allergy** — this product optimizes exposure relief as a *co-benefit* of a remo
 other reasons. (The Sant Jordi 2026 nuisance was the plane *fruit*, distinct from the spring *pollen*
 modelled here.) See paper §8, §2.4 and `phase-6/section-street-design.md`.
 
+## Trained-model probe (Phase 4, pre-registered) -- why the shipped core is still a composite
+
+We tested whether a trained ML model should join Phase 4 (`phase-6/modeling-ml-design.md`;
+deep-research `research/crispdm/04-modeling-ml-options.md`). Three pre-registered models, all reported:
+- **#1 Source estimator (supervised):** predict observed mature-plane density from urban-form features
+  (no plane-derived inputs). Random-CV R2 0.41/0.44 (Ridge/RF) collapsed to **spatial-CV R2
+  -0.25/-0.37** -- urban form does NOT predict historical plane placement. Honest negative; re-enacts
+  the Cycle-A leakage trap, this time caught by spatial cross-validation (Roberts 2017, Ploton 2020).
+  Confirms the inventory is irreplaceable.
+- **#2 Typologies (clustering):** k=4 archetypes (silhouette 0.32, ARI 1.0). **No high-source/high-pop
+  archetype exists** -> independently confirms the source-vs-population tension behind the MAUP finding.
+- **#3 Hotspots (Gi*/LISA):** 100 significant priority hot-spots, 76 High-High clusters -> defensible
+  clusters instead of an arbitrary top-N.
+
+Net: a trained model earns its place only with an observed, independent target AND an honest
+generalization test; here the supervised probe failed spatial validation and the unsupervised methods
+reinforced the composite. The shipped priority stays a transparent composite. See paper sec 6.5.
+
 ## How this product differs from the failed predecessor
 
 The mycorrhizal composite collapsed to a single variable (sealed surface) with its ecological components at effective weight ≈ 0, and was validated against its own ingredients. This product is the structural opposite: **two layers that demonstrably both move the ranking (T2), tested against an external question whose answer was unknown (T1), with its un-validatable element disclosed rather than dressed up.** The lesson from the failure (`docs/failure-and-pivot.md`) is built into the design.

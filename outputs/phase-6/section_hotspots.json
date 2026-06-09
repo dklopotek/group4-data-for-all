@@ -1,0 +1,66 @@
+{
+  "n": 1068,
+  "n_permutations": 999,
+  "gi_star": {
+    "hot_p<0.05": 100,
+    "cold_p<0.05": 0
+  },
+  "lisa_quadrants_sig": {
+    "HH": 76,
+    "LL": 0,
+    "HL": 0,
+    "LH": 48
+  },
+  "montjuic_03024": "Gi* 5.80 (hot), LISA HH",
+  "top_hot_sections": [
+    {
+      "key": "03020",
+      "district_lbl": "Sants-Montjuic",
+      "priority": 0.0033601737455692835,
+      "gi_z": 11.613883362201468
+    },
+    {
+      "key": "03025",
+      "district_lbl": "Sants-Montjuic",
+      "priority": 0.05227278418623923,
+      "gi_z": 10.788788593506263
+    },
+    {
+      "key": "03032",
+      "district_lbl": "Sants-Montjuic",
+      "priority": 0.0,
+      "gi_z": 10.123679934731578
+    },
+    {
+      "key": "03045",
+      "district_lbl": "Sants-Montjuic",
+      "priority": 0.0,
+      "gi_z": 10.060074016835598
+    },
+    {
+      "key": "03006",
+      "district_lbl": "Sants-Montjuic",
+      "priority": 0.0003892884217427828,
+      "gi_z": 9.793761212292376
+    },
+    {
+      "key": "02150",
+      "district_lbl": "Eixample",
+      "priority": 0.0020167302959730273,
+      "gi_z": 8.650758620808537
+    },
+    {
+      "key": "03053",
+      "district_lbl": "Sants-Montjuic",
+      "priority": 0.0,
+      "gi_z": 8.643454792399776
+    },
+    {
+      "key": "03046",
+      "district_lbl": "Sants-Montjuic",
+      "priority": 0.00021740961565167111,
+      "gi_z": 8.156411020870983
+    }
+  ],
+  "VERDICT": "100 significant priority hot-spots and 0 High-Low spatial outliers identified; Montjuic 03024 = Gi* 5.80 (hot), LISA HH (the parkland-outlier check)."
+}

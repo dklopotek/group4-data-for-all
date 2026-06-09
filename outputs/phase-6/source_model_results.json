@@ -1,0 +1,65 @@
+{
+  "target": "mature_density",
+  "n": 1068,
+  "criterion_spatial_R2": 0.3,
+  "models": {
+    "Ridge": {
+      "random_cv": {
+        "R2": 0.4111,
+        "MAE": 150.14
+      },
+      "spatial_cv": {
+        "R2": -0.2543,
+        "MAE": 208.67
+      },
+      "leakage_gap_R2": 0.6654
+    },
+    "RandomForest": {
+      "random_cv": {
+        "R2": 0.4388,
+        "MAE": 143.37
+      },
+      "spatial_cv": {
+        "R2": -0.3678,
+        "MAE": 210.68
+      },
+      "leakage_gap_R2": 0.8066
+    }
+  },
+  "rf_top_features": [
+    {
+      "feature": "district_lbl_Eixample",
+      "importance": 0.2773
+    },
+    {
+      "feature": "mean_ndvi",
+      "importance": 0.123
+    },
+    {
+      "feature": "pop_density",
+      "importance": 0.0908
+    },
+    {
+      "feature": "dist_to_centre_km",
+      "importance": 0.0808
+    },
+    {
+      "feature": "mean_lst_celsius",
+      "importance": 0.0805
+    },
+    {
+      "feature": "mean_sealed",
+      "importance": 0.0804
+    },
+    {
+      "feature": "compactness",
+      "importance": 0.0687
+    },
+    {
+      "feature": "area_km2",
+      "importance": 0.0629
+    }
+  ],
+  "best_spatial_R2": -0.2543,
+  "VERDICT": "HONEST NEGATIVE: best spatial-CV R2 -0.2543 < 0.3 -- urban form does not predict historical plane placement (planting is path-dependent). Inventory irreplaceable."
+}
