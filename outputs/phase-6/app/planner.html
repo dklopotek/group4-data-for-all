@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Barcelona Plane-Tree Removal Priority — Planner</title>
+
+<!-- Leaflet (CDN, works on file://) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<!-- Fonts: Fraunces (display serif) + IBM Plex Sans (body) + IBM Plex Mono (data) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   Design tokens — dark municipal "control room" palette
+   ============================================================ */
+:root{
+  --bg:#0d1117;
+  --panel:#161b22;
+  --panel-2:#1c2330;
+  --border:#30363d;
+  --border-soft:#262c36;
+  --text:#e6edf3;
+  --muted:#8b949e;
+  --muted-2:#6e7681;
+  --accent:#39c5cf;          /* teal — interaction / plan */
+  --accent-dim:#1d6b70;
+  --warn:#f0883e;
+
+  /* priority sequential ramp: dark khaki -> red */
+  --pri-0:#3d3a22;
+  --pri-1:#6b5a1e;
+  --pri-2:#a8761f;
+  --pri-3:#d6622a;
+  --pri-4:#e5484d;
+
+  /* archetype categorical */
+  --arch-priority:#ef6a2b;
+  --arch-monitor:#d4a72c;
+  --arch-defer:#5b7fa6;
+  --arch-low:#444c56;
+
+  /* hotspot */
+  --hs-hh:#e5484d;
+  --hs-lh:#3b82f6;
+  --hs-hot:#f0883e;
+  --hs-ns:#3a4150;
+
+  --shadow:0 18px 48px -12px rgba(0,0,0,.7);
+  --radius:12px;
+  --radius-sm:8px;
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:14px;
+  line-height:1.45;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;}
+.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+
+button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
+
+/* ============================================================
+   App shell — header + (map | right rail)
+   ============================================================ */
+#app{display:flex;flex-direction:column;height:100vh;}
+
+header.appbar{
+  display:flex;align-items:center;gap:22px;
+  padding:11px 20px;
+  background:linear-gradient(180deg,#11161e 0%,#0d1117 100%);
+  border-bottom:1px solid var(--border);
+  z-index:1200;
+  flex:0 0 auto;
+}
+.brand{display:flex;align-items:baseline;gap:12px;min-width:0;}
+.brand .mark{
+  font-family:"Fraunces",serif;font-weight:600;font-size:22px;letter-spacing:.2px;
+  color:var(--text);white-space:nowrap;
+}
+.brand .mark .leaf{color:var(--accent);}
+.brand .sub{
+  color:var(--muted);font-size:12px;letter-spacing:.04em;text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.chips{display:flex;gap:9px;margin-left:auto;flex-wrap:wrap;}
+.chip{
+  display:flex;flex-direction:column;line-height:1.15;
+  background:var(--panel-2);border:1px solid var(--border-soft);
+  border-radius:10px;padding:6px 12px;
+}
+.chip b{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--text);font-weight:600;}
+.chip span{font-size:10.5px;color:var(--muted);letter-spacing:.03em;text-transform:uppercase;}
+
+.appbar .help-btn{
+  margin-left:6px;
+  background:var(--panel-2);border:1px solid var(--border);color:var(--text);
+  border-radius:9px;padding:9px 14px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:7px;transition:border-color .15s,background .15s;
+}
+.appbar .help-btn:hover{border-color:var(--accent);background:#1f2733;}
+
+main.stage{position:relative;flex:1 1 auto;display:flex;min-height:0;}
+
+/* ============================================================
+   Map
+   ============================================================ */
+#map{position:absolute;inset:0;background:#0a0d12;}
+.leaflet-container{background:#0a0d12;font-family:"IBM Plex Sans",sans-serif;}
+.leaflet-tooltip.sec-tip{
+  background:#0d1117ee;border:1px solid var(--border);color:var(--text);
+  font-family:"IBM Plex Mono",monospace;font-size:12px;border-radius:7px;
+  box-shadow:var(--shadow);padding:6px 9px;
+}
+.leaflet-tooltip.sec-tip:before{display:none;}
+/* dark CartoDB attribution legibility */
+.leaflet-control-attribution{background:#0d1117cc!important;color:#6e7681!important;}
+.leaflet-control-attribution a{color:#8b949e!important;}
+.leaflet-bar a{background:#161b22;color:#e6edf3;border-bottom-color:#30363d;}
+.leaflet-bar a:hover{background:#1f2733;}
+
+/* ============================================================
+   Floating control deck (top-left): layers + filters + budget
+   ============================================================ */
+.deck{
+  position:absolute;top:14px;left:14px;z-index:1000;
+  width:312px;max-height:calc(100% - 28px);
+  display:flex;flex-direction:column;gap:12px;
+  overflow:auto;padding-right:2px;
+}
+.card{
+  background:rgba(22,27,34,.92);
+  backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+  border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.card .hd{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 14px 9px;border-bottom:1px solid var(--border-soft);
+}
+.card .hd h2{
+  margin:0;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--muted);
+}
+.card .hd .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent);}
+.card .bd{padding:12px 14px;}
+
+/* layer radios */
+.layer-opt{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:9px 10px;border-radius:var(--radius-sm);
+  border:1px solid transparent;cursor:pointer;transition:background .14s,border-color .14s;
+}
+.layer-opt:hover{background:#1c2330;}
+.layer-opt.active{background:#19222e;border-color:var(--accent-dim);}
+.layer-opt input{margin-top:2px;accent-color:var(--accent);width:15px;height:15px;}
+.layer-opt .lbl{font-weight:600;font-size:13px;}
+.layer-opt .desc{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* filters */
+.field{margin-bottom:11px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:11px;color:var(--muted);letter-spacing:.04em;
+  text-transform:uppercase;margin-bottom:5px;font-weight:600;}
+select,input[type=number]{
+  width:100%;background:#0d1117;color:var(--text);
+  border:1px solid var(--border);border-radius:8px;padding:8px 10px;
+  font-family:"IBM Plex Mono",monospace;font-size:13px;
+}
+select:hover,input[type=number]:hover{border-color:#46505c;}
+
+/* budget */
+.check{display:flex;align-items:center;gap:9px;font-size:13px;margin:10px 0;cursor:pointer;}
+.check input{accent-color:var(--accent);width:15px;height:15px;}
+.btn{
+  width:100%;border:1px solid var(--accent-dim);
+  background:linear-gradient(180deg,#1a3a3d,#15282b);color:var(--accent);
+  font-weight:600;font-size:13px;padding:10px;border-radius:9px;
+  transition:filter .15s,transform .05s;letter-spacing:.02em;
+}
+.btn:hover{filter:brightness(1.25);}
+.btn:active{transform:translateY(1px);}
+.btn.solid{background:var(--accent);color:#06222400;color:#04181a;border-color:var(--accent);}
+.btn.ghost{background:#1c2330;color:var(--text);border-color:var(--border);}
+.btn.ghost:hover{border-color:#46505c;filter:none;background:#222c39;}
+.btn-row{display:flex;gap:8px;margin-top:10px;}
+.btn-row .btn{flex:1;}
+
+/* the [hidden] attribute must win over explicit display rules below */
+[hidden]{display:none!important;}
+
+/* plan summary + list */
+.plan-summary{
+  display:flex;justify-content:space-between;align-items:center;
+  background:#101720;border:1px solid var(--border-soft);border-radius:9px;
+  padding:9px 12px;margin-top:11px;font-size:12px;
+}
+.plan-summary .big{font-family:"IBM Plex Mono",monospace;font-size:18px;font-weight:600;color:var(--accent);}
+.plan-summary .lbl{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;}
+.plan-summary .meta{text-align:right;color:var(--muted);font-size:11px;line-height:1.3;}
+
+.plan-list{margin-top:10px;max-height:190px;overflow:auto;border-radius:8px;}
+.plan-row{
+  display:grid;grid-template-columns:34px 1fr auto auto;gap:8px;align-items:center;
+  padding:7px 9px;border-bottom:1px solid var(--border-soft);font-size:12px;
+}
+.plan-row:last-child{border-bottom:none;}
+.plan-row .rk{font-family:"IBM Plex Mono",monospace;color:var(--accent);font-weight:600;}
+.plan-row .ds{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.plan-row .mt{font-family:"IBM Plex Mono",monospace;color:var(--text);}
+.plan-row .rt{font-family:"IBM Plex Mono",monospace;color:var(--muted);}
+.plan-row.over .mt{color:var(--muted-2);}
+.empty-note{color:var(--muted-2);font-size:12px;font-style:italic;padding:6px 2px;}
+
+/* MAUP explainer (shown only on cells layer) */
+.maup-box{
+  position:absolute;top:14px;left:340px;z-index:1000;width:300px;
+  background:rgba(28,35,48,.94);backdrop-filter:blur(9px);
+  border:1px solid var(--warn);border-left:3px solid var(--warn);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;
+  font-size:12px;color:var(--text);line-height:1.5;display:none;
+}
+.maup-box.show{display:block;animation:fade .2s ease;}
+.maup-box h3{margin:0 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--warn);}
+
+/* ============================================================
+   Legend (bottom-left)
+   ============================================================ */
+.legend{
+  position:absolute;bottom:28px;right:14px;z-index:1000;width:240px;
+  background:rgba(22,27,34,.92);backdrop-filter:blur(9px);
+  border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:11px 13px;
+}
+.legend h4{margin:0 0 8px;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;}
+.legend .ramp{height:11px;border-radius:6px;
+  background:linear-gradient(90deg,var(--pri-0),var(--pri-1),var(--pri-2),var(--pri-3),var(--pri-4));}
+.legend .ramp-lbls{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px;font-family:"IBM Plex Mono",monospace;}
+.legend .sw-row{display:flex;align-items:center;gap:9px;margin:6px 0;font-size:12px;}
+.legend .sw{width:13px;height:13px;border-radius:4px;flex:0 0 auto;border:1px solid rgba(255,255,255,.12);}
+.legend .plan-key{display:flex;align-items:center;gap:9px;margin-top:9px;padding-top:9px;border-top:1px solid var(--border-soft);font-size:12px;color:var(--muted);}
+.legend .plan-key .line{width:16px;height:0;border-top:3px solid var(--accent);flex:0 0 auto;}
+
+/* ============================================================
+   Section detail panel (right slide-in)
+   ============================================================ */
+.detail{
+  position:absolute;top:0;right:0;height:100%;width:380px;z-index:1100;
+  background:linear-gradient(180deg,#171d26,#13181f);
+  border-left:1px solid var(--border);box-shadow:-18px 0 48px -16px rgba(0,0,0,.65);
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.detail.open{transform:translateX(0);}
+.detail .dhd{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:18px 20px 14px;border-bottom:1px solid var(--border-soft);flex:0 0 auto;
+}
+.detail .rank-badge{
+  font-family:"Fraunces",serif;font-weight:600;font-size:30px;line-height:1;
+  color:var(--accent);flex:0 0 auto;
+}
+.detail .rank-badge small{display:block;font-family:"IBM Plex Mono",monospace;font-size:9px;
+  color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:3px;font-weight:400;}
+.detail .dhd .dt h2{margin:0;font-size:18px;font-weight:600;}
+.detail .dhd .dt .key{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted);margin-top:2px;}
+.detail .close{
+  margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);
+  width:30px;height:30px;border-radius:8px;font-size:16px;line-height:1;
+  display:flex;align-items:center;justify-content:center;transition:.15s;flex:0 0 auto;
+}
+.detail .close:hover{color:var(--text);border-color:#46505c;}
+.detail .dbd{padding:16px 20px;overflow:auto;flex:1 1 auto;}
+
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.stat{background:#0f141c;border:1px solid var(--border-soft);border-radius:9px;padding:9px 11px;}
+.stat .v{font-family:"IBM Plex Mono",monospace;font-size:17px;font-weight:600;color:var(--text);}
+.stat .v small{font-size:11px;color:var(--muted);font-weight:400;}
+.stat .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:1px;}
+.stat.full{grid-column:1/-1;}
+
+.pri-bar-wrap{margin-top:4px;}
+.pri-bar{height:9px;border-radius:5px;background:#0a0d12;border:1px solid var(--border-soft);overflow:hidden;}
+.pri-bar i{display:block;height:100%;
+  background:linear-gradient(90deg,var(--pri-1),var(--pri-3),var(--pri-4));border-radius:5px;}
+
+.badges{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.badge{
+  display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;
+  border:1px solid var(--border-soft);background:#0f141c;
+}
+.badge .swl{width:11px;height:34px;border-radius:4px;flex:0 0 auto;}
+.badge .bt{font-size:13px;font-weight:600;}
+.badge .bd2{font-size:11px;color:var(--muted);margin-top:1px;}
+
+.worklist h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);
+  margin:4px 0 4px;font-weight:600;}
+.worklist .cap{font-size:11px;color:var(--warn);font-style:italic;margin-bottom:9px;line-height:1.4;}
+table.wl{width:100%;border-collapse:collapse;font-size:12px;}
+table.wl th{
+  text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);
+  padding:5px 8px;border-bottom:1px solid var(--border);font-weight:600;position:sticky;top:0;background:#13181f;
+}
+table.wl th.r,table.wl td.r{text-align:right;font-family:"IBM Plex Mono",monospace;}
+table.wl td{padding:6px 8px;border-bottom:1px solid var(--border-soft);}
+table.wl td.s{color:var(--text);}
+table.wl tr:hover td{background:#0f141c;}
+table.wl td.sg{color:var(--accent);font-weight:600;}
+
+.detail .dft{padding:14px 20px;border-top:1px solid var(--border-soft);flex:0 0 auto;}
+
+/* ============================================================
+   Modal
+   ============================================================ */
+.scrim{
+  position:fixed;inset:0;z-index:2000;background:rgba(5,8,12,.74);
+  backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px;
+}
+.scrim.show{display:flex;animation:fade .2s ease;}
+.modal{
+  width:min(680px,100%);max-height:100%;overflow:hidden;
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#181e27,#12161d);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);
+}
+.modal .mhd{padding:24px 28px 8px;flex:0 0 auto;}
+.modal .mhd .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);}
+.modal .mhd h1{font-family:"Fraunces",serif;font-weight:600;font-size:27px;margin:6px 0 4px;letter-spacing:.2px;}
+.modal .mhd p.lead{color:var(--muted);margin:0;font-size:13.5px;}
+.modal .mbd{padding:8px 28px 8px;flex:1 1 auto;overflow-y:auto;min-height:0;}
+.steps{list-style:none;counter-reset:s;margin:14px 0 4px;padding:0;}
+.steps li{counter-increment:s;display:flex;gap:13px;padding:9px 0;border-bottom:1px solid var(--border-soft);}
+.steps li:before{
+  content:counter(s);flex:0 0 auto;width:26px;height:26px;border-radius:50%;
+  background:#1a3a3d;color:var(--accent);font-family:"IBM Plex Mono",monospace;font-weight:600;
+  display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid var(--accent-dim);
+}
+.steps li b{color:var(--text);}
+.steps li span{color:var(--muted);font-size:13px;}
+.notes-block{margin:16px 0 6px;background:#0f141c;border:1px solid var(--border-soft);border-left:3px solid var(--warn);
+  border-radius:10px;padding:13px 16px;}
+.notes-block h4{margin:0 0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--warn);}
+.notes-block .note{font-size:12.5px;color:#c9d3de;margin:7px 0;line-height:1.5;}
+.notes-block .note b{color:var(--text);}
+.modal .mft{padding:14px 28px 24px;display:flex;justify-content:flex-end;gap:10px;flex:0 0 auto;border-top:1px solid var(--border-soft);}
+.modal .mft .btn{width:auto;padding:10px 22px;}
+
+/* small toast */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--accent);color:#04181a;font-weight:600;font-size:13px;
+  padding:10px 18px;border-radius:10px;box-shadow:var(--shadow);z-index:3000;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+
+/* scrollbars */
+*::-webkit-scrollbar{width:9px;height:9px;}
+*::-webkit-scrollbar-thumb{background:#2b323d;border-radius:6px;}
+*::-webkit-scrollbar-track{background:transparent;}
+</style>
+</head>
+
+<body>
+<div id="app">
+  <!-- ====================== HEADER ====================== -->
+  <header class="appbar">
+    <div class="brand">
+      <div class="mark"><span class="leaf">❧</span> Plàtans</div>
+      <div class="sub">Removal-priority planner · Espais Verds</div>
+    </div>
+    <div class="chips" id="chips"><!-- filled by JS --></div>
+    <button class="help-btn" id="openHelp" aria-label="Open how-to-use and about dialog">
+      <span aria-hidden="true">ℹ</span> How to use / About
+    </button>
+  </header>
+
+  <!-- ====================== STAGE ====================== -->
+  <main class="stage">
+    <div id="map" role="application" aria-label="Map of Barcelona census sections ranked by plane-tree removal priority"></div>
+
+    <!-- Control deck -->
+    <div class="deck">
+      <!-- Layers -->
+      <section class="card" aria-label="Map layer">
+        <div class="hd"><span class="dot" aria-hidden="true"></span><h2>Map layer</h2></div>
+        <div class="bd" id="layerOpts">
+          <label class="layer-opt active">
+            <input type="radio" name="layer" value="priority" checked aria-describedby="ld-priority">
+            <span><span class="lbl">Priority</span><span class="desc" id="ld-priority">Mature-plane source × residents. The headline.</span></span>
+          </label>
+          <label class="layer-opt">
+            <input type="radio" name="layer" value="archetype" aria-describedby="ld-arch">
+            <span><span class="lbl">Archetype</span><span class="desc" id="ld-arch">Typology &amp; suggested action (interpretive).</span></span>
+          </label>
+          <label class="layer-opt">
+            <input type="radio" name="layer" value="hotspot" aria-describedby="ld-hot">
+            <span><span class="lbl">Hotspot</span><span class="desc" id="ld-hot">Gi* / LISA spatial clusters (interpretive).</span></span>
+          </label>
+          <label class="layer-opt">
+            <input type="radio" name="layer" value="cells" aria-describedby="ld-cells">
+            <span><span class="lbl">400 m cells (MAUP)</span><span class="desc" id="ld-cells">People-weighted re-aggregation check.</span></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section class="card" aria-label="Filters">
+        <div class="hd"><span class="dot" aria-hidden="true"></span><h2>Filters</h2></div>
+        <div class="bd">
+          <div class="field">
+            <label for="fDistrict">District</label>
+            <select id="fDistrict" aria-label="Filter by district"></select>
+          </div>
+          <div class="field">
+            <label for="fAction">Suggested action</label>
+            <select id="fAction" aria-label="Filter by suggested action"></select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Budget planner -->
+      <section class="card" aria-label="Budget planner">
+        <div class="hd"><span class="dot" aria-hidden="true"></span><h2>Budget planner</h2></div>
+        <div class="bd">
+          <div class="field">
+            <label for="fBudget">Mature planes to remove this year</label>
+            <input type="number" id="fBudget" min="0" step="10" value="300" aria-label="Mature plane removal budget">
+          </div>
+          <label class="check">
+            <input type="checkbox" id="fSkipPark" checked>
+            <span>Skip park-like (defer) sections</span>
+          </label>
+          <button class="btn solid" id="buildPlan">Build plan</button>
+
+          <div class="plan-summary" id="planSummary" hidden>
+            <div>
+              <div class="big num" id="planTotal">0</div>
+              <div class="lbl">mature in plan</div>
+            </div>
+            <div class="meta" id="planMeta"></div>
+          </div>
+
+          <div class="plan-list" id="planList" aria-live="polite"></div>
+
+          <div class="btn-row" id="planActions" hidden>
+            <button class="btn ghost" id="exportCsv">Export CSV</button>
+            <button class="btn ghost" id="clearPlan">Clear plan</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- MAUP explainer (cells layer only) -->
+    <aside class="maup-box" id="maupBox" role="note">
+      <h3>MAUP — read with care</h3>
+      <span id="maupText"></span>
+    </aside>
+
+    <!-- Legend -->
+    <aside class="legend" id="legend" aria-label="Legend"></aside>
+
+    <!-- Section detail panel -->
+    <aside class="detail" id="detail" role="dialog" aria-modal="false" aria-label="Section detail" aria-hidden="true">
+      <div class="dhd">
+        <div class="rank-badge" id="dRank">#–<small>priority</small></div>
+        <div class="dt">
+          <h2 id="dDistrict">—</h2>
+          <div class="key" id="dKey">section —</div>
+        </div>
+        <button class="close" id="closeDetail" aria-label="Close section detail">✕</button>
+      </div>
+      <div class="dbd">
+        <div class="stat-grid" id="dStats"></div>
+        <div class="badges" id="dBadges"></div>
+        <div class="worklist" id="dWorklist"></div>
+      </div>
+      <div class="dft">
+        <button class="btn" id="addToPlan">➕ Add to plan</button>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<!-- ====================== HELP / ABOUT MODAL ====================== -->
+<div class="scrim" id="scrim" role="presentation">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="mhd">
+      <div class="eyebrow">Field guide</div>
+      <h1 id="modalTitle">How to use this planner</h1>
+      <p class="lead">Sequencing plane-tree (Platanus) removals to relieve the most pollen-allergen exposure, as a co-benefit of the city's biodiversity programme.</p>
+    </div>
+    <div class="mbd">
+      <ol class="steps">
+        <li><span><b>Read sections top-down by priority.</b> The red end of the ramp is highest priority (mature-plane source × residents nearby). Rank #1 is the single best place to start.</span></li>
+        <li><span><b>Skip park-like / defer sections with few residents.</b> Many high-source sections (e.g. Montjuïc) are parks — high pollen but almost nobody exposed. The budget planner can skip these automatically.</span></li>
+        <li><span><b>Open a section</b> by clicking it for its street worklist — which streets hold the planes and how many mature trees to take.</span></li>
+        <li><span><b>Cross-reference the city works calendar</b> to piggyback removals onto scheduled street works, paving, or tree-health interventions.</span></li>
+        <li><span><b>Use the budget planner + Export CSV</b> to turn a yearly mature-tree budget into a ranked, exportable removal sheet.</span></li>
+      </ol>
+      <div class="notes-block">
+        <h4>Honesty notes — please keep these in mind</h4>
+        <div class="note" id="noteRationale"></div>
+        <div class="note" id="noteMl"></div>
+        <div class="note" id="noteStreet"></div>
+        <div class="note" id="noteMaup"></div>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn solid" id="gotIt">Got it</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Data global (must load BEFORE the app script) -->
+<script src="app_data.js"></script>
+
+<script>
+"use strict";
+/* ================================================================
+   Barcelona plane-tree removal-priority planner
+   Vanilla JS. Data = window.PLANNER_DATA (see app_data.js).
+   ================================================================ */
+(function(){
+  const DATA = window.PLANNER_DATA;
+  if(!DATA){document.body.innerHTML="<p style='padding:40px;font-family:monospace'>PLANNER_DATA not found — app_data.js must load first.</p>";return;}
+  const META = DATA.meta;
+
+  /* ---------- colour helpers ---------- */
+  // Priority sequential ramp (dark khaki -> red), pri in [0,1].
+  const RAMP = ["#3d3a22","#6b5a1e","#a8761f","#d6622a","#e5484d"];
+  function priColor(t){
+    if(t==null||isNaN(t)) return "#2a2f38";
+    t=Math.max(0,Math.min(1,t));
+    const seg=t*(RAMP.length-1), i=Math.floor(seg), f=seg-i;
+    if(i>=RAMP.length-1) return RAMP[RAMP.length-1];
+    return lerpHex(RAMP[i],RAMP[i+1],f);
+  }
+  function lerpHex(a,b,f){
+    const pa=hx(a),pb=hx(b);
+    const r=Math.round(pa[0]+(pb[0]-pa[0])*f),
+          g=Math.round(pa[1]+(pb[1]-pa[1])*f),
+          bl=Math.round(pa[2]+(pb[2]-pa[2])*f);
+    return "#"+[r,g,bl].map(v=>v.toString(16).padStart(2,"0")).join("");
+  }
+  function hx(h){h=h.replace("#","");return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
+
+  // Archetype categorical (keyed by `action`)
+  const ARCH_COLORS = {
+    "PRIORITY (cut early)":"#ef6a2b",
+    "monitor":"#d4a72c",
+    "defer (park-like)":"#5b7fa6",
+    "low-relevance":"#444c56"
+  };
+  function archColor(action){ return ARCH_COLORS[action] || "#444c56"; }
+
+  // Hotspot colour: HH = priority cluster, LH = low-in-high outlier,
+  // hot & lisa ns = warm, else faint grey.
+  function hotColor(p){
+    if(p.lisa==="HH") return "#e5484d";
+    if(p.lisa==="LH") return "#3b82f6";
+    if(p.hot==="hot") return "#f0883e";
+    return "#3a4150";
+  }
+
+  /* ---------- state ---------- */
+  let currentLayer="priority";
+  let fDistrict="All", fAction="All";
+  const planKeys=new Set();      // section keys currently in the plan (Set preserves insertion order)
+  const featByKey={};            // key -> leaflet layer (sections)
+  let selectedKey=null;          // open in detail panel
+
+  /* ================================================================
+     MAP
+     ================================================================ */
+  const map=L.map("map",{zoomControl:true,preferCanvas:true}).setView([41.40,2.17],12);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{
+    attribution:'&copy; OpenStreetMap &copy; CARTO',
+    subdomains:"abcd",maxZoom:19
+  }).addTo(map);
+
+  // Section polygons
+  const sectionLayer=L.geoJSON(DATA.sections,{
+    style:styleSection,
+    onEachFeature:(feat,layer)=>{
+      const p=feat.properties;
+      featByKey[p.key]=layer;
+      layer.bindTooltip(
+        `#${p.rank} · ${p.district}`+
+        `<br>${fmt(p.planes)} planes · ${fmt(p.mature)} mature · ${fmt(p.pop)} res.`,
+        {className:"sec-tip",sticky:true}
+      );
+      layer.on("click",()=>openDetail(p.key));
+      // keyboard access: focusable + Enter opens
+      layer.on("add",()=>{const el=layer.getElement&&layer.getElement();if(el){el.setAttribute("tabindex","0");el.setAttribute("role","button");
+        el.setAttribute("aria-label",`Section rank ${p.rank}, ${p.district}`);
+        el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openDetail(p.key);}});}});
+    }
+  }).addTo(map);
+
+  // 400m cells (MAUP) — created lazily, hidden by default
+  let cellLayer=null;
+  function buildCellLayer(){
+    if(cellLayer) return cellLayer;
+    cellLayer=L.geoJSON(DATA.cells,{
+      style:f=>({
+        color:"#0a0d12",weight:.4,fillColor:priColor(f.properties.pri),fillOpacity:.78
+      }),
+      onEachFeature:(f,layer)=>{
+        const p=f.properties;
+        layer.bindTooltip(`${p.cell}<br>${fmt(p.planes)} planes · pri ${p.pri.toFixed(2)}`,{className:"sec-tip",sticky:true});
+      }
+    });
+    return cellLayer;
+  }
+
+  /* ---------- styling ---------- */
+  function styleSection(feat){
+    const p=feat.properties;
+    const visible=passesFilter(p);
+    const inPlan=planKeys.has(p.key);
+    let fill;
+    if(currentLayer==="priority")   fill=priColor(p.pri);
+    else if(currentLayer==="archetype") fill=archColor(p.action);
+    else /* hotspot */              fill=hotColor(p);
+
+    return {
+      color: inPlan ? "#39c5cf" : "#0d1117",
+      weight: inPlan ? 2.6 : .5,
+      fillColor: fill,
+      fillOpacity: visible ? (currentLayer==="hotspot" && fill==="#3a4150" ? .35 : .8) : .05,
+      opacity: visible ? (inPlan?1:.85) : .12
+    };
+  }
+  function restyle(){
+    if(currentLayer==="cells") return;          // sections hidden
+    sectionLayer.setStyle(styleSection);
+    // re-raise plan outlines above neighbours
+    planKeys.forEach(k=>{const l=featByKey[k]; if(l&&l.bringToFront) l.bringToFront();});
+  }
+
+  /* ---------- filtering ---------- */
+  function passesFilter(p){
+    if(fDistrict!=="All" && p.district!==fDistrict) return false;
+    if(fAction!=="All"   && p.action!==fAction)     return false;
+    return true;
+  }
+
+  /* ================================================================
+     LAYER SWITCHING
+     ================================================================ */
+  document.querySelectorAll('input[name="layer"]').forEach(r=>{
+    r.addEventListener("change",()=>{
+      currentLayer=r.value;
+      document.querySelectorAll(".layer-opt").forEach(o=>o.classList.toggle("active",o.contains(r)));
+      applyLayerVisibility();
+      renderLegend();
+    });
+  });
+  function applyLayerVisibility(){
+    const showCells = currentLayer==="cells";
+    // toggle map layers
+    if(showCells){
+      if(map.hasLayer(sectionLayer)) map.removeLayer(sectionLayer);
+      map.addLayer(buildCellLayer());
+    }else{
+      if(cellLayer && map.hasLayer(cellLayer)) map.removeLayer(cellLayer);
+      if(!map.hasLayer(sectionLayer)) map.addLayer(sectionLayer);
+      restyle();
+    }
+    document.getElementById("maupBox").classList.toggle("show",showCells);
+  }
+
+  /* ================================================================
+     LEGEND (reflects active layer)
+     ================================================================ */
+  function renderLegend(){
+    const el=document.getElementById("legend");
+    let html="";
+    if(currentLayer==="priority"||currentLayer==="cells"){
+      html=`<h4>${currentLayer==="cells"?"Priority — 400 m cells":"Removal priority"}</h4>
+        <div class="ramp"></div>
+        <div class="ramp-lbls"><span>0.0 low</span><span>1.0 high</span></div>`;
+    }else if(currentLayer==="archetype"){
+      html=`<h4>Suggested action</h4>`+
+        swatch("#ef6a2b","PRIORITY (cut early)")+
+        swatch("#d4a72c","monitor")+
+        swatch("#5b7fa6","defer (park-like)")+
+        swatch("#444c56","low-relevance");
+    }else{ // hotspot
+      html=`<h4>Spatial clusters (Gi* / LISA)</h4>`+
+        swatch("#e5484d","Priority cluster (HH)")+
+        swatch("#3b82f6","Low-in-high outlier (LH)")+
+        swatch("#f0883e","Hot (Gi*), no LISA")+
+        swatch("#3a4150","Not significant");
+    }
+    // plan key always appended if plan active
+    if(planKeys.size) html+=`<div class="plan-key"><span class="line"></span> In current plan (${planKeys.size})</div>`;
+    el.innerHTML=html;
+  }
+  function swatch(c,t){return `<div class="sw-row"><span class="sw" style="background:${c}"></span>${t}</div>`;}
+
+  /* ================================================================
+     SECTION DETAIL PANEL
+     ================================================================ */
+  const detail=document.getElementById("detail");
+  function openDetail(key){
+    const feat=DATA.sections.features.find(f=>f.properties.key===key);
+    if(!feat) return;
+    const p=feat.properties;
+    selectedKey=key;
+
+    document.getElementById("dRank").innerHTML=`#${p.rank}<small>priority</small>`;
+    document.getElementById("dDistrict").textContent=p.district;
+    document.getElementById("dKey").textContent=`section ${p.key}`;
+
+    // stats grid
+    document.getElementById("dStats").innerHTML=
+      stat(`${fmt(p.planes)}`,`<small>(${fmt(p.mature)} mature)</small>`,"plane trees")+
+      stat(`${fmt(p.pop)}`,"","residents")+
+      `<div class="stat full">
+         <div class="k" style="margin-bottom:5px">priority (0–1)</div>
+         <div class="pri-bar-wrap"><div class="pri-bar"><i style="width:${(p.pri*100).toFixed(0)}%"></i></div></div>
+         <div class="v" style="font-size:14px;margin-top:5px">${p.pri.toFixed(3)}</div>
+       </div>`;
+
+    // archetype + hotspot badges
+    document.getElementById("dBadges").innerHTML=
+      `<div class="badge">
+         <span class="swl" style="background:${archColor(p.action)}"></span>
+         <div><div class="bt">${escapeHtml(archetypeName(p))}</div>
+              <div class="bd2">Action: ${escapeHtml(p.action)} · cluster ${p.cluster}</div></div>
+       </div>`+
+      `<div class="badge">
+         <span class="swl" style="background:${hotColor(p)}"></span>
+         <div><div class="bt">${hotspotLabel(p)}</div>
+              <div class="bd2">Gi* z = ${(+p.gi_z).toFixed(2)} · ${p.hot==="hot"?"hot":"not hot"}</div></div>
+       </div>`;
+
+    // street worklist (guard empty/missing)
+    renderWorklist(p);
+
+    // add-to-plan button label
+    syncAddBtn();
+
+    detail.classList.add("open");
+    detail.setAttribute("aria-hidden","false");
+    document.getElementById("closeDetail").focus();
+  }
+  function renderWorklist(p){
+    const wl=document.getElementById("dWorklist");
+    const streets=Array.isArray(p.streets)?p.streets:[];
+    let head=`<h3>Street worklist</h3>
+      <div class="cap">Counts + suggested removal (policy allocation). NOT a street ranking.</div>`;
+    if(!streets.length){
+      wl.innerHTML=head+`<div class="empty-note">No street-level plane inventory recorded for this section.</div>`;
+      return;
+    }
+    // show all rows; streets already ordered by the data (by suggested removal)
+    const rows=streets.map(s=>`<tr>
+        <td class="s">${escapeHtml(s.s)}</td>
+        <td class="r">${fmt(s.n)}</td>
+        <td class="r">${fmt(s.m)}</td>
+        <td class="r sg">${fmt(s.r)}</td>
+      </tr>`).join("");
+    wl.innerHTML=head+`<table class="wl"><thead><tr>
+        <th>Street</th><th class="r">Planes</th><th class="r">Mature</th><th class="r">Suggested</th>
+      </tr></thead><tbody>${rows}</tbody></table>`;
+  }
+  // Section features carry `archetype` (the typology string) but no `name`;
+  // meta.archetypes holds the canonical name keyed by cluster. Prefer that, fall back to the raw string.
+  const ARCH_BY_CLUSTER={};
+  (META.archetypes||[]).forEach(a=>{ARCH_BY_CLUSTER[a.cluster]=a.name;});
+  function archetypeName(p){ return ARCH_BY_CLUSTER[p.cluster] || p.archetype || "—"; }
+
+  function hotspotLabel(p){
+    if(p.lisa==="HH") return "Priority cluster (HH)";
+    if(p.lisa==="LH") return "Isolated — low in high (LH)";
+    if(p.lisa==="HL") return "High in low (HL)";
+    if(p.lisa==="LL") return "Low cluster (LL)";
+    if(p.hot==="hot") return "Hot (Gi*), no local cluster";
+    return "Not significant";
+  }
+  function closeDetail(){
+    detail.classList.remove("open");
+    detail.setAttribute("aria-hidden","true");
+    selectedKey=null;
+  }
+  document.getElementById("closeDetail").addEventListener("click",closeDetail);
+
+  /* ================================================================
+     BUDGET PLANNER (greedy fill by ascending rank)
+     ================================================================ */
+  function buildPlan(){
+    const budget=Math.max(0,+document.getElementById("fBudget").value||0);
+    const skipPark=document.getElementById("fSkipPark").checked;
+    planKeys.clear();
+
+    // candidates: visible under current filters, sorted by ascending rank (best first)
+    const candidates=DATA.sections.features
+      .map(f=>f.properties)
+      .filter(p=>passesFilter(p))
+      .filter(p=>!(skipPark && p.action==="defer (park-like)"))
+      .sort((a,b)=>a.rank-b.rank);
+
+    let running=0;
+    for(const p of candidates){
+      if(running>=budget) break;
+      planKeys.add(p.key);
+      running+=p.mature;          // accumulate until running total >= budget
+    }
+    renderPlan(budget,running);
+    restyle();
+    renderLegend();
+  }
+
+  function renderPlan(budget,running){
+    const list=document.getElementById("planList");
+    const summary=document.getElementById("planSummary");
+    const actions=document.getElementById("planActions");
+
+    if(!planKeys.size){
+      list.innerHTML=`<div class="empty-note">No sections selected. Set a budget and press “Build plan”, or add sections manually from a detail panel.</div>`;
+      summary.hidden=true; actions.hidden=true;
+      document.getElementById("planTotal").textContent="0";
+      document.getElementById("planMeta").innerHTML="";
+      return;
+    }
+    // ordered properties for plan keys, by rank
+    const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties)
+                             .sort((a,b)=>a.rank-b.rank);
+    let cum=0;
+    const rows=props.map(p=>{
+      cum+=p.mature;
+      const over = budget!=null && cum-p.mature>=budget; // this row pushed us past budget already? (informational)
+      return `<div class="plan-row${over?" over":""}">
+        <span class="rk">#${p.rank}</span>
+        <span class="ds" title="${escapeHtml(p.district)} · ${p.key}">${escapeHtml(p.district)}</span>
+        <span class="mt">${fmt(p.mature)}</span>
+        <span class="rt">Σ${fmt(cum)}</span>
+      </div>`;
+    }).join("");
+    list.innerHTML=rows;
+
+    const total=props.reduce((s,p)=>s+p.mature,0);
+    document.getElementById("planTotal").textContent=fmt(total);
+    let meta=`${props.length} section${props.length>1?"s":""}`;
+    if(budget!=null){ meta+=`<br>target ${fmt(budget)} mature`; }
+    document.getElementById("planMeta").innerHTML=meta;
+    summary.hidden=false; actions.hidden=false;
+  }
+
+  document.getElementById("buildPlan").addEventListener("click",()=>buildPlan());
+  document.getElementById("clearPlan").addEventListener("click",()=>{
+    planKeys.clear();renderPlan(null,0);restyle();renderLegend();
+  });
+
+  /* ---------- manual add from detail panel ---------- */
+  const addBtn=document.getElementById("addToPlan");
+  function syncAddBtn(){
+    if(selectedKey && planKeys.has(selectedKey)){
+      addBtn.textContent="✓ In plan — remove";
+      addBtn.classList.add("ghost");
+    }else{
+      addBtn.textContent="➕ Add to plan";
+      addBtn.classList.remove("ghost");
+    }
+  }
+  addBtn.addEventListener("click",()=>{
+    if(!selectedKey) return;
+    if(planKeys.has(selectedKey)) planKeys.delete(selectedKey);
+    else planKeys.add(selectedKey);
+    syncAddBtn();
+    // rebuild plan list display with no fixed budget context
+    renderPlan(planKeys.size?(+document.getElementById("fBudget").value||null):null,0);
+    restyle();renderLegend();
+    toast(planKeys.has(selectedKey)?"Added to plan":"Removed from plan");
+  });
+
+  /* ================================================================
+     CSV EXPORT — street rows for selected sections (file:// safe)
+     ================================================================ */
+  document.getElementById("exportCsv").addEventListener("click",()=>{
+    if(!planKeys.size){toast("Plan is empty");return;}
+    const header=["section","district","street","planes","mature","suggested"];
+    const lines=[header.join(",")];
+    let rowCount=0;
+    [...planKeys]
+      .map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties)
+      .sort((a,b)=>a.rank-b.rank)
+      .forEach(p=>{
+        const streets=Array.isArray(p.streets)?p.streets:[];
+        if(!streets.length){
+          // still emit a row so the section is visible in the export
+          lines.push([csv(p.key),csv(p.district),csv("(no street inventory)"),"","",""].join(","));
+          rowCount++;
+        }else{
+          streets.forEach(s=>{
+            lines.push([csv(p.key),csv(p.district),csv(s.s),s.n,s.m,s.r].join(","));
+            rowCount++;
+          });
+        }
+      });
+    const blob=new Blob([lines.join("\r\n")],{type:"text/csv;charset=utf-8;"});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    const stamp=new Date().toISOString().slice(0,10);
+    a.href=url; a.download=`plane-removal-plan_${stamp}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    toast(`Exported ${rowCount} street rows`);
+  });
+  function csv(v){ v=(v==null?"":String(v)); return /[",\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+
+  /* ================================================================
+     FILTERS
+     ================================================================ */
+  function buildFilters(){
+    const ds=document.getElementById("fDistrict");
+    ds.innerHTML=`<option value="All">All districts</option>`+
+      META.districts.map(d=>`<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");
+    ds.addEventListener("change",()=>{fDistrict=ds.value;restyle();});
+
+    // actions: from the canonical archetype list (covers all 4 even if some unused)
+    const acts=[...new Set(META.archetypes.map(a=>a.action))];
+    const as=document.getElementById("fAction");
+    as.innerHTML=`<option value="All">All actions</option>`+
+      acts.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join("");
+    as.addEventListener("change",()=>{fAction=as.value;restyle();});
+  }
+
+  /* ================================================================
+     HEADER CHIPS
+     ================================================================ */
+  function buildChips(){
+    const target=Math.round(META.removal_rate*100);
+    const chips=[
+      [fmt(META.n_sections),"census sections"],
+      [`${META.top15_share_pct}%`,"top-15 share of priority"],
+      [`~${target}% by 2037`,`of ${fmt(META.city_platanus_total)} planes`]
+    ];
+    document.getElementById("chips").innerHTML=
+      chips.map(c=>`<div class="chip"><b>${c[0]}</b><span>${c[1]}</span></div>`).join("");
+  }
+
+  /* ================================================================
+     HELP / ABOUT MODAL (+ localStorage persistence)
+     ================================================================ */
+  const scrim=document.getElementById("scrim");
+  function fillNotes(){
+    const n=META.notes||{};
+    document.getElementById("noteRationale").innerHTML=`<b>Why this exists:</b> ${escapeHtml(n.rationale||"")}`;
+    document.getElementById("noteMl").innerHTML=`<b>The ML failed:</b> ${escapeHtml(n.ml||"")}`;
+    document.getElementById("noteStreet").innerHTML=`<b>Streets ≠ ranking:</b> ${escapeHtml(n.street_layer||"")}`;
+    document.getElementById("noteMaup").innerHTML=`<b>MAUP:</b> ${escapeHtml(n.maup||"")}`;
+    document.getElementById("maupText").textContent=n.maup||"";
+  }
+  function openModal(){scrim.classList.add("show");document.getElementById("gotIt").focus();}
+  function closeModal(){scrim.classList.remove("show");try{localStorage.setItem("plàtans_seen","1");}catch(e){}}
+  document.getElementById("openHelp").addEventListener("click",openModal);
+  document.getElementById("gotIt").addEventListener("click",closeModal);
+  scrim.addEventListener("click",e=>{if(e.target===scrim) closeModal();});
+
+  /* ================================================================
+     MISC: toast, esc-key, formatters
+     ================================================================ */
+  let toastT=null;
+  function toast(msg){
+    const t=document.getElementById("toast");
+    t.textContent=msg;t.classList.add("show");
+    clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove("show"),1900);
+  }
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){
+      if(scrim.classList.contains("show")) closeModal();
+      else if(detail.classList.contains("open")) closeDetail();
+    }
+  });
+
+  function fmt(n){ if(n==null||isNaN(n)) return "—"; return Math.round(n).toLocaleString("en-US"); }
+  function stat(v,sub,k){ return `<div class="stat"><div class="v">${v} ${sub||""}</div><div class="k">${k}</div></div>`; }
+  function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+  /* ================================================================
+     INIT
+     ================================================================ */
+  document.title=META.title||"Plane-Tree Removal Planner";
+  buildChips();
+  buildFilters();
+  fillNotes();
+  renderLegend();
+  renderPlan(null,0);
+  try{ if(!localStorage.getItem("plàtans_seen")) openModal(); }catch(e){ openModal(); }
+
+  // fit to data once loaded
+  try{ map.fitBounds(sectionLayer.getBounds(),{padding:[20,20],maxZoom:13}); }catch(e){}
+})();
+</script>
+</body>
+</html>
