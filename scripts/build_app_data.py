@@ -13,14 +13,19 @@ Deterministic. Run:  python scripts/build_app_data.py
 """
 from __future__ import annotations
 import json
+import sys
 from pathlib import Path
 import numpy as np
 import pandas as pd
 import geopandas as gpd
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+import cost_model_bcn                      # noqa: E402
+
 SEC = ROOT / "outputs" / "phase-6" / "section_priority.parquet"
 CELLS = ROOT / "data" / "processed" / "allergen_layers.parquet"
+FEAT = ROOT / "data" / "processed" / "section_features.parquet"
 ACTIONS = ROOT / "outputs" / "phase-6" / "street_removal_actions.csv"
 TYPO = ROOT / "outputs" / "phase-6" / "section_typology.csv"
 HOT = ROOT / "outputs" / "phase-6" / "section_hotspots.csv"
@@ -51,6 +56,19 @@ def main():
     sec["key"] = sec["key"].astype(str)
     sec = sec.merge(typo, on="key", how="left").merge(hot, on="key", how="left")
 
+    # features (income for equity, vuln_std for vulnerability) + per-objective scores
+    feat = gpd.read_parquet(FEAT)[["key", "income", "vuln_std"]].copy()
+    feat["key"] = feat["key"].astype(str)
+    sec = sec.merge(feat, on="key", how="left")
+    sec["depriv"] = minmax(-sec["income"].to_numpy(float))            # poorest = 1
+    src_std = sec["source_std"].to_numpy(float)
+    pri = sec["priority"].to_numpy(float)
+    sec["sc_efficiency"] = pri
+    sec["sc_equity"] = pri * sec["depriv"].to_numpy()
+    sec["sc_quick_wins"] = sec["mature_count"].astype(float)
+    sec["sc_density"] = sec["plane_count"].astype(float)
+    sec["sc_vulnerability"] = src_std * sec["vuln_std"].fillna(0).to_numpy(float)
+
     streets = {}
     if ACTIONS.exists():
         a = pd.read_csv(ACTIONS, dtype={"section_key": str})
@@ -75,6 +93,16 @@ def main():
             "gi_z": round(float(r.gi_z), 2) if pd.notna(r.gi_z) else 0.0,
             "hot": r.hotspot if isinstance(r.hotspot, str) else "ns",
             "lisa": r.lisa_quadrant if isinstance(r.lisa_quadrant, str) else "ns",
+            "pri_raw": round(float(r.priority), 6),          # burden axis for the relief curve
+            "depriv": round(float(r.depriv), 4),
+            "vuln": round(float(r.vuln_std), 4) if pd.notna(r.vuln_std) else 0.0,
+            "scores": {                                      # per-objective sort scores
+                "efficiency": round(float(r.sc_efficiency), 6),
+                "equity": round(float(r.sc_equity), 6),
+                "quick_wins": round(float(r.sc_quick_wins), 2),
+                "density": round(float(r.sc_density), 2),
+                "vulnerability": round(float(r.sc_vulnerability), 6),
+            },
             "streets": streets.get(k, []),
         }})
     sections_gj = {"type": "FeatureCollection", "features": feats}
@@ -107,6 +135,11 @@ def main():
         "street_platanus": int(sec["plane_count"].sum()),
         "districts": sorted(sec["district_lbl"].dropna().unique().tolist()),
         "archetypes": archetypes,
+        "total_priority": round(float(sec["priority"].sum()), 6),  # denom for the relief curve
+        "cost": cost_model_bcn.as_dict(),                          # euro<->tree (from coolspend)
+        "objectives": ["efficiency", "equity", "quick_wins", "density", "vulnerability"],
+        "vulnerability_note": "Age-AR-prevalence weighting; tested REDUNDANT with population "
+                              "(re-orders ~nothing, Jaccard top-15 = 1.0) -- an optional lens, not a re-ranking.",
         "top15_share_pct": round(100 * sec.head(15)["priority"].sum() / sec["priority"].sum(), 1),
         "top50_share_pct": round(100 * sec.head(50)["priority"].sum() / sec["priority"].sum(), 1),
         "notes": {

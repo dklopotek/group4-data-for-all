@@ -213,6 +213,51 @@ select:hover,input[type=number]:hover{border-color:#46505c;}
 /* the [hidden] attribute must win over explicit display rules below */
 [hidden]{display:none!important;}
 
+/* objective selector caption (e.g. vulnerability redundancy flag) */
+.obj-note{
+  font-size:11px;color:var(--warn);font-style:italic;line-height:1.4;
+  margin:-3px 0 11px;padding-left:1px;
+}
+
+/* grain helper line under the layer switcher */
+.grain-hint{
+  margin-top:9px;padding:8px 10px;border-radius:var(--radius-sm);
+  background:#11181f;border:1px solid var(--border-soft);border-left:3px solid var(--accent-dim);
+  font-size:11px;color:var(--muted);line-height:1.45;
+}
+.grain-hint b{color:#c9d3de;font-weight:600;}
+
+/* budget unit toggle (trees | euros) */
+.unit-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:11px;}
+.unit-row .field{flex:1 1 auto;margin-bottom:0;}
+.seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;flex:0 0 auto;height:36px;}
+.seg button{
+  background:#0d1117;color:var(--muted);border:none;padding:0 13px;font-size:12px;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;transition:background .14s,color .14s;
+}
+.seg button:not(:last-child){border-right:1px solid var(--border);}
+.seg button.on{background:var(--accent);color:#04181a;}
+.seg button:not(.on):hover{background:#1c2330;color:var(--text);}
+
+/* derived euro->tree readout */
+.derived{
+  font-size:11.5px;color:var(--muted);margin:-3px 0 10px;line-height:1.4;
+}
+.derived b{font-family:"IBM Plex Mono",monospace;color:var(--accent);font-weight:600;}
+
+/* marginal-relief curve */
+.curve-card{margin-top:11px;background:#0f141c;border:1px solid var(--border-soft);border-radius:9px;padding:11px 12px 9px;}
+.curve-card .ct{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px;
+}
+.curve-card .ct h3{margin:0;font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;}
+.curve-card .ct .pctnow{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--accent);font-weight:600;}
+.curve-card svg{display:block;width:100%;height:auto;}
+.curve-card .ckey{display:flex;gap:14px;margin-top:6px;font-size:10px;color:var(--muted);flex-wrap:wrap;}
+.curve-card .ckey span{display:flex;align-items:center;gap:5px;}
+.curve-card .ckey i{width:14px;height:0;border-top:2px solid var(--accent);display:inline-block;}
+.curve-card .ckey i.ref{border-top:2px dashed var(--muted-2);}
+
 /* plan summary + list */
 .plan-summary{
   display:flex;justify-content:space-between;align-items:center;
@@ -427,8 +472,9 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
           </label>
           <label class="layer-opt">
             <input type="radio" name="layer" value="cells" aria-describedby="ld-cells">
-            <span><span class="lbl">400 m cells (MAUP)</span><span class="desc" id="ld-cells">People-weighted re-aggregation check.</span></span>
+            <span><span class="lbl">400 m cells (MAUP) — evidence</span><span class="desc" id="ld-cells">People-weighted re-aggregation check.</span></span>
           </label>
+          <p class="grain-hint"><b>Claim priority at 400&nbsp;m</b> (evidence); <b>execute at the section</b> (operational unit).</p>
         </div>
       </section>
 
@@ -452,14 +498,42 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
         <div class="hd"><span class="dot" aria-hidden="true"></span><h2>Budget planner</h2></div>
         <div class="bd">
           <div class="field">
-            <label for="fBudget">Mature planes to remove this year</label>
-            <input type="number" id="fBudget" min="0" step="10" value="300" aria-label="Mature plane removal budget">
+            <label for="objective">Objective — how to sequence</label>
+            <select id="objective" aria-label="Planning objective"></select>
           </div>
+          <p class="obj-note" id="objNote" hidden></p>
+
+          <div class="unit-row">
+            <div class="field">
+              <label for="fBudget" id="budgetLabel">Mature planes to remove this year</label>
+              <input type="number" id="fBudget" min="0" step="10" value="300" aria-label="Removal budget">
+            </div>
+            <div class="seg" role="group" aria-label="Budget unit">
+              <button type="button" id="unitTrees" class="on" aria-pressed="true">trees</button>
+              <button type="button" id="unitEuro" aria-pressed="false">&euro;</button>
+            </div>
+          </div>
+          <p class="derived" id="derived" hidden></p>
+          <label class="check" id="upkeepRow" hidden>
+            <input type="checkbox" id="fUpkeep">
+            <span>Include 40-yr upkeep in &euro; rate</span>
+          </label>
+
           <label class="check">
             <input type="checkbox" id="fSkipPark" checked>
             <span>Skip park-like (defer) sections</span>
           </label>
           <button class="btn solid" id="buildPlan">Build plan</button>
+
+          <div class="curve-card" id="curveCard">
+            <div class="ct"><h3>Marginal relief</h3><span class="pctnow" id="curvePct">—</span></div>
+            <svg id="curveSvg" viewBox="0 0 280 150" role="img"
+                 aria-label="Cumulative exposure burden captured versus mature planes removed"></svg>
+            <div class="ckey">
+              <span><i></i><span id="curveObjLbl">objective</span></span>
+              <span><i class="ref"></i>density (naive rule)</span>
+            </div>
+          </div>
 
           <div class="plan-summary" id="planSummary" hidden>
             <div>
@@ -599,6 +673,52 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   const planKeys=new Set();      // section keys currently in the plan (Set preserves insertion order)
   const featByKey={};            // key -> leaflet layer (sections)
   let selectedKey=null;          // open in detail panel
+
+  /* objective + budget-unit state (NEW) */
+  let objective="efficiency";    // active sequencing objective
+  let budgetUnit="trees";        // "trees" | "euro"
+  const COST=META.cost||{};
+  // active euro->tree conversion rate (default = remove+replace CapEx; upkeep toggle switches to lifecycle)
+  function euroRate(){
+    const upkeep=document.getElementById("fUpkeep");
+    return (upkeep && upkeep.checked)
+      ? (COST.lifecycle_cost_per_tree_eur||COST.intervention_capex_eur||1)
+      : (COST.intervention_capex_eur||COST.lifecycle_cost_per_tree_eur||1);
+  }
+  // safe per-objective sort score (fallback 0 for missing scores)
+  function objScore(p){
+    const sc=p.scores; if(!sc) return 0;
+    const v=sc[objective]; return (v==null||isNaN(v))?0:v;
+  }
+  // objective the budget number is interpreted as a tree count:
+  //   trees mode -> the entered number; euro mode -> euros / rate (floored).
+  function treeBudget(){
+    const raw=Math.max(0,+document.getElementById("fBudget").value||0);
+    if(budgetUnit==="euro"){ const r=euroRate()||1; return Math.floor(raw/r); }
+    return raw;
+  }
+  function fmtEuro(n){
+    if(n==null||isNaN(n)) return "—";
+    return "€"+Math.round(n).toLocaleString("en-US");
+  }
+  const OBJ_LABELS={
+    efficiency:"Efficiency — max relief",
+    equity:"Equity — favour deprived",
+    quick_wins:"Quick wins — fewest sites",
+    density:"Density — city's naive rule",
+    vulnerability:"Vulnerability — age-weighted (redundant)"
+  };
+  // sections sorted best-first under the active objective, with optional park-skip + filters
+  function sortedByObjective(obj,skipPark,respectFilters){
+    return DATA.sections.features.map(f=>f.properties)
+      .filter(p=>!respectFilters||passesFilter(p))
+      .filter(p=>!(skipPark && p.action==="defer (park-like)"))
+      .sort((a,b)=>{
+        const d=( (b.scores?b.scores[obj]:0)||0 ) - ( (a.scores?a.scores[obj]:0)||0 );
+        if(d!==0) return d;
+        return (a.rank||0)-(b.rank||0); // stable tiebreak by headline rank
+      });
+  }
 
   /* ================================================================
      MAP
@@ -812,6 +932,8 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     return "Not significant";
   }
   function closeDetail(){
+    // move focus out before hiding so aria-hidden never traps a focused descendant (a11y)
+    if(detail.contains(document.activeElement)) document.activeElement.blur();
     detail.classList.remove("open");
     detail.setAttribute("aria-hidden","true");
     selectedKey=null;
@@ -822,16 +944,12 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
      BUDGET PLANNER (greedy fill by ascending rank)
      ================================================================ */
   function buildPlan(){
-    const budget=Math.max(0,+document.getElementById("fBudget").value||0);
+    const budget=treeBudget();   // tree budget (converted from euros if in euro mode)
     const skipPark=document.getElementById("fSkipPark").checked;
     planKeys.clear();
 
-    // candidates: visible under current filters, sorted by ascending rank (best first)
-    const candidates=DATA.sections.features
-      .map(f=>f.properties)
-      .filter(p=>passesFilter(p))
-      .filter(p=>!(skipPark && p.action==="defer (park-like)"))
-      .sort((a,b)=>a.rank-b.rank);
+    // candidates: visible under current filters, sorted best-first by the ACTIVE objective's score
+    const candidates=sortedByObjective(objective,skipPark,true);
 
     let running=0;
     for(const p of candidates){
@@ -842,6 +960,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     renderPlan(budget,running);
     restyle();
     renderLegend();
+    renderCurve();
   }
 
   function renderPlan(budget,running){
@@ -856,9 +975,10 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
       document.getElementById("planMeta").innerHTML="";
       return;
     }
-    // ordered properties for plan keys, by rank
+    // ordered properties for plan keys, by the ACTIVE objective (matches the greedy fill order)
+    const order={}; sortedByObjective(objective,false,false).forEach((p,i)=>{order[p.key]=i;});
     const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties)
-                             .sort((a,b)=>a.rank-b.rank);
+                             .sort((a,b)=>(order[a.key]??1e9)-(order[b.key]??1e9));
     let cum=0;
     const rows=props.map(p=>{
       cum+=p.mature;
@@ -874,8 +994,12 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
 
     const total=props.reduce((s,p)=>s+p.mature,0);
     document.getElementById("planTotal").textContent=fmt(total);
+    // ALWAYS show both: N mature planes ~ euro cost at the active rate, + illustrative caveat
+    const rate=euroRate();
     let meta=`${props.length} section${props.length>1?"s":""}`;
     if(budget!=null){ meta+=`<br>target ${fmt(budget)} mature`; }
+    meta+=`<br>${fmt(total)} planes &asymp; <b style="color:var(--text)">${fmtEuro(total*rate)}</b>`;
+    if(COST.caveat){ meta+=`<br><span style="color:var(--muted-2);font-style:italic">${escapeHtml(COST.caveat)}</span>`; }
     document.getElementById("planMeta").innerHTML=meta;
     summary.hidden=false; actions.hidden=false;
   }
@@ -887,10 +1011,71 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
       const ok=confirm("Skip park-like is now OFF.\n\nThe #1-ranked section is Montjuïc parkland — 594 mature planes but only ~2,000 residents. With park-like sections included, a small annual budget can spend most of the year felling trees in a park where almost nobody is exposed (a known MAUP artifact).\n\nKeep park-like sections in the plan anyway?");
       if(!ok){ e.target.checked=true; }
     }
+    renderCurve();   // skip-park flips the candidate set -> curve shape changes
   });
   document.getElementById("clearPlan").addEventListener("click",()=>{
-    planKeys.clear();renderPlan(null,0);restyle();renderLegend();
+    planKeys.clear();renderPlan(null,0);restyle();renderLegend();renderCurve();
   });
+
+  /* ================================================================
+     OBJECTIVE SELECTOR + BUDGET UNIT TOGGLE (NEW)
+     ================================================================ */
+  function buildObjectiveSelect(){
+    const sel=document.getElementById("objective");
+    const objs=(META.objectives||["efficiency"]);
+    sel.innerHTML=objs.map(o=>`<option value="${escapeHtml(o)}">${escapeHtml(OBJ_LABELS[o]||o)}</option>`).join("");
+    sel.value=objective;
+    sel.addEventListener("change",()=>{
+      objective=sel.value;
+      syncObjectiveNote();
+      // re-run the plan under the new objective so plan + curve agree
+      buildPlan();
+    });
+    syncObjectiveNote();
+  }
+  function syncObjectiveNote(){
+    const note=document.getElementById("objNote");
+    document.getElementById("curveObjLbl").textContent=(OBJ_LABELS[objective]||objective).split(" — ")[0].toLowerCase();
+    if(objective==="vulnerability" && META.vulnerability_note){
+      note.textContent=META.vulnerability_note; note.hidden=false;
+    }else{ note.hidden=true; note.textContent=""; }
+  }
+
+  function setUnit(u){
+    budgetUnit=u;
+    const tBtn=document.getElementById("unitTrees"), eBtn=document.getElementById("unitEuro");
+    tBtn.classList.toggle("on",u==="trees"); tBtn.setAttribute("aria-pressed",u==="trees");
+    eBtn.classList.toggle("on",u==="euro");  eBtn.setAttribute("aria-pressed",u==="euro");
+    const inp=document.getElementById("fBudget");
+    if(u==="euro"){
+      document.getElementById("budgetLabel").textContent="Budget this year (euros)";
+      document.getElementById("upkeepRow").hidden=false;
+      inp.step="10000"; if(+inp.value<5000) inp.value=String((COST.intervention_capex_eur||2650)*300);
+    }else{
+      document.getElementById("budgetLabel").textContent="Mature planes to remove this year";
+      document.getElementById("upkeepRow").hidden=true;
+      inp.step="10"; if(+inp.value>5000) inp.value="300";
+    }
+    renderDerived();
+    renderCurve();      // X axis stays "trees"; only the budget marker moves
+  }
+  // euro->tree derived readout (shown only in euro mode)
+  function renderDerived(){
+    const d=document.getElementById("derived");
+    if(budgetUnit!=="euro"){ d.hidden=true; d.innerHTML=""; return; }
+    const rate=euroRate(), euros=Math.max(0,+document.getElementById("fBudget").value||0);
+    const trees=Math.floor(euros/(rate||1));
+    const upkeep=document.getElementById("fUpkeep").checked;
+    d.innerHTML=`&approx; <b>${fmt(trees)}</b> mature planes at ${fmtEuro(rate)}/tree `
+      +`(${upkeep?"remove+replace + 40-yr upkeep":"remove+replace CapEx"}).`;
+    d.hidden=false;
+  }
+
+  document.getElementById("unitTrees").addEventListener("click",()=>setUnit("trees"));
+  document.getElementById("unitEuro").addEventListener("click",()=>setUnit("euro"));
+  document.getElementById("fUpkeep").addEventListener("change",()=>{ renderDerived(); renderCurve(); });
+  // live budget feedback (derived readout + curve marker) without forcing a rebuild
+  document.getElementById("fBudget").addEventListener("input",()=>{ renderDerived(); renderCurve(); });
 
   /* ---------- manual add from detail panel ---------- */
   const addBtn=document.getElementById("addToPlan");
@@ -950,6 +1135,85 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     toast(`Exported ${rowCount} street rows`);
   });
   function csv(v){ v=(v==null?"":String(v)); return /[",\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+
+  /* ================================================================
+     MARGINAL-RELIEF CURVE (NEW)
+     X = cumulative mature planes removed; Y = cumulative exposure burden
+     captured (%) = Σ pri_raw / meta.total_priority * 100. Walks sections in
+     the active objective's order (and a faint density reference), applying
+     skip-park. Marks the current budget. Lightweight SVG, downsampled.
+     ================================================================ */
+  const TOTAL_PRI=(META.total_priority && META.total_priority>0)?META.total_priority:
+                  (DATA.sections.features.reduce((s,f)=>s+(f.properties.pri_raw||0),0)||1);
+  // cumulative [x=trees, y=burden%] points for an objective, walking best-first
+  function cumPoints(obj,skipPark){
+    const arr=sortedByObjective(obj,skipPark,false);
+    const pts=[[0,0]]; let x=0,y=0;
+    for(const p of arr){
+      x+=(p.mature||0);
+      y+=(p.pri_raw||0);
+      pts.push([x,(y/TOTAL_PRI)*100]);
+    }
+    return pts;
+  }
+  // downsample to ~maxN points (keep first/last), preserving monotone x
+  function downsample(pts,maxN){
+    if(pts.length<=maxN) return pts;
+    const out=[pts[0]]; const step=(pts.length-1)/(maxN-1);
+    for(let i=1;i<maxN-1;i++) out.push(pts[Math.round(i*step)]);
+    out.push(pts[pts.length-1]);
+    return out;
+  }
+  function renderCurve(){
+    const svg=document.getElementById("curveSvg");
+    if(!svg) return;
+    const W=280,H=150, m={l:34,r:8,t:10,b:24};
+    const iw=W-m.l-m.r, ih=H-m.t-m.b;
+    const skipPark=document.getElementById("fSkipPark").checked;
+
+    const actPts=cumPoints(objective,skipPark);
+    const refPts=cumPoints("density",skipPark);
+    // X domain = max trees across both curves; Y domain = max burden% (cap headroom)
+    const xMax=Math.max(actPts[actPts.length-1][0], refPts[refPts.length-1][0], 1);
+    const yMax=Math.max(actPts[actPts.length-1][1], refPts[refPts.length-1][1], 1);
+    const sx=v=>m.l+(v/xMax)*iw;
+    const sy=v=>m.t+ih-(v/yMax)*ih;
+    const path=pts=>downsample(pts,120).map((p,i)=>(i?"L":"M")+sx(p[0]).toFixed(1)+" "+sy(p[1]).toFixed(1)).join(" ");
+
+    // budget marker: walk the active curve to the current tree budget
+    const budget=treeBudget();
+    let bx=0,by=0;
+    for(let i=1;i<actPts.length;i++){
+      if(actPts[i][0]<=budget){ bx=actPts[i][0]; by=actPts[i][1]; }
+      else break;
+    }
+    const pct=by;
+    document.getElementById("curvePct").textContent=budget>0?pct.toFixed(1)+"% burden":"set a budget";
+
+    // gridlines (y at 0/50/100% of yMax) + axis labels
+    const gy=[0,.5,1].map(t=>{
+      const yv=yMax*t, py=sy(yv).toFixed(1);
+      return `<line x1="${m.l}" y1="${py}" x2="${W-m.r}" y2="${py}" stroke="#262c36" stroke-width="1"/>`
+        +`<text x="${m.l-5}" y="${(+py+3).toFixed(1)}" fill="#6e7681" font-size="8" text-anchor="end" font-family="IBM Plex Mono, monospace">${Math.round(yv)}</text>`;
+    }).join("");
+
+    const refPath=path(refPts), actPath=path(actPts);
+    let marker="";
+    if(budget>0){
+      const mxp=sx(Math.min(bx,xMax)).toFixed(1), myp=sy(Math.min(by,yMax)).toFixed(1);
+      marker=`<line x1="${mxp}" y1="${m.t}" x2="${mxp}" y2="${m.t+ih}" stroke="#39c5cf" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>`
+        +`<circle cx="${mxp}" cy="${myp}" r="3.4" fill="#39c5cf" stroke="#04181a" stroke-width="1"/>`;
+    }
+    svg.innerHTML=
+      gy
+      +`<line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${m.t+ih}" stroke="#30363d" stroke-width="1"/>`
+      +`<line x1="${m.l}" y1="${m.t+ih}" x2="${W-m.r}" y2="${m.t+ih}" stroke="#30363d" stroke-width="1"/>`
+      +`<path d="${refPath}" fill="none" stroke="#6e7681" stroke-width="1.5" stroke-dasharray="4 3" opacity=".7"/>`
+      +`<path d="${actPath}" fill="none" stroke="#39c5cf" stroke-width="2" stroke-linejoin="round"/>`
+      +marker
+      +`<text x="${m.l+iw/2}" y="${H-4}" fill="#6e7681" font-size="8.5" text-anchor="middle" font-family="IBM Plex Mono, monospace">mature planes removed</text>`
+      +`<text x="${m.l-26}" y="${m.t+8}" fill="#6e7681" font-size="8.5" text-anchor="start" font-family="IBM Plex Mono, monospace" transform="rotate(-90 ${m.l-26} ${m.t+ih/2})">burden %</text>`;
+  }
 
   /* ================================================================
      FILTERS
@@ -1026,9 +1290,12 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   document.title=META.title||"Plane-Tree Removal Planner";
   buildChips();
   buildFilters();
+  buildObjectiveSelect();
+  setUnit("trees");          // sets labels, derived readout, and draws the curve
   fillNotes();
   renderLegend();
   renderPlan(null,0);
+  renderCurve();
   try{ if(!localStorage.getItem("plàtans_seen")) openModal(); }catch(e){ openModal(); }
 
   // fit to data once loaded
