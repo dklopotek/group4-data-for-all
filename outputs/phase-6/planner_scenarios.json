@@ -1,0 +1,1303 @@
+{
+  "city_total_priority": 1.8408,
+  "n_sections": 1068,
+  "scenarios": [
+    {
+      "objective": "efficiency",
+      "skip_park": false,
+      "budget": 100,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": false,
+      "budget": 300,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": false,
+      "budget": 500,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": false,
+      "budget": 1000,
+      "sections_used": 5,
+      "mature_removed": 1122,
+      "exposure_burden_captured_pct": 16.39,
+      "deprived_tercile_share_pct": 60.0,
+      "districts_touched": 3,
+      "streets_listed": 62,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 76
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Eixample",
+          "mature": 209
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": false,
+      "budget": 2000,
+      "sections_used": 13,
+      "mature_removed": 2038,
+      "exposure_burden_captured_pct": 26.12,
+      "deprived_tercile_share_pct": 23.1,
+      "districts_touched": 5,
+      "streets_listed": 125,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 76
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Eixample",
+          "mature": 209
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": false,
+      "budget": 5000,
+      "sections_used": 68,
+      "mature_removed": 5013,
+      "exposure_burden_captured_pct": 50.47,
+      "deprived_tercile_share_pct": 22.1,
+      "districts_touched": 10,
+      "streets_listed": 401,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 76
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Eixample",
+          "mature": 209
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": true,
+      "budget": 100,
+      "sections_used": 1,
+      "mature_removed": 152,
+      "exposure_burden_captured_pct": 2.84,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 16,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": true,
+      "budget": 300,
+      "sections_used": 3,
+      "mature_removed": 306,
+      "exposure_burden_captured_pct": 6.16,
+      "deprived_tercile_share_pct": 33.3,
+      "districts_touched": 2,
+      "streets_listed": 38,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": true,
+      "budget": 500,
+      "sections_used": 9,
+      "mature_removed": 538,
+      "exposure_burden_captured_pct": 9.44,
+      "deprived_tercile_share_pct": 44.4,
+      "districts_touched": 4,
+      "streets_listed": 81,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": true,
+      "budget": 1000,
+      "sections_used": 30,
+      "mature_removed": 1010,
+      "exposure_burden_captured_pct": 14.69,
+      "deprived_tercile_share_pct": 43.3,
+      "districts_touched": 6,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": true,
+      "budget": 2000,
+      "sections_used": 118,
+      "mature_removed": 2005,
+      "exposure_burden_captured_pct": 22.41,
+      "deprived_tercile_share_pct": 33.9,
+      "districts_touched": 10,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "efficiency",
+      "skip_park": true,
+      "budget": 5000,
+      "sections_used": 398,
+      "mature_removed": 3146,
+      "exposure_burden_captured_pct": 28.57,
+      "deprived_tercile_share_pct": 28.1,
+      "districts_touched": 10,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": false,
+      "budget": 100,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": false,
+      "budget": 300,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": false,
+      "budget": 500,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": false,
+      "budget": 1000,
+      "sections_used": 5,
+      "mature_removed": 1115,
+      "exposure_burden_captured_pct": 16.26,
+      "deprived_tercile_share_pct": 60.0,
+      "districts_touched": 3,
+      "streets_listed": 60,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 76
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": false,
+      "budget": 2000,
+      "sections_used": 17,
+      "mature_removed": 2093,
+      "exposure_burden_captured_pct": 27.67,
+      "deprived_tercile_share_pct": 47.1,
+      "districts_touched": 5,
+      "streets_listed": 149,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 76
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": false,
+      "budget": 5000,
+      "sections_used": 89,
+      "mature_removed": 5038,
+      "exposure_burden_captured_pct": 52.04,
+      "deprived_tercile_share_pct": 39.3,
+      "districts_touched": 9,
+      "streets_listed": 327,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 76
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": true,
+      "budget": 100,
+      "sections_used": 1,
+      "mature_removed": 152,
+      "exposure_burden_captured_pct": 2.84,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 16,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": true,
+      "budget": 300,
+      "sections_used": 3,
+      "mature_removed": 306,
+      "exposure_burden_captured_pct": 6.16,
+      "deprived_tercile_share_pct": 33.3,
+      "districts_touched": 2,
+      "streets_listed": 38,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": true,
+      "budget": 500,
+      "sections_used": 9,
+      "mature_removed": 549,
+      "exposure_burden_captured_pct": 9.38,
+      "deprived_tercile_share_pct": 55.6,
+      "districts_touched": 4,
+      "streets_listed": 79,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": true,
+      "budget": 1000,
+      "sections_used": 30,
+      "mature_removed": 1003,
+      "exposure_burden_captured_pct": 14.66,
+      "deprived_tercile_share_pct": 46.7,
+      "districts_touched": 6,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": true,
+      "budget": 2000,
+      "sections_used": 121,
+      "mature_removed": 2005,
+      "exposure_burden_captured_pct": 22.45,
+      "deprived_tercile_share_pct": 38.8,
+      "districts_touched": 9,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "equity",
+      "skip_park": true,
+      "budget": 5000,
+      "sections_used": 398,
+      "mature_removed": 3146,
+      "exposure_burden_captured_pct": 28.57,
+      "deprived_tercile_share_pct": 28.1,
+      "districts_touched": 10,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 24
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": false,
+      "budget": 100,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": false,
+      "budget": 300,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": false,
+      "budget": 500,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": false,
+      "budget": 1000,
+      "sections_used": 3,
+      "mature_removed": 1005,
+      "exposure_burden_captured_pct": 9.23,
+      "deprived_tercile_share_pct": 33.3,
+      "districts_touched": 3,
+      "streets_listed": 38,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Eixample",
+          "mature": 209
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": false,
+      "budget": 2000,
+      "sections_used": 12,
+      "mature_removed": 2073,
+      "exposure_burden_captured_pct": 19.21,
+      "deprived_tercile_share_pct": 25.0,
+      "districts_touched": 6,
+      "streets_listed": 106,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Eixample",
+          "mature": 209
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Les Corts",
+          "mature": 151
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": false,
+      "budget": 5000,
+      "sections_used": 59,
+      "mature_removed": 5046,
+      "exposure_burden_captured_pct": 43.36,
+      "deprived_tercile_share_pct": 22.0,
+      "districts_touched": 10,
+      "streets_listed": 286,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Eixample",
+          "mature": 209
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Les Corts",
+          "mature": 151
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": true,
+      "budget": 100,
+      "sections_used": 1,
+      "mature_removed": 152,
+      "exposure_burden_captured_pct": 2.84,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 16,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": true,
+      "budget": 300,
+      "sections_used": 3,
+      "mature_removed": 306,
+      "exposure_burden_captured_pct": 6.16,
+      "deprived_tercile_share_pct": 33.3,
+      "districts_touched": 2,
+      "streets_listed": 38,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": true,
+      "budget": 500,
+      "sections_used": 7,
+      "mature_removed": 512,
+      "exposure_burden_captured_pct": 7.94,
+      "deprived_tercile_share_pct": 42.9,
+      "districts_touched": 3,
+      "streets_listed": 65,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 58
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 52
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": true,
+      "budget": 1000,
+      "sections_used": 24,
+      "mature_removed": 1003,
+      "exposure_burden_captured_pct": 12.61,
+      "deprived_tercile_share_pct": 33.3,
+      "districts_touched": 6,
+      "streets_listed": 96,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 58
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 52
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": true,
+      "budget": 2000,
+      "sections_used": 108,
+      "mature_removed": 2008,
+      "exposure_burden_captured_pct": 20.86,
+      "deprived_tercile_share_pct": 30.6,
+      "districts_touched": 10,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 58
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 52
+        }
+      ]
+    },
+    {
+      "objective": "quick_wins",
+      "skip_park": true,
+      "budget": 5000,
+      "sections_used": 398,
+      "mature_removed": 3146,
+      "exposure_burden_captured_pct": 28.57,
+      "deprived_tercile_share_pct": 28.1,
+      "districts_touched": 10,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 58
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 52
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": false,
+      "budget": 100,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": false,
+      "budget": 300,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": false,
+      "budget": 500,
+      "sections_used": 1,
+      "mature_removed": 594,
+      "exposure_burden_captured_pct": 5.85,
+      "deprived_tercile_share_pct": 100.0,
+      "districts_touched": 1,
+      "streets_listed": 22,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": false,
+      "budget": 1000,
+      "sections_used": 5,
+      "mature_removed": 1053,
+      "exposure_burden_captured_pct": 10.94,
+      "deprived_tercile_share_pct": 40.0,
+      "districts_touched": 4,
+      "streets_listed": 55,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 135
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": false,
+      "budget": 2000,
+      "sections_used": 14,
+      "mature_removed": 2008,
+      "exposure_burden_captured_pct": 20.34,
+      "deprived_tercile_share_pct": 35.7,
+      "districts_touched": 8,
+      "streets_listed": 127,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 135
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": false,
+      "budget": 5000,
+      "sections_used": 80,
+      "mature_removed": 5006,
+      "exposure_burden_captured_pct": 44.58,
+      "deprived_tercile_share_pct": 33.8,
+      "districts_touched": 10,
+      "streets_listed": 290,
+      "top5": [
+        {
+          "district": "Sants-Montjuic",
+          "mature": 594
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Ciutat Vella",
+          "mature": 202
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sant Andreu",
+          "mature": 135
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": true,
+      "budget": 100,
+      "sections_used": 2,
+      "mature_removed": 122,
+      "exposure_burden_captured_pct": 2.78,
+      "deprived_tercile_share_pct": 0.0,
+      "districts_touched": 1,
+      "streets_listed": 20,
+      "top5": [
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": true,
+      "budget": 300,
+      "sections_used": 4,
+      "mature_removed": 337,
+      "exposure_burden_captured_pct": 6.85,
+      "deprived_tercile_share_pct": 25.0,
+      "districts_touched": 2,
+      "streets_listed": 48,
+      "top5": [
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": true,
+      "budget": 500,
+      "sections_used": 8,
+      "mature_removed": 525,
+      "exposure_burden_captured_pct": 8.46,
+      "deprived_tercile_share_pct": 25.0,
+      "districts_touched": 2,
+      "streets_listed": 71,
+      "top5": [
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 41
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": true,
+      "budget": 1000,
+      "sections_used": 36,
+      "mature_removed": 1004,
+      "exposure_burden_captured_pct": 12.38,
+      "deprived_tercile_share_pct": 30.6,
+      "districts_touched": 7,
+      "streets_listed": 93,
+      "top5": [
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 41
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": true,
+      "budget": 2000,
+      "sections_used": 140,
+      "mature_removed": 2004,
+      "exposure_burden_captured_pct": 19.85,
+      "deprived_tercile_share_pct": 25.7,
+      "districts_touched": 10,
+      "streets_listed": 96,
+      "top5": [
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 41
+        }
+      ]
+    },
+    {
+      "objective": "density_naive",
+      "skip_park": true,
+      "budget": 5000,
+      "sections_used": 398,
+      "mature_removed": 3146,
+      "exposure_burden_captured_pct": 28.57,
+      "deprived_tercile_share_pct": 28.1,
+      "districts_touched": 10,
+      "streets_listed": 100,
+      "top5": [
+        {
+          "district": "Sant Marti",
+          "mature": 91
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 31
+        },
+        {
+          "district": "Sants-Montjuic",
+          "mature": 152
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 63
+        },
+        {
+          "district": "Sant Marti",
+          "mature": 41
+        }
+      ]
+    }
+  ],
+  "note": "exposure_burden_captured_pct = share of the city's total source*exposure burden in the chosen sections; the headline 'relief' proxy. deprived share = fraction of chosen sections in the bottom income tercile."
+}
