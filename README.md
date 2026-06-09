@@ -10,8 +10,9 @@ answer. The documented falsification is the project's strongest result.
 
 ## Start here
 
-- **`outputs/reports/crispdm-phase-1-to-5-paper.md`** — the canonical narrative. Read this first.
+- **`outputs/reports/crispdm-phase-1-to-6-paper.md`** — the canonical narrative (all 6 CRISP-DM phases). Read this first.
 - **`REPO-MAP.md`** — what every directory is + the real pipeline flow.
+- **`outputs/phase-6/maps/deployment_map.html`** — interactive priority map (section ↔ 400m toggle, street worklists).
 
 ## Run the pipeline
 
@@ -23,7 +24,10 @@ python src/clean_data.py          # Phases 1-3 ETL -> data/processed/scored_grid
 python src/split_data.py          # spatial cluster split -> data/splits/
 python src/train_model.py         # baselines + linear model -> outputs/phase-4/
 python src/external_validation.py # Phase 5 external test (the falsification)
-python src/allergen_priority.py   # Phase 6 pivot -> outputs/phase-6/  (shipped product)
+python src/allergen_priority.py   # Phase 5 pivot product -> outputs/phase-6/ (cell grain)
+python src/section_priority.py    # Phase 6 deploy: census-section grain + T1-T4 re-run
+python src/street_actions.py      # Phase 6 deploy: per-street removal worklist
+python scripts/build_deploy_map.py # interactive map -> outputs/phase-6/maps/deployment_map.html
 ```
 
 ## Repository layout

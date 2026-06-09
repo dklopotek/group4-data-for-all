@@ -53,10 +53,27 @@ A transparent, two-layer map that ranks Barcelona cells for **where to sequence 
 5. **NOT equity-adjusted** in v1 (all residents equal).
 6. **Maturity is a coarse proxy** (cell-level young-tree share, not per-tree trunk diameter); a diameter-based emission estimate would refine the source layer.
 
+## Deployment grain (Phase 6) — and a grain-dependence finding
+
+The 400 m grain above is the **evidence** grain. For deployment the product was recomputed at the
+city's **native census-section grain** (1,068 sections; `src/section_priority.py`) — finer than the
+494 cells and the native unit of the population data, so the areal-interpolation step is dropped — and
+a per-street removal **worklist** (`src/street_actions.py`, `outputs/phase-6/street_removal_actions.csv`)
+was emitted for the top sections. **Honest finding:** at section grain the exposure layer **fails** the
+pre-registered re-ordering test it passes at 400 m — Spearman(priority, source) 0.97 (>0.90), T4 holds
+in only 1 of 3 arms, and the cell ranking rolls up to the section ranking at only Spearman 0.47. A few
+park-like sections with very large mature-plane clusters (rank-1 = **Montjuïc**, 594 mature planes,
+~2,000 residents) dominate, so people-weighting washes out at the top. This is the **Modifiable Areal
+Unit Problem measured in our own product**: the 400 m map carries the people-weighting evidence; the
+section map is the operational unit, where priority is closer to "largest mature clusters first." Both
+are shipped with this caveat. **The street worklist is an action/inventory layer only — it carries no
+priority or score column (ecological fallacy gate); `suggested_remove` is an illustrative, swappable
+policy allocation, not a finding.** See paper §8 and `phase-6/section-street-design.md`.
+
 ## How this product differs from the failed predecessor
 
 The mycorrhizal composite collapsed to a single variable (sealed surface) with its ecological components at effective weight ≈ 0, and was validated against its own ingredients. This product is the structural opposite: **two layers that demonstrably both move the ranking (T2), tested against an external question whose answer was unknown (T1), with its un-validatable element disclosed rather than dressed up.** The lesson from the failure (`docs/failure-and-pivot.md`) is built into the design.
 
 ## Reproducibility
 
-`python src/allergen_source.py && python src/exposure_layer.py && python src/allergen_priority.py` from the committed `scored_grid.parquet` + raw population/boundary files. Outputs under `outputs/phase-6/`.
+`python src/allergen_source.py && python src/exposure_layer.py && python src/allergen_priority.py` from the committed `scored_grid.parquet` + raw population/boundary files. For the deployment grain add `python src/section_priority.py && python src/street_actions.py && python scripts/build_deploy_map.py`. Outputs under `outputs/phase-6/`. Deterministic (seed 42).

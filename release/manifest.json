@@ -1,0 +1,96 @@
+{
+  "product": "Barcelona Platanus Pollen-Allergen Exposure Priority",
+  "version": "1.0.0",
+  "release_date": "2026-06-09",
+  "crisp_dm_phase": "6 - Deployment",
+  "maintainer": "Group 4 (MaAI01 25-26)",
+  "license_code": "MIT",
+  "license_data": "CC-BY-4.0",
+  "license_docs": "CC-BY-4.0",
+  "doi_code": "PENDING (Zenodo via GitHub release; requires team institutional account)",
+  "doi_data": "PENDING (Zenodo data upload)",
+  "crs": "EPSG:25831 (ETRS89 / UTM 31N) internal; outputs reprojected to EPSG:4326 for web map",
+  "determinism": "all randomness seeded (seed 42)",
+  "inputs": {
+    "street_tree_inventory": {
+      "path": "data/arbrat-viari.csv",
+      "description": "Barcelona street-tree inventory (arbrat viari); 145,257 trees, 40,444 Platanus",
+      "source": "Open Data BCN — opendata-ajuntament.barcelona.cat",
+      "snapshot": "2026-04 download",
+      "license": "CC-BY-4.0",
+      "bytes": 43101285,
+      "sha256": "e38b56e6a7fbe776b90f0eb435ebd5c851484828b26f7c4e7a72b62776230a28"
+    },
+    "population_padro_2026": {
+      "path": "data/raw/2026_pad_mdbas.csv",
+      "description": "Municipal population register (Padro) 2026 by census section; 1,729,963 residents, 1,068 sections",
+      "source": "Open Data BCN (Padro Municipal d'Habitants)",
+      "snapshot": "2026 register",
+      "license": "CC-BY-4.0",
+      "bytes": 64633,
+      "sha256": "e131453cb389beb3981ca3d7b0190cb695eba708a8df9a32fdb756ee14b6a459"
+    },
+    "census_section_polygons": {
+      "path": "data/raw/Unitats_Administratives_BCN_geojson/0301100100_UNITATS_ADM_POLIGONS.json",
+      "description": "Administrative-unit polygons; SEC_CENS rows used as census sections",
+      "source": "Ajuntament de Barcelona, Unitats Administratives",
+      "license": "CC-BY-4.0",
+      "bytes": 22828486,
+      "sha256": "c9eeba9d3aa832c90dd7f0d73916b7d9505ff6c5703e0c05a7f38a5e869af65e"
+    },
+    "allergen_layers": {
+      "path": "data/processed/allergen_layers.parquet",
+      "description": "Phase-5 cell-grain product (494 cells): source/exposure/deprivation layers",
+      "source": "derived (src/allergen_source.py, exposure_layer.py, equity_layer.py)",
+      "license": "MIT (derived)",
+      "bytes": 94166,
+      "sha256": "3a5a54f07e8555ecd0272fd95b5709e69515254891b837264bf207d7227f5750"
+    }
+  },
+  "outputs": {
+    "section_priority_parquet": {
+      "path": "outputs/phase-6/section_priority.parquet",
+      "description": "Section-grain priority (1,068 sections) with geometry; the deployment data product",
+      "version": "1.0.0",
+      "bytes": 833328,
+      "sha256": "83ca615ffbf2d03cf8e2e24c22b58d625e52acf0e139afdb4f2a93f1b71cd10e"
+    },
+    "section_priority_csv": {
+      "path": "outputs/phase-6/section_priority.csv",
+      "description": "Top-50 sections ranked (planner-readable, no geometry)",
+      "version": "1.0.0",
+      "bytes": 5822,
+      "sha256": "3b3c4cf64dd7967389e4d233c2f9198113a4148c42d3a8915b2af3e343201058"
+    },
+    "street_removal_actions": {
+      "path": "outputs/phase-6/street_removal_actions.csv",
+      "description": "Per-street Platanus worklist for top-60 sections; ACTION layer (no priority column)",
+      "version": "1.0.0",
+      "bytes": 28702,
+      "sha256": "05f19f2c78c7411656d72c0316972672077bb642845e676f271fd50afffaf73b"
+    },
+    "street_removal_points": {
+      "path": "outputs/phase-6/street_removal_points.geojson",
+      "description": "Plane-tree points (WGS84) for top sections; QA / map layer",
+      "version": "1.0.0",
+      "bytes": 3476597,
+      "sha256": "24752d860f7b9cb9348b367394397ea6d973b8735b371a84afb5b9f73dd538fb"
+    },
+    "deployment_map": {
+      "path": "outputs/phase-6/maps/deployment_map.html",
+      "description": "Self-contained interactive map (section/cell toggle, street worklists). Presentation aid, not a maintained service.",
+      "version": "1.0.0",
+      "bytes": 1186653,
+      "sha256": "9f8ff9129defed070e996c61c45ea3aed601dc7544d4e2750c231ee016fa6e79"
+    }
+  },
+  "environment": {
+    "python": "3.11.15",
+    "numpy": "1.26.4",
+    "pandas": "2.2.3",
+    "geopandas": "1.0.1",
+    "scipy": "1.12.0",
+    "scikit-learn": "1.8.0",
+    "shapely": "2.0.6"
+  }
+}

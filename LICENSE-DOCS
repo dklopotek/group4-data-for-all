@@ -1,0 +1,13 @@
+Documentation License — Creative Commons Attribution 4.0 International (CC-BY-4.0)
+
+The DOCUMENTATION in this repository — including the final report
+(outputs/reports/crispdm-phase-1-to-6-paper.md), the model cards, the release/ bundle, the
+phase-* CRISP-DM artifacts, and the docs/ briefs — is licensed under CC-BY-4.0:
+https://creativecommons.org/licenses/by/4.0/
+
+You are free to share and adapt this documentation for any purpose, provided you give
+appropriate credit (cite this project — see CITATION.cff), link to the licence, and indicate
+if changes were made.
+
+This CC-BY-4.0 licence applies to DOCUMENTATION only; source code is under the MIT License
+(see LICENSE) and derived data under CC-BY-4.0 (see LICENSE-DATA).

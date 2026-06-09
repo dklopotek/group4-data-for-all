@@ -1,0 +1,19 @@
+# Pinned environment for reproducing the Barcelona allergen-priority pipeline.
+# Captured 2026-06-09 from the hermes-agent venv (Python 3.11.15).
+# These are the libraries the pipeline actually imports; pin exactly to reproduce.
+#
+#   python -m venv .venv && .venv/Scripts/activate   (Windows)
+#   pip install -r release/requirements-lock.txt
+#
+# NOTE: geopandas pulls GDAL/PROJ/Fiona/pyogrio as binary deps; on a clean machine
+# prefer `conda install -c conda-forge geopandas=1.0.1` then pip the rest, or use the
+# Dockerfile (release/Dockerfile) which pins the GDAL base image.
+
+numpy==1.26.4
+pandas==2.2.3
+geopandas==1.0.1
+scipy==1.12.0
+scikit-learn==1.8.0
+shapely==2.0.6
+pyarrow>=14,<18        # parquet I/O
+joblib>=1.3            # model artifact (Phase 4)

@@ -1,0 +1,16 @@
+Data License — Creative Commons Attribution 4.0 International (CC-BY-4.0)
+
+The derived DATA products in this repository (notably outputs/phase-6/section_priority.*,
+street_removal_actions.csv, street_removal_points.geojson, and other outputs/ data artifacts)
+are licensed under CC-BY-4.0: https://creativecommons.org/licenses/by/4.0/
+
+You are free to share and adapt these data for any purpose, provided you give appropriate
+credit (cite this project — see CITATION.cff), link to the licence, and indicate if changes
+were made.
+
+Upstream attribution: derived from Open Data BCN (Ajuntament de Barcelona) sources — the
+street-tree inventory, the municipal population register (Padro), and administrative-unit
+boundaries — themselves published under CC-BY-4.0. See release/manifest.json for exact sources,
+snapshots, and SHA-256 hashes.
+
+This CC-BY-4.0 licence applies to DATA only; source code is under the MIT License (see LICENSE).

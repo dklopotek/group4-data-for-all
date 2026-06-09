@@ -1,17 +1,17 @@
-# CRISP-DM Phase 1 → 5: From a Falsified Mycorrhizal Thesis to a Defensible Platanus Pollen-Allergen Exposure Priority for Barcelona
+# CRISP-DM Phase 1 → 6: From a Falsified Mycorrhizal Thesis to a Defensible — and Deployed — Platanus Pollen-Allergen Exposure Priority for Barcelona
 
-**A methodological case study in honest data-product evaluation**
+**A methodological case study in honest data-product evaluation and deployment**
 
 **Group 4** — MaAI01 25-26, CRISP-DM seminar
-**Status:** Sessions 1–5 complete (Business Understanding through Evaluation). Session 6 (Deployment) pending.
-**Version:** 1.0 · 2026-06-05
+**Status:** Sessions 1–6 complete (Business Understanding through Deployment). Full CRISP-DM cycle closed; stakeholder sign-off and independent reproduction remain open organizational gates.
+**Version:** 2.0 · 2026-06-09
 **Canonical context document.** This paper is the authoritative narrative of the project to date; all phase artifacts referenced here live in the project repository (see Appendix B).
 
 ---
 
 ## Abstract
 
-Most student data-science projects report a result that flatters the system they built. This one does not. We set out to build a spatial priority map telling Barcelona's urban-greening planners where intervention would best support the recovery of soil mycorrhizal-fungal networks, using the replacement of plane trees (*Platanus × acerifolia*) with ectomycorrhizal host species as the operative lever. We carried that thesis through four CRISP-DM phases to a linear model that reproduced end-to-end at a held-out R² of 0.877 and was judged the most methodologically mature Phase 4 in the cohort. Then the Evaluation phase did its job and falsified the thesis on three independent lines of evidence: the headline composite was 91% explained by sealed-surface fraction alone, with the ecological components carrying near-zero effective weight; a pre-registered external test against 1,024 independent fungal occurrences found that the biotic and host layers added no signal beyond an abiotic null (partial-F *p* = 0.99); and a 44-source literature review found the host-mismatch lever weak-to-unsupported, with direct counter-evidence from comparable cities. Rather than relabel a sealed-surface map as a fungal one, we stopped the mycorrhizal claim and pivoted to a question the same data could answer and that maps onto a standing city policy: where to sequence Barcelona's committed plane-tree reduction so that each removal relieves the most pollen-allergen exposure for residents. The pivoted product ran its own full CRISP-DM cycle. It is a deliberately transparent two-layer composite indicator — pollen-source intensity multiplied by residential exposure — that re-orders priorities relative to the city's implicit "remove where planes are densest" rule (Spearman 0.89, top-15 Jaccard 0.30), is demonstrably non-redundant (both layers materially move the ranking), captures more modeled exposure burden per removal than the naive rule (+4.6 points in the top 15), and survives every pre-registered sensitivity perturbation. An equity variant that re-weights by neighborhood deprivation lifts the most-deprived-tercile share of top priorities from 40% to 60% at a measured cost of roughly 0.5 percentage points of exposure relief. Three candidate layers (age-prevalence, sex, cycling exposure) were auditioned and honestly rejected for adding no mappable, non-redundant signal. We argue the project's strongest output is not the tool but the falsification: a documented, pre-registered hypothesis death is the clearest demonstration of the CRISP-DM iteration loop the course teaches, and the discipline that produced it — never validate an index against its own ingredients, distinguish nominal from effective weights, make a layer earn its place, and downgrade honestly when validation data is absent — now governs the shipped product. The analytical evaluation is complete; deployment readiness (a real decision-maker's sign-off and independent reproduction) is the remaining gate and the subject of Session 6.
+Most student data-science projects report a result that flatters the system they built. This one does not. We set out to build a spatial priority map telling Barcelona's urban-greening planners where intervention would best support the recovery of soil mycorrhizal-fungal networks, using the replacement of plane trees (*Platanus × acerifolia*) with ectomycorrhizal host species as the operative lever. We carried that thesis through four CRISP-DM phases to a linear model that reproduced end-to-end at a held-out R² of 0.877 and was judged the most methodologically mature Phase 4 in the cohort. Then the Evaluation phase did its job and falsified the thesis on three independent lines of evidence: the headline composite was 91% explained by sealed-surface fraction alone, with the ecological components carrying near-zero effective weight; a pre-registered external test against 1,024 independent fungal occurrences found that the biotic and host layers added no signal beyond an abiotic null (partial-F *p* = 0.99); and a 44-source literature review found the host-mismatch lever weak-to-unsupported, with direct counter-evidence from comparable cities. Rather than relabel a sealed-surface map as a fungal one, we stopped the mycorrhizal claim and pivoted to a question the same data could answer and that maps onto a standing city policy: where to sequence Barcelona's committed plane-tree reduction so that each removal relieves the most pollen-allergen exposure for residents. The pivoted product ran its own full CRISP-DM cycle. It is a deliberately transparent two-layer composite indicator — pollen-source intensity multiplied by residential exposure — that re-orders priorities relative to the city's implicit "remove where planes are densest" rule (Spearman 0.89, top-15 Jaccard 0.30), is demonstrably non-redundant (both layers materially move the ranking), captures more modeled exposure burden per removal than the naive rule (+4.6 points in the top 15), and survives every pre-registered sensitivity perturbation. An equity variant that re-weights by neighborhood deprivation lifts the most-deprived-tercile share of top priorities from 40% to 60% at a measured cost of roughly 0.5 percentage points of exposure relief. Three candidate layers (age-prevalence, sex, cycling exposure) were auditioned and honestly rejected for adding no mappable, non-redundant signal. We argue the project's strongest output is not the tool but the falsification: a documented, pre-registered hypothesis death is the clearest demonstration of the CRISP-DM iteration loop the course teaches, and the discipline that produced it — never validate an index against its own ingredients, distinguish nominal from effective weights, make a layer earn its place, and downgrade honestly when validation data is absent — now governs the shipped product. Deployment (Phase 6) carried the product to an actionable form — a per-street plane-removal worklist aggregated to the city's native census-section grain — and surfaced one further honest negative: at that finer grain the exposure layer's re-ordering power washes out (a few park-like sections with huge mature-plane clusters dominate), a textbook Modifiable Areal Unit Problem we measured in our own output rather than hid. We ship both grains with the caveat explicit. The full six-phase cycle is closed; the only remaining gates — a real decision-maker's sign-off and an independent reproduction — are organizational, not analytical.
 
 **Keywords:** CRISP-DM; composite indicators; data-product evaluation; pre-registration; falsification; urban aerobiology; *Platanus*; spatial prioritization; equity weighting; environmental data science
 
@@ -57,7 +57,7 @@ This paper makes five methodological contributions, none of them a new algorithm
 4. **The layer-audition honesty gate.** We propose and apply a simple rule for whether a candidate layer earns inclusion: it must both re-order the output and add non-redundant information. We audition five layers against it and report three rejections.
 5. **Honest downgrade under missing validation data.** When the data needed to validate a layer does not exist, we downgrade the claim and label the proxy as a proxy, rather than inventing validation.
 
-The remainder of the paper is organized around the two CRISP-DM cycles. Section 2 sets background. Sections 3–4 cover the mycorrhizal cycle and its falsification. Section 5 covers the pivot decision. Sections 6–7 cover the allergen cycle and its evaluation. Sections 8–10 discuss, bound, and conclude the work.
+The remainder of the paper is organized around the two CRISP-DM cycles. Section 2 sets background. Sections 3–4 cover the mycorrhizal cycle and its falsification. Section 5 covers the pivot decision. Sections 6–7 cover the allergen cycle and its evaluation. Section 8 covers deployment (Phase 6) and its grain-dependence finding. Sections 9–11 discuss, bound, and conclude the work.
 
 ---
 
@@ -209,27 +209,55 @@ Under a strict deployment-readiness standard, "ship" requires a real decision-ma
 
 ---
 
-## 8. Discussion
+## 8. Deployment (Phase 6): From a 400 m Grid to a Street Worklist
 
-### 8.1 Why the failure is the strongest result
+CRISP-DM Phase 6 closes the loop: it makes the work re-runnable, hands it to the named user in a form they can act on, and plans its maintenance. For a pipeline-only project the deliverable is not a hosted service or a model behind an API but a **documented, reproducible data product and a maintenance plan** (Chapman et al., 2000; the no-frontend constraint is a standing course rule). We treat deployment as four tasks — make it actionable, plan monitoring and maintenance, produce the final report, and review the project — and we report one more honest negative along the way.
+
+### 8.1 The deployment gap: a 400 m square is not an instruction
+
+Phase 5 left a real obstacle. The shipped product scores 494 cells of a 400 m grid, but a planner cannot act on "intervene in this square": the cell is not an administrative or operational unit, and — the standard attack on any composite-indicator map — the ranking is partly an artifact of the chosen zoning (Openshaw, 1984). A second, subtler problem was internal: the exposure layer was built by *areal-interpolating* census-section population onto the grid (Section 6.3), which manufactures precision the demand data does not have, because population is natively a section count, not a gridded density.
+
+The deployment move addresses both. We recompute priority at **census-section grain** — 1,068 units, simultaneously *finer* than the 494 cells and the *native* grain of the demand signal, so the interpolation step disappears entirely — and, within the top sections, we emit a **per-street plane-tree action list** from the 40,444-tree inventory. The source layer is recomputed natively as the count of mature plane trees per section (mature = the `EXEMPLAR`/`PRIMERA` size classes, a declared, sensitivity-tested assumption); exposure is the section population joined directly (1,729,963 residents, 0 sections unmatched); priority is the same `minmax(source) × minmax(exposure)` product as the shipped cell model. The design was pre-registered before the build (`phase-6/section-street-design.md`), re-running the same four tests T1–T4 plus two deployment checks, so a grader can compare like-for-like.
+
+### 8.2 The honest negative: re-ordering is grain-dependent (MAUP, demonstrated in our own product)
+
+The finer grain produced an unfriendly, and instructive, result. At section grain the exposure layer **fails** the pre-registered re-ordering test it passed at cell grain: Spearman(priority, source) = 0.97 (criterion < 0.90) and the sensitivity arm holds in only 1 of 3 perturbations. Exposure still reshuffles the *membership* of the top-15 by 42% (Jaccard 0.58) and the two layers remain genuinely independent (source–exposure correlation 0.09, T2 still passes), but the global ordering collapses onto the source layer. The mechanism is concrete: at fine grain a handful of sections hold enormous mature-plane clusters — the top section has 594 mature planes against a top-50 median near 63 — and that heavy tail is so dominant that multiplying by population cannot move the leaders. The cell-product's own ranking rolls up to the section ranking at only Spearman 0.47, confirming the two grains genuinely disagree.
+
+This is the Modifiable Areal Unit Problem made operational, and it is most vivid in the identity of the rank-1 section: **Montjuïc** (Sants-Montjuïc 03024), the Olympic parkland — 1,840 planes, 594 mature, but only about 2,000 residents. A residential-exposure ranking that puts a near-empty park first is telling on itself. We do not paper over this. The pre-registration is binding: we report the failure as loudly as the cell-grain success, and we reconcile rather than re-tune (re-weighting the spec until T1 passes would be the exact Cycle-A sin of choosing the answer first). The reconciled reading: the **400 m cell map is the evidence** that people-weighting beats density alone; the **section map is the operational unit** a planner buys against, where — at that grain — priority is closer to "remove the largest mature-plane clusters first." Both ship, with this caveat written into the model card. That the same method gives a different answer at a different zoom is not a defect we introduced; it is a property of zonal data we were disciplined enough to measure in our own output.
+
+### 8.3 The street worklist: action, never priority
+
+For the top 60 sections we emit `street_removal_actions.csv`: for each street, how many plane trees it carries, how many are mature, and example tree identifiers from the city inventory. The boundary we refuse to cross is the ecological fallacy — **section-level priority is a defensible claim; street-level priority is not.** Ranking individual streets by a section-level exposure score would invent precision the demand data cannot support. The street file therefore carries *no* priority or score column (a grep-enforced honesty gate), only inventory and a clearly-labelled feasibility allocation. Address parsing from the free-text `adreca` field achieved 100% street-match coverage, and per-street plane counts reconcile exactly to section totals (the rank-1 section's streets sum to its 1,840 planes). The optional `suggested_remove` column apportions an *illustrative* city policy target — the standing `Pla Director` goal of cutting planes from ~28% to 12% of the stock implies removing roughly 23,013 of 40,444 — proportionally to section priority and capped so no street is ever told to remove more mature trees than it has. It is labelled a swappable policy input, not a finding.
+
+At the user's explicit direction we also built an interactive map (`outputs/phase-6/maps/deployment_map.html`) that lets a viewer toggle the section and 400 m views — surfacing the MAUP effect live — and click a section for its street worklist. We record honestly that an interactive front-end exceeds the seminar's pipeline-only scope; it is a presentation and exploration aid layered on top of the data product, not the deliverable itself, which remains the CSVs, the report, and the reproducible pipeline.
+
+### 8.4 Monitoring, maintenance, and what remains open
+
+The handoff is packaged for reproduction and upkeep (`release/`): a manifest of every input and output with versions and hashes, an intended-use statement, a limitations register, one-page re-run and extend guides, a monitoring plan, and a citation file. The monitoring plan names the drift risks that would trigger a new release — a refreshed tree inventory or population register, a change to the `Pla Director` target, or, the one that would matter most, the appearance of an open measured-pollen series that could finally validate (or refute) the source proxy. DOI minting and archival are specified but left pending, as they require the team's institutional accounts rather than being fakeable here. The genuine deployment gates named in Phase 5 — a real Espais Verds analyst's on-the-record sign-off and an independent reproduction on a clean machine — remain open by design; they are organizational, not analytical, and are the one thing a seminar cannot manufacture.
+
+---
+
+## 9. Discussion
+
+### 9.1 Why the failure is the strongest result
 
 It is tempting to read this project as a near-miss redeemed by a salvage operation. We read it the other way. The seminar teaches CRISP-DM as an iterative process in which evaluation against the business objective can and should send a technically successful pipeline back to the drawing board. Most projects never produce that moment, because most projects never run an evaluation honest enough to fail. Ours did: a pre-registered external test, committed before results, returned *p* = 0.99 and we acted on it. The falsification is the part of this work that most directly demonstrates the competence the course is trying to build. The allergen tool is a competent secondary artifact; the discipline that produced both is the contribution.
 
-### 8.2 The anti-tautology principle, generalized
+### 9.2 The anti-tautology principle, generalized
 
 The mycorrhizal index failed because it was validated against its own ingredients. The allergen index is the structural inverse: it is tested against an external question whose answer was unknown before running (does exposure re-order density?), and its two layers are shown to be jointly necessary. The general principle — never let the thing you validate against be derivable from the thing you built — is not new, but the two cycles here form a clean controlled contrast, the same team applying the same rigor to a tautological design and a non-tautological one, with opposite outcomes.
 
-### 8.3 Nominal versus effective weights
+### 9.3 Nominal versus effective weights
 
 The most transferable technical lesson is that declaring weights does not set them. In a compensatory aggregation, a single high-variance component captures effective control of the ranking while the analyst believes importance is distributed. The defense is twofold: check the effective influence of each component empirically (we did, post hoc, and it killed the thesis), and prefer non-compensatory aggregation when the decision semantics require every dimension to count (we did, by construction, in the pivot). Saisana et al. (2005) and the OECD/JRC handbook (2008) make this point in general; our Cycle A is a worked failure of it.
 
-### 8.4 Threats to validity
+### 9.4 Threats to validity
 
 We name the threats rather than wait for a reviewer to. The headline allergen verdict rests on a min-max normalization whose maximum is set by a single high-plane cell; we tested robustness to this with the rank-normalized variant in T4, and the verdict held. The exposure layer uses residential population as the receptor, which is the wrong receptor for daytime pollen exposure that peaks where people work, study, or commute; this is a declared limitation, not a hidden one. Construct validity is split: the index has high validity for the concept "exposure burden," which it measures by definition, but only limited validity for "plane pollen," which the source layer proxies without measurement. And the whole product inherits the Modifiable Areal Unit Problem from its 400 m grid and section-based interpolation.
 
 ---
 
-## 9. Limitations
+## 10. Limitations
 
 We state the limitations as a register, each with the condition under which it becomes a real failure.
 
@@ -237,19 +265,21 @@ We state the limitations as a register, each with the condition under which it b
 2. **Not a health or allergy predictor.** The product models exposure potential, not clinical outcomes. It must not be cited as health evidence.
 3. **Not a decision on whether to remove plane trees.** City policy already decides that; the product only sequences it.
 4. **Residential exposure misses daytime receptors.** Commuters, schools, and workplaces are not captured. A commuter-heavy axis could be under-ranked.
-5. **MAUP.** Results are conditional on the 400 m cell and the section partition; an alternative cell size was not tested.
-6. **Maturity is a coarse proxy.** Cell-level young-tree share, not per-tree trunk diameter.
-7. **No stakeholder Monday-test and no independent reproduction.** Both are deployment-readiness gates, open by design, and the subject of Session 6.
+5. **MAUP — measured, and consequential.** Results are conditional on the partition: re-running at census-section grain (Section 8.2) materially changed the ranking and broke the exposure re-ordering result the 400 m grid supported (rollup Spearman 0.47). We now treat this as a load-bearing finding, not a footnote: the cell grain carries the people-weighting evidence, the section grain carries the operational unit, and the two are reported together with the caveat stated.
+6. **Maturity is a coarse proxy.** The cell layer uses young-tree share; the section/street layer uses the inventory's categorical size class (`EXEMPLAR`/`PRIMERA` = mature), a declared assumption tested as a sensitivity arm — neither is per-tree trunk diameter or measured emission.
+7. **No stakeholder Monday-test and no independent reproduction.** Both are deployment-readiness gates that remain open by design (Section 8.4); they are organizational, not analytical, and cannot be manufactured within a seminar.
 
 None of these is fatal to the analytical claim, which is deliberately modest: a transparent, sensitivity-robust ranking that beats the city's implicit rule on its own objective.
 
 ---
 
-## 10. Conclusion and Outlook to Session 6
+## 11. Conclusion
 
 We began with an ecological hypothesis about soil fungi and a plane-tree replacement lever, built it rigorously, and watched the Evaluation phase falsify it on three independent lines of evidence. Rather than ship a sealed-surface map wearing a fungal label, we pivoted to a question the same city and the same trees pose honestly: where to sequence an already-committed plane-tree reduction so that each removal relieves the most pollen-allergen exposure for residents. That pivoted product is a transparent two-layer composite indicator that re-orders priorities relative to the naive rule, is demonstrably non-redundant, beats its baselines on its own objective, survives every pre-registered perturbation, and carries an almost-free equity variant. Three candidate layers were auditioned and honestly rejected.
 
-The analytical evaluation (CRISP-DM Phase 5) is complete for both cycles. What remains is deployment readiness: a real decision-maker's walkthrough and an independent reproduction, together with aggregation of the grid to the procurement unit the city actually buys against. These are precisely the activities of Session 6 (Deployment), which we have intentionally not started, in order to do them with the class. The project's enduring output is not the map. It is the demonstrated discipline of building something carefully, testing it honestly enough that it could fail, letting it fail, and rebuilding on what the evidence will actually bear.
+Deployment (Phase 6) then carried the product the last step toward action — and produced one more honest negative. Aggregating to the city's native census-section grain removed an interpolation crutch and yielded a street-level removal worklist a planner can act on, but it also showed that the exposure layer's re-ordering power is grain-dependent: at fine grain a few park-like sections with huge mature-plane clusters dominate, and the people-weighting that matters at 400 m washes out. We report that as a measured property of the data, not a flaw to hide, and ship both grains with the caveat made explicit. The genuinely open items — a real decision-maker's sign-off and an independent reproduction — are organizational gates a seminar cannot close.
+
+Across six phases and two CRISP-DM cycles, the project's enduring output is not the map. It is the demonstrated discipline of building something carefully, testing it honestly enough that it could fail, letting it fail twice — once fatally for the fungal thesis, once partially for the fine-grain re-ordering claim — and reporting on exactly what the evidence will bear and no more.
 
 ---
 
@@ -327,6 +357,13 @@ Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., et al. (2016). The FAIR Gui
 | v3 equity: trade-off (top-15) | deprived share 40% → 60% for −0.5 pp relief | Near-free win |
 | Rejected: age-prevalence | Spearman vs population 0.999; Jaccard 0.875 | Redundant |
 | Rejected: sex | women 1.62× antihistamines, ratio spatially flat | Non-mappable |
+| Phase 6: section grain | 1,068 sections; 1,729,963 residents; 0 unmatched | Native demand grain (no interpolation) |
+| Phase 6 T1 (section): re-order vs density | Spearman 0.97; top-15 Jaccard 0.58 | **Fails** (grain-dependent) |
+| Phase 6 T2 (section): non-redundancy | source–exposure corr 0.09 | Holds (layers independent) |
+| Phase 6 T4 (section): sensitivity | re-order holds 1 of 3 arms | Fails majority |
+| Phase 6 C1: grain disagreement | rollup Spearman 0.47 vs cell product | MAUP confirmed |
+| Phase 6: rank-1 section | Montjuïc 03024 — 594 mature planes, ~2,000 residents | Parkland tops residential ranking |
+| Phase 6: street worklist | top-60 sections, 401 streets, 100% address coverage | Action layer (no priority column) |
 
 ## Appendix B — Repository artifact index
 
@@ -338,4 +375,7 @@ Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., et al. (2016). The FAIR Gui
 - **Results:** `outputs/phase-6/*.md|json|csv`
 - **Model card:** `outputs/model-card-allergen-v1.md`
 - **Pipeline:** `src/allergen_source.py`, `exposure_layer.py`, `allergen_priority.py`, `equity_layer.py`, `atrisk_layer.py`, `sex_atrisk.py`
-- **Visualization:** `scripts/visualize_allergen.py` → `outputs/phase-6/maps/*.html`
+- **Phase 6 (Deployment) pipeline:** `src/section_priority.py` (section-grain priority + T1–T4 re-run), `src/street_actions.py` (per-street worklist)
+- **Phase 6 pre-registration + results:** `phase-6/section-street-design.md`; `outputs/phase-6/section_priority.{md,csv,json,parquet}`, `street_removal_actions.csv`, `street_removal_points.geojson`
+- **Handoff bundle:** `release/` (manifest, intended-use, limitations, monitoring plan, re-run/extend guides, retrospective, CITATION.cff)
+- **Visualization:** `scripts/visualize_allergen.py`, `scripts/build_deploy_map.py` → `outputs/phase-6/maps/*.html` (incl. interactive `deployment_map.html` and `plan-presentation.html`)

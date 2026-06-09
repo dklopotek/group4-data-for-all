@@ -1,7 +1,7 @@
 # REPO MAP — what's what
 
 > Lost? Read this first, then the one file that explains the whole project:
-> **`outputs/reports/crispdm-phase-1-to-5-paper.md`** — the canonical narrative (the "bible").
+> **`outputs/reports/crispdm-phase-1-to-6-paper.md`** — the canonical narrative (the "bible", all 6 phases).
 
 ## What this project is
 
