@@ -121,6 +121,15 @@ main.stage{position:relative;flex:1 1 auto;display:flex;min-height:0;}
    Map
    ============================================================ */
 #map{position:absolute;inset:0;background:#0a0d12;}
+/* always-visible honesty caveat over the map (non-suppressible, never blocks the map) */
+#caveat{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:900;
+  max-width:min(620px,52vw);pointer-events:none;text-align:center;
+  background:rgba(13,17,23,.82);backdrop-filter:blur(6px);
+  border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:9px;
+  padding:7px 13px;font-size:11.5px;line-height:1.35;color:#c9d3de;box-shadow:var(--shadow);
+}
+#caveat b{color:var(--warn);font-weight:600;}
 .leaflet-container{background:#0a0d12;font-family:"IBM Plex Sans",sans-serif;}
 .leaflet-tooltip.sec-tip{
   background:#0d1117ee;border:1px solid var(--border);color:var(--text);
@@ -396,6 +405,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   <!-- ====================== STAGE ====================== -->
   <main class="stage">
     <div id="map" role="application" aria-label="Map of Barcelona census sections ranked by plane-tree removal priority"></div>
+    <div id="caveat" role="note">⚠ At section grain the ranking ≈ plane density (MAUP) — use sections to <b>execute</b>, claim priority at the 400&nbsp;m grain. Relief is a <b>modeled proxy</b>, not a health outcome.</div>
 
     <!-- Control deck -->
     <div class="deck">
@@ -871,6 +881,13 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   }
 
   document.getElementById("buildPlan").addEventListener("click",()=>buildPlan());
+  // Honesty guard: warn when the user disables the park-skip (the Montjuic trap).
+  document.getElementById("fSkipPark").addEventListener("change",(e)=>{
+    if(!e.target.checked){
+      const ok=confirm("Skip park-like is now OFF.\n\nThe #1-ranked section is Montjuïc parkland — 594 mature planes but only ~2,000 residents. With park-like sections included, a small annual budget can spend most of the year felling trees in a park where almost nobody is exposed (a known MAUP artifact).\n\nKeep park-like sections in the plan anyway?");
+      if(!ok){ e.target.checked=true; }
+    }
+  });
   document.getElementById("clearPlan").addEventListener("click",()=>{
     planKeys.clear();renderPlan(null,0);restyle();renderLegend();
   });
@@ -903,7 +920,9 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   document.getElementById("exportCsv").addEventListener("click",()=>{
     if(!planKeys.size){toast("Plan is empty");return;}
     const header=["section","district","street","planes","mature","suggested"];
-    const lines=[header.join(",")];
+    const lines=[
+      '"NOTE: streets are inventory; suggested = illustrative policy allocation, NOT a street-level ranking. Sections are an execution unit, not a priority claim (priority is made at the 400m grain). Relief is a modeled exposure proxy, not a health outcome."',
+      header.join(",")];
     let rowCount=0;
     [...planKeys]
       .map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties)
