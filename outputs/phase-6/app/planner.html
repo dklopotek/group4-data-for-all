@@ -464,11 +464,15 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
           </label>
           <label class="layer-opt">
             <input type="radio" name="layer" value="archetype" aria-describedby="ld-arch">
-            <span><span class="lbl">Archetype</span><span class="desc" id="ld-arch">Typology &amp; suggested action (interpretive).</span></span>
+            <span><span class="lbl">Archetype</span><span class="desc" id="ld-arch">Unsupervised ML — k-means typology &amp; suggested action.</span></span>
+          </label>
+          <label class="layer-opt">
+            <input type="radio" name="layer" value="corrob" aria-describedby="ld-corrob">
+            <span><span class="lbl">Corroboration — trust verdict</span><span class="desc" id="ld-corrob">Does the 400&nbsp;m evidence back this section? (the MAUP check, made actionable)</span></span>
           </label>
           <label class="layer-opt">
             <input type="radio" name="layer" value="hotspot" aria-describedby="ld-hot">
-            <span><span class="lbl">Hotspot</span><span class="desc" id="ld-hot">Gi* / LISA spatial clusters (interpretive).</span></span>
+            <span><span class="lbl">Hotspot</span><span class="desc" id="ld-hot">Spatial statistics — Gi* / LISA clusters (999 perms).</span></span>
           </label>
           <label class="layer-opt">
             <input type="radio" name="layer" value="cells" aria-describedby="ld-cells">
@@ -489,6 +493,16 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
           <div class="field">
             <label for="fAction">Suggested action</label>
             <select id="fAction" aria-label="Filter by suggested action"></select>
+          </div>
+          <div class="field">
+            <label for="fCorrob">Cross-grain corroboration</label>
+            <select id="fCorrob" aria-label="Filter by cross-grain corroboration">
+              <option value="All">All sections</option>
+              <option value="CORROBORATED">Corroborated — act first</option>
+              <option value="ARTIFACT">Section-grain artifacts</option>
+              <option value="UNDERRATED">Underrated by section grain</option>
+              <option value="minor">Minor (lower tier)</option>
+            </select>
           </div>
         </div>
       </section>
@@ -603,6 +617,9 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
       <div class="notes-block">
         <h4>Honesty notes — please keep these in mind</h4>
         <div class="note" id="noteRationale"></div>
+        <div class="note" id="noteCorrob"></div>
+        <div class="note" id="noteMono"></div>
+        <div class="note" id="noteThermal"></div>
         <div class="note" id="noteMl"></div>
         <div class="note" id="noteStreet"></div>
         <div class="note" id="noteMaup"></div>
@@ -667,9 +684,29 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     return "#3a4150";
   }
 
+  // Cross-grain corroboration colours (the flagship trust verdict)
+  const CORR_COLORS={CORROBORATED:"#2ea043",ARTIFACT:"#f0883e",UNDERRATED:"#a371f7",minor:"#3a4150"};
+  function corrColor(c){ return CORR_COLORS[c]||"#3a4150"; }
+  function corrLabel(c){
+    return c==="CORROBORATED"?"Corroborated — act first"
+      : c==="ARTIFACT"?"Section-grain artifact"
+      : c==="UNDERRATED"?"Underrated by section grain"
+      : "Concordant (lower tier)";
+  }
+  // verdict sentence for the detail badge (uses section rank vs 400 m rank)
+  function corrMsg(p){
+    if(p.corrob==="CORROBORATED")
+      return `Both grains agree (section #${p.rank}, 400 m #${p.rank400}). The people-weighted evidence backs this — act first.`;
+    if(p.corrob==="ARTIFACT")
+      return `High here only because it is a big mature-plane cluster. The 400 m people-weighting ranks it #${p.rank400}. Use as an execution unit — do NOT claim priority (the Montjuïc trap).`;
+    if(p.corrob==="UNDERRATED")
+      return `Buried at section grain (#${p.rank}) but the 400 m people-weighting ranks it #${p.rank400} — a dense-residential area the naive plane-count misses.`;
+    return `Not top-tier at either grain (section #${p.rank}, 400 m #${p.rank400}).`;
+  }
+
   /* ---------- state ---------- */
   let currentLayer="priority";
-  let fDistrict="All", fAction="All";
+  let fDistrict="All", fAction="All", fCorrob="All";
   const planKeys=new Set();      // section keys currently in the plan (Set preserves insertion order)
   const featByKey={};            // key -> leaflet layer (sections)
   let selectedKey=null;          // open in detail panel
@@ -703,6 +740,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   }
   const OBJ_LABELS={
     efficiency:"Efficiency — max relief",
+    co_benefit:"Co-benefit — relief × monoculture",
     equity:"Equity — favour deprived",
     quick_wins:"Quick wins — fewest sites",
     density:"Density — city's naive rule",
@@ -772,13 +810,15 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     let fill;
     if(currentLayer==="priority")   fill=priColor(p.pri);
     else if(currentLayer==="archetype") fill=archColor(p.action);
+    else if(currentLayer==="corrob") fill=corrColor(p.corrob);
     else /* hotspot */              fill=hotColor(p);
 
+    const faint=((currentLayer==="hotspot"||currentLayer==="corrob") && fill==="#3a4150");
     return {
       color: inPlan ? "#39c5cf" : "#0d1117",
       weight: inPlan ? 2.6 : .5,
       fillColor: fill,
-      fillOpacity: visible ? (currentLayer==="hotspot" && fill==="#3a4150" ? .35 : .8) : .05,
+      fillOpacity: visible ? (faint ? .32 : .8) : .05,
       opacity: visible ? (inPlan?1:.85) : .12
     };
   }
@@ -793,6 +833,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   function passesFilter(p){
     if(fDistrict!=="All" && p.district!==fDistrict) return false;
     if(fAction!=="All"   && p.action!==fAction)     return false;
+    if(fCorrob!=="All"   && p.corrob!==fCorrob)     return false;
     return true;
   }
 
@@ -818,7 +859,17 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
       if(!map.hasLayer(sectionLayer)) map.addLayer(sectionLayer);
       restyle();
     }
-    document.getElementById("maupBox").classList.toggle("show",showCells);
+    // explainer box: MAUP text on cells, corroboration text on the corrob layer
+    const showCorrob=currentLayer==="corrob";
+    const mb=document.getElementById("maupBox"), h3=mb.querySelector("h3");
+    if(showCorrob){
+      h3.textContent="Corroboration — read with care";
+      document.getElementById("maupText").textContent=(META.notes&&META.notes.corrob)||"";
+    }else{
+      h3.textContent="MAUP — read with care";
+      document.getElementById("maupText").textContent=(META.notes&&META.notes.maup)||"";
+    }
+    mb.classList.toggle("show",showCells||showCorrob);
   }
 
   /* ================================================================
@@ -837,6 +888,12 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
         swatch("#d4a72c","monitor")+
         swatch("#5b7fa6","defer (park-like)")+
         swatch("#444c56","low-relevance");
+    }else if(currentLayer==="corrob"){
+      html=`<h4>Cross-grain trust verdict</h4>`+
+        swatch("#2ea043","Corroborated (act first)")+
+        swatch("#f0883e","Section-grain artifact")+
+        swatch("#a371f7","Underrated by section grain")+
+        swatch("#3a4150","Minor (lower tier)");
     }else{ // hotspot
       html=`<h4>Spatial clusters (Gi* / LISA)</h4>`+
         swatch("#e5484d","Priority cluster (HH)")+
@@ -872,10 +929,18 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
          <div class="k" style="margin-bottom:5px">priority (0–1)</div>
          <div class="pri-bar-wrap"><div class="pri-bar"><i style="width:${(p.pri*100).toFixed(0)}%"></i></div></div>
          <div class="v" style="font-size:14px;margin-top:5px">${p.pri.toFixed(3)}</div>
-       </div>`;
+       </div>`+
+      stat(`${((p.mono||0)*100).toFixed(0)}`,`<small>%</small>`,"Platanus share")+
+      stat(`${(p.shannon||0).toFixed(2)}`,`<small>(${p.nsp||0} sp)</small>`,"Shannon diversity");
 
-    // archetype + hotspot badges
+    // badges: corroboration (flagship) FIRST, then archetype, hotspot, optional thermal
     document.getElementById("dBadges").innerHTML=
+      `<div class="badge" style="border-color:${corrColor(p.corrob)}55">
+         <span class="swl" style="background:${corrColor(p.corrob)}"></span>
+         <div><div class="bt">${escapeHtml(corrLabel(p.corrob))}</div>
+              <div class="bd2">${escapeHtml(corrMsg(p))}</div>
+              <div class="bd2" style="color:var(--muted-2);font-style:italic;margin-top:3px">Tests agreement of two aggregations of the same exposure proxy — not the proxy itself.</div></div>
+       </div>`+
       `<div class="badge">
          <span class="swl" style="background:${archColor(p.action)}"></span>
          <div><div class="bt">${escapeHtml(archetypeName(p))}</div>
@@ -885,7 +950,13 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
          <span class="swl" style="background:${hotColor(p)}"></span>
          <div><div class="bt">${hotspotLabel(p)}</div>
               <div class="bd2">Gi* z = ${(+p.gi_z).toFixed(2)} · ${p.hot==="hot"?"hot":"not hot"}</div></div>
-       </div>`;
+       </div>`+
+      (p.heat?
+      `<div class="badge" style="border-color:#f0883e55">
+         <span class="swl" style="background:#f0883e"></span>
+         <div><div class="bt">Heat-island caution</div>
+              <div class="bd2">LST ${p.lst==null?"—":p.lst+"°C"}, low canopy — pair removal with immediate replacement, no gaps.</div></div>
+       </div>`:"");
 
     // street worklist (guard empty/missing)
     renderWorklist(p);
@@ -999,6 +1070,12 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     let meta=`${props.length} section${props.length>1?"s":""}`;
     if(budget!=null){ meta+=`<br>target ${fmt(budget)} mature`; }
     meta+=`<br>${fmt(total)} planes &asymp; <b style="color:var(--text)">${fmtEuro(total*rate)}</b>`;
+    // corroboration KPI: how much of the plan's modeled relief is cross-grain-trustworthy vs MAUP artifact
+    const den=props.reduce((s,p)=>s+(p.pri_raw||0),0)||1;
+    const corPct=Math.round(100*props.filter(p=>p.corrob==="CORROBORATED").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    const artPct=Math.round(100*props.filter(p=>p.corrob==="ARTIFACT").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    meta+=`<br><span style="color:#2ea043">${corPct}% relief corroborated</span>`
+        + (artPct>0?` · <span style="color:#f0883e">${artPct}% from artifacts — review</span>`:"");
     if(COST.caveat){ meta+=`<br><span style="color:var(--muted-2);font-style:italic">${escapeHtml(COST.caveat)}</span>`; }
     document.getElementById("planMeta").innerHTML=meta;
     summary.hidden=false; actions.hidden=false;
@@ -1230,6 +1307,9 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     as.innerHTML=`<option value="All">All actions</option>`+
       acts.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join("");
     as.addEventListener("change",()=>{fAction=as.value;restyle();});
+
+    const cs=document.getElementById("fCorrob");
+    cs.addEventListener("change",()=>{fCorrob=cs.value;restyle();});
   }
 
   /* ================================================================
@@ -1253,7 +1333,10 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   function fillNotes(){
     const n=META.notes||{};
     document.getElementById("noteRationale").innerHTML=`<b>Why this exists:</b> ${escapeHtml(n.rationale||"")}`;
-    document.getElementById("noteMl").innerHTML=`<b>The ML failed:</b> ${escapeHtml(n.ml||"")}`;
+    document.getElementById("noteCorrob").innerHTML=`<b>Corroboration verdict:</b> ${escapeHtml(n.corrob||"")}`;
+    document.getElementById("noteMono").innerHTML=`<b>Co-benefit objective:</b> ${escapeHtml(n.monoculture||"")}`;
+    document.getElementById("noteThermal").innerHTML=`<b>Heat guardrail:</b> ${escapeHtml(n.thermal||"")}`;
+    document.getElementById("noteMl").innerHTML=`<b>Models used:</b> ${escapeHtml(n.ml||"")}`;
     document.getElementById("noteStreet").innerHTML=`<b>Streets ≠ ranking:</b> ${escapeHtml(n.street_layer||"")}`;
     document.getElementById("noteMaup").innerHTML=`<b>MAUP:</b> ${escapeHtml(n.maup||"")}`;
     document.getElementById("maupText").textContent=n.maup||"";

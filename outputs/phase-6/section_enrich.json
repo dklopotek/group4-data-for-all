@@ -1,0 +1,37 @@
+{
+  "grain_spearman_section_vs_400m": 0.4669,
+  "interpretation": "the two grains disagree materially (MAUP) -- corroboration is informative",
+  "corrob_counts": {
+    "CORROBORATED": 187,
+    "ARTIFACT": 169,
+    "UNDERRATED": 169,
+    "minor": 543
+  },
+  "montjuic_check": {
+    "section_key": "03024",
+    "section_rank_by_priority": 1,
+    "rank_400m": 920,
+    "mature_planes": 594,
+    "residents": 2031,
+    "corrob_class": "ARTIFACT",
+    "EXPECT": "ARTIFACT (high source, low people-weighting)"
+  },
+  "underrated_example": {
+    "key": "08036",
+    "section_pctile": 0.478,
+    "p400_pctile": 1.0
+  },
+  "monoculture": {
+    "city_share_check": 0.2787,
+    "sections_over_50pct_planes": 136,
+    "median_shannon_diversity": 1.645,
+    "median_species_per_section": 9,
+    "note": "share = section Platanus / section total trees; Shannon H = -sum(p ln p) over all 286 species (diversity context, method inspired by CoolSpend)."
+  },
+  "thermal": {
+    "heat_flag_threshold_top_quartile": 0.4564,
+    "n_flagged": 267,
+    "note": "heat_risk = minmax(LST) * (1 - minmax(NDVI)); flagged = removal worsens heat island."
+  },
+  "honesty": "Corroboration compares two aggregations of the SAME unvalidated pollen proxy. Agreement raises confidence in the spatial ALLOCATION; it does NOT validate the proxy. Monoculture is real inventory; co_benefit is a ranking lens, not a claim. Thermal is a guardrail, not a priority."
+}
