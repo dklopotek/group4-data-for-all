@@ -131,8 +131,8 @@
       "path": "outputs/phase-6/app/planner.html",
       "description": "Self-contained Leaflet planner app + Vera, a grounded data-agent chat (BYOK DeepSeek/Claude/OpenAI or local Ollama; persona + skill workflows + hard anti-hallucination rules) that answers only from the data, with real Excel (SheetJS) and PDF (jsPDF) exports built from PLANNER_DATA and a negation-aware over-claim linter. No key in source; user key stored only in browser localStorage. Presentation aid; loads app_data.js. Not a maintained service.",
       "version": "1.4.0",
-      "bytes": 103652,
-      "sha256": "f2a9f82a87eca2eb1126a54b58611fbec2f7021efe697bfbf9ab4b66ab71428f"
+      "bytes": 105037,
+      "sha256": "990df9dd6d3a68464af12508b5bb2a6ea6aefce3f061a5f91afe07672fc33f8d"
     },
     "planner_app_data": {
       "path": "outputs/phase-6/app/app_data.js",
