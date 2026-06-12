@@ -11,6 +11,11 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+<!-- Artifact export libs (CDN): SheetJS (xlsx) + jsPDF + autotable. Tables are built from real PLANNER_DATA, not the LLM. -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
 <!-- Fonts: Fraunces (display serif) + IBM Plex Sans (body) + IBM Plex Mono (data) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -447,6 +452,71 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
 *::-webkit-scrollbar{width:9px;height:9px;}
 *::-webkit-scrollbar-thumb{background:#2b323d;border-radius:6px;}
 *::-webkit-scrollbar-track{background:transparent;}
+
+/* ============================================================
+   Vera — data agent chat widget
+   ============================================================ */
+.vera-fab{
+  position:absolute;bottom:24px;right:18px;z-index:1500;
+  display:flex;align-items:center;gap:9px;
+  background:linear-gradient(180deg,#1a3a3d,#13282b);color:var(--accent);
+  border:1px solid var(--accent-dim);border-radius:999px;padding:11px 17px;
+  font-weight:600;font-size:13px;box-shadow:var(--shadow);transition:filter .15s,transform .05s;
+}
+.vera-fab:hover{filter:brightness(1.25);}
+.vera-fab:active{transform:translateY(1px);}
+.vera-fab .av{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);}
+
+.vera{
+  position:absolute;top:0;right:0;height:100%;width:440px;max-width:92vw;z-index:1600;
+  background:linear-gradient(180deg,#141a22,#10151c);
+  border-left:1px solid var(--border);box-shadow:-20px 0 54px -16px rgba(0,0,0,.7);
+  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.vera.open{transform:translateX(0);}
+.vera .vhd{display:flex;align-items:center;gap:12px;padding:16px 18px 13px;border-bottom:1px solid var(--border-soft);flex:0 0 auto;}
+.vera .vhd .vavatar{
+  width:38px;height:38px;border-radius:11px;flex:0 0 auto;
+  background:radial-gradient(circle at 35% 30%,#39c5cf,#1d6b70);
+  display:flex;align-items:center;justify-content:center;font-family:"Fraunces",serif;font-weight:600;font-size:19px;color:#04181a;
+}
+.vera .vhd h2{margin:0;font-size:16px;font-weight:600;font-family:"Fraunces",serif;}
+.vera .vhd .vsub{font-size:11px;color:var(--muted);margin-top:1px;}
+.vera .vhd .vclose{margin-left:auto;background:none;border:1px solid var(--border);color:var(--muted);width:30px;height:30px;border-radius:8px;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.vera .vhd .vclose:hover{color:var(--text);border-color:#46505c;}
+
+.vera .vlog{flex:1 1 auto;overflow:auto;padding:15px 16px;display:flex;flex-direction:column;gap:12px;}
+.vmsg{display:flex;flex-direction:column;gap:3px;max-width:100%;}
+.vmsg .who{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted-2);font-weight:600;}
+.vmsg .bub{border-radius:11px;padding:10px 13px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-wrap:break-word;}
+.vmsg.user .bub{background:#1a2733;border:1px solid #243443;align-self:flex-end;}
+.vmsg.user{align-items:flex-end;}
+.vmsg.vera .bub{background:#0f141c;border:1px solid var(--border-soft);}
+.vmsg.vera .bub.warn{border-left:3px solid var(--warn);}
+.vmsg .bub b,.vmsg .bub strong{color:var(--text);}
+.vmsg .bub table{border-collapse:collapse;margin:6px 0;font-size:11.5px;}
+.vmsg .bub td,.vmsg .bub th{border:1px solid var(--border-soft);padding:3px 7px;}
+.vmsg .meta{font-size:10px;color:var(--muted-2);}
+
+.vera .vquick{display:flex;flex-wrap:wrap;gap:6px;padding:8px 14px 0;flex:0 0 auto;}
+.vchip{background:#1c2330;border:1px solid var(--border-soft);color:var(--text);border-radius:999px;padding:6px 11px;font-size:11.5px;transition:.14s;}
+.vchip:hover{border-color:var(--accent-dim);background:#19222e;}
+
+.vera .vfoot{flex:0 0 auto;padding:11px 14px 13px;border-top:1px solid var(--border-soft);}
+.vera .vinrow{display:flex;gap:8px;align-items:flex-end;}
+.vera textarea.vin{flex:1 1 auto;min-height:42px;max-height:120px;background:#0d1117;color:var(--text);
+  border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:13px;line-height:1.4;resize:none;}
+.vera .vsend{flex:0 0 auto;background:var(--accent);color:#04181a;border:none;border-radius:10px;width:44px;height:44px;font-size:18px;font-weight:700;}
+.vera .vsend:disabled{opacity:.5;}
+.vera .vtools{display:flex;gap:8px;margin-top:9px;}
+.vera .vtools .btn{flex:1;padding:8px;font-size:12px;}
+.vera .vsettings{margin-top:9px;}
+.vera .vsettings summary{font-size:11px;color:var(--muted);cursor:pointer;list-style:none;}
+.vera .vsettings summary::-webkit-details-marker{display:none;}
+.vera .vsettings .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+.vera .vfoot .ai-priv{margin-top:8px;}
+.vtyping{font-size:12px;color:var(--muted);font-style:italic;}
 </style>
 </head>
 
@@ -583,59 +653,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
         </div>
       </section>
 
-      <!-- Deliverable generator: grounded, formatter-only LLM. AI in-app (BYOK / local) or copy-out. -->
-      <section class="card" aria-label="Deliverable generator">
-        <div class="hd"><span class="dot" aria-hidden="true"></span><h2>Deliverable — AI writer</h2></div>
-        <div class="bd">
-          <div class="field">
-            <label for="delivFormat">Turn this plan into…</label>
-            <select id="delivFormat" aria-label="Deliverable format">
-              <option value="director_memo">Director decision memo</option>
-              <option value="council_briefing">Council / public briefing</option>
-              <option value="procurement">Ops procurement worklist</option>
-              <option value="public_faq">Resident FAQ answer</option>
-            </select>
-          </div>
-
-          <div class="ai-grid">
-            <div class="field">
-              <label for="aiProvider">AI provider</label>
-              <select id="aiProvider" aria-label="AI provider">
-                <option value="deepseek">DeepSeek</option>
-                <option value="anthropic">Claude (Anthropic)</option>
-                <option value="openai">OpenAI</option>
-                <option value="ollama">Local (Ollama)</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="aiModel">Model</label>
-              <input type="text" class="ai" id="aiModel" aria-label="Model id" placeholder="claude-opus-4-8">
-            </div>
-          </div>
-          <div class="ai-key field" id="aiKeyRow">
-            <label for="aiKey">API key <span id="aiKeyHint" style="text-transform:none;color:var(--muted-2)"></span></label>
-            <input type="password" id="aiKey" aria-label="API key" placeholder="sk-…" autocomplete="off">
-          </div>
-
-          <button class="btn solid" id="genAI" style="margin-top:10px">Generate with AI</button>
-          <div class="ai-status" id="aiStatus" aria-live="polite"></div>
-          <div class="ai-out" id="aiOut" hidden></div>
-          <div class="btn-row" id="aiOutActions" hidden>
-            <button class="btn ghost" id="copyAiOut">Copy result</button>
-          </div>
-
-          <p class="ai-priv" id="aiPriv"></p>
-
-          <div class="btn-row" style="margin-top:10px">
-            <button class="btn ghost" id="genPrompt">Copy prompt (offline)</button>
-          </div>
-          <p class="derived" id="delivNote" style="margin-top:9px">The app writes a grounded prompt; the AI only <b>formats</b> your plan — it cannot add numbers or claims. Offline mode copies the prompt to paste into any chat assistant.</p>
-          <textarea class="deliv" id="promptOut" readonly hidden aria-label="Generated prompt"></textarea>
-          <div class="btn-row" id="promptActions" hidden>
-            <button class="btn ghost" id="copyPrompt">Copy</button>
-          </div>
-        </div>
-      </section>
+      <!-- Deliverable AI moved into the Vera data-agent chat widget (floating, bottom-right). -->
     </div>
 
     <!-- MAUP explainer (cells layer only) -->
@@ -664,6 +682,66 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
       </div>
       <div class="dft">
         <button class="btn" id="addToPlan">➕ Add to plan</button>
+      </div>
+    </aside>
+
+    <!-- ===== Vera — data agent (chat + artifacts) ===== -->
+    <button class="vera-fab" id="veraFab" aria-label="Open Vera, the data agent">
+      <span class="av" aria-hidden="true"></span> Ask&nbsp;Vera
+    </button>
+    <aside class="vera" id="vera" role="dialog" aria-modal="false" aria-label="Vera data agent" aria-hidden="true">
+      <div class="vhd">
+        <div class="vavatar" aria-hidden="true">V</div>
+        <div>
+          <h2>Vera</h2>
+          <div class="vsub">Data agent — speaks only from the dataset</div>
+        </div>
+        <button class="vclose" id="veraClose" aria-label="Close Vera">✕</button>
+      </div>
+
+      <div class="vlog" id="veraLog" aria-live="polite"></div>
+
+      <div class="vquick" id="veraQuick">
+        <button class="vchip" data-q="Where should I act first, and why?">Where to act</button>
+        <button class="vchip" data-q="Compare the districts by removal priority and trust mix.">Compare districts</button>
+        <button class="vchip" data-q="Explain the corroboration verdict and why Montjuïc is an artifact.">Explain corroboration</button>
+        <button class="vchip" data-q="Draft a one-page director decision memo for the current plan.">Director memo</button>
+        <button class="vchip" data-q="What does this tool NOT know?">What's unknown</button>
+      </div>
+
+      <div class="vfoot">
+        <div class="vinrow">
+          <textarea class="vin" id="veraIn" rows="1" placeholder="Ask Vera anything about the map… (your own prompt)"></textarea>
+          <button class="vsend" id="veraSend" aria-label="Send" title="Send">➤</button>
+        </div>
+        <div class="vtools">
+          <button class="btn ghost" id="veraXlsx" title="Download the real dataset + plan as Excel">⤓ Excel</button>
+          <button class="btn ghost" id="veraPdf" title="Download a PDF report (real tables + Vera narrative)">⤓ PDF report</button>
+        </div>
+        <details class="vsettings">
+          <summary>AI settings (provider · model · key)</summary>
+          <div class="sgrid">
+            <div class="field">
+              <label for="aiProvider">Provider</label>
+              <select id="aiProvider" aria-label="AI provider">
+                <option value="deepseek">DeepSeek</option>
+                <option value="anthropic">Claude (Anthropic)</option>
+                <option value="openai">OpenAI</option>
+                <option value="ollama">Local (Ollama)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="aiModel">Model</label>
+              <input type="text" class="ai" id="aiModel" aria-label="Model id" placeholder="deepseek-chat">
+            </div>
+          </div>
+          <div class="ai-key field" id="aiKeyRow" style="margin-top:8px">
+            <label for="aiKey">API key <span id="aiKeyHint" style="text-transform:none;color:var(--muted-2)"></span></label>
+            <input type="password" id="aiKey" aria-label="API key" placeholder="sk-…" autocomplete="off">
+          </div>
+          <p class="ai-priv" id="aiPriv"></p>
+        </details>
+        <div class="ai-status" id="aiStatus" aria-live="polite"></div>
       </div>
     </aside>
   </main>
@@ -1332,23 +1410,7 @@ HARD RULES (do not break):
 CAVEATS (must appear in the output): the pollen source is an UNVALIDATED PROXY (no measured Barcelona pollen series exists); relief is modeled exposure, not health; the people-weighting claim holds at the 400 m grain and sections are the execution unit (MAUP); the city's primary rationale is biodiversity/monoculture, allergen relief is a co-benefit; cost figures are illustrative, not procurement quotes.`;
     return `${rules}\n\nTASK: ${FMT_INSTR[fmt]||FMT_INSTR.director_memo}\n\n${ctx}\n\nPLAN (best-first under the active objective):\n${lines}\n`;
   }
-  document.getElementById("genPrompt").addEventListener("click",()=>{
-    const txt=buildDeliverablePrompt(document.getElementById("delivFormat").value);
-    if(!txt){ toast("Build a plan first"); return; }
-    const ta=document.getElementById("promptOut");
-    ta.value=txt; ta.hidden=false; document.getElementById("promptActions").hidden=false;
-    ta.focus(); ta.select();
-    toast("Prompt ready — copy it into ChatGPT / Claude");
-  });
-  document.getElementById("copyPrompt").addEventListener("click",async()=>{
-    const ta=document.getElementById("promptOut");
-    if(ta.hidden||!ta.value){ toast("Generate a prompt first"); return; }
-    ta.focus(); ta.select();
-    let ok=false;
-    try{ await navigator.clipboard.writeText(ta.value); ok=true; }
-    catch(e){ try{ ok=document.execCommand("copy"); }catch(e2){ ok=false; } }
-    toast(ok?"Prompt copied — paste into your assistant":"Press Ctrl+C to copy");
-  });
+  // (offline copy-prompt UI removed — Vera now generates in-app; buildDeliverablePrompt kept for reuse.)
 
   /* ---- AI IN-APP: bring-your-own-key (DeepSeek / Claude / OpenAI) or local Ollama ----
      The app holds NO key in source. The user's key lives only in this browser's
@@ -1399,17 +1461,18 @@ CAVEATS (must appear in the output): the pollen source is an UNVALIDATED PROXY (
   document.getElementById("aiModel").addEventListener("change",()=>{
     try{ localStorage.setItem("platans_aimodel_"+document.getElementById("aiProvider").value,document.getElementById("aiModel").value.trim()); }catch(e){} });
 
-  async function callAI(cfg,key,model,system,user){
+  // multi-turn call: system string + msgs=[{role:'user'|'assistant',content}]
+  async function callAIChat(cfg,key,model,system,msgs){
     const headers={"content-type":"application/json"}; let body;
     if(cfg.kind==="anthropic"){
       headers["x-api-key"]=key; headers["anthropic-version"]="2023-06-01";
       headers["anthropic-dangerous-direct-browser-access"]="true";
-      body={model,max_tokens:4096,system,messages:[{role:"user",content:user}]};
+      body={model,max_tokens:3000,system,messages:msgs};
     }else if(cfg.kind==="openai"){
       headers["authorization"]="Bearer "+key;
-      body={model,max_tokens:4096,messages:[{role:"system",content:system},{role:"user",content:user}]};
+      body={model,max_tokens:3000,messages:[{role:"system",content:system},...msgs]};
     }else{
-      body={model,stream:false,messages:[{role:"system",content:system},{role:"user",content:user}]};
+      body={model,stream:false,messages:[{role:"system",content:system},...msgs]};
     }
     const r=await fetch(cfg.url,{method:"POST",headers,body:JSON.stringify(body)});
     if(!r.ok){ let d=""; try{ d=((await r.json()).error||{}).message||""; }catch(e){} throw new Error("HTTP "+r.status+(d?": "+d:"")); }
@@ -1422,36 +1485,211 @@ CAVEATS (must appear in the output): the pollen source is an UNVALIDATED PROXY (
     return ((data.message||{}).content||"").trim();
   }
 
-  document.getElementById("genAI").addEventListener("click",async()=>{
-    const status=document.getElementById("aiStatus"), out=document.getElementById("aiOut");
-    const prompt=buildDeliverablePrompt(document.getElementById("delivFormat").value);
-    if(!prompt){ toast("Build a plan first"); return; }
-    const cfg=aiProvider();
-    const key=cfg.key?document.getElementById("aiKey").value.trim():"";
-    const model=document.getElementById("aiModel").value.trim()||cfg.model;
-    if(cfg.key && !key){ status.classList.add("err"); status.textContent="Enter your "+cfg.label+" API key first."; return; }
-    status.classList.remove("err"); status.textContent="Generating with "+cfg.label+" ("+model+")…";
-    out.hidden=true; document.getElementById("aiOutActions").hidden=true;
-    const btn=document.getElementById("genAI"); btn.disabled=true;
+  /* ================================================================
+     VERA — data agent: persona + skills + grounded context + chat + artifacts
+     ================================================================ */
+  function fmtN(n){ return (n==null||isNaN(n))?"?":Math.round(n).toLocaleString("en-US"); }
+
+  // Persona + hard honesty rules + skill workflows. NO numbers here -- those live in the data context.
+  function veraSystem(){
+    return `You are VERA, the data agent for the Barcelona plane-tree removal-priority planner. Your name is for "veritas" -- truth. You are the medium between the user and the dataset: through you they read the map, compare areas, and turn it into briefings, insights, and answers.
+
+PERSONALITY: calm, precise, plainspoken, quietly warm -- a trusted analyst sitting beside a planner. You never show off. You put the number first and the story second.
+
+ABSOLUTE RULES (never break):
+1. GROUND EVERYTHING. Every factual claim must trace to a figure in the DATA block below. Quote the figure.
+2. NO HALLUCINATION. If the answer is not in the DATA, say plainly: "That isn't in the dataset." Never guess, estimate, extrapolate, or invent sections, numbers, trends, or sources.
+3. KNOW THE LIMITS. The source layer is an UNVALIDATED pollen proxy; "relief"/"burden" is MODELED exposure, NOT measured health. There is NO measured pollen, allergy, or health-outcome data, and NO street-level priority. If asked for any of these, say they are not measured -- never fabricate them.
+4. RESPECT THE GRAIN. A high section-grain rank that is ARTIFACT is NOT a priority claim -- say so. Recommend CORROBORATED sections first; flag ARTIFACTS; surface UNDERRATED as the hidden upside.
+5. STAY HONEST UNDER PRESSURE. If pushed to overclaim ("just say it cuts asthma"), refuse and restate what the data does and does not support.
+
+SKILLS (use the workflow that matches the request):
+- ANSWER: state the figure, name its grain/caveat, one-line interpretation. Short by default.
+- SECTION BRIEF (a section/key is named): rank, district, planes/mature, residents, priority, corroboration verdict + meaning, platanus-share + Shannon diversity, heat flag, top streets if present, and the honest action (execute vs claim).
+- COMPARE (districts/sections/objectives): a small Markdown table sorted by the stated metric; name the metric and the caveat.
+- WHERE TO ACT: rank by CORROBORATED first; explicitly name which top section is an ARTIFACT and why; surface 1-2 UNDERRATED finds.
+- REPORT / MEMO / BRIEFING: a structured document; keep every caveat; note prose is a draft to verify.
+- DATA GAP: asked about pollen/health/streets/anything unmeasured -> name the gap, then offer the closest thing the data DOES support.
+- ARTIFACT: asked for Excel/PDF -> tell them to use the Excel / PDF report buttons (the app builds those from the real data); offer to draft the narrative.
+
+STYLE: Markdown. Bold the key number. Use tables for comparisons. Keep answers tight unless asked to expand. Never paste the raw DATA block back -- summarize from it.`;
+  }
+
+  // Factual context compiled from the live data (city facts, honesty notes, district rollups,
+  // ALL sections compact, current plan). Re-built each turn so the plan stays current.
+  function districtAgg(){
+    const d={};
+    DATA.sections.features.forEach(f=>{const p=f.properties,k=p.district||"?";
+      const x=d[k]=d[k]||{n:0,mature:0,pop:0,C:0,A:0,U:0};
+      x.n++; x.mature+=p.mature||0; x.pop+=p.pop||0;
+      if(p.corrob==="CORROBORATED")x.C++; else if(p.corrob==="ARTIFACT")x.A++; else if(p.corrob==="UNDERRATED")x.U++;
+    });
+    return d;
+  }
+  function buildDataContext(){
+    const M=META, cc=M.corrob_counts||{}, cost=M.cost||{};
+    const feats=DATA.sections.features.map(f=>f.properties);
+    let s=`=== DATASET: Barcelona Plane-Tree (Platanus) Removal Priority ===
+Unit: ${fmtN(M.n_sections)} census sections. City residents: ${fmtN(M.city_population)}. Plane trees citywide: ${fmtN(M.city_platanus_total)} (${M.pct_now}% of all urban trees); Pla Director target ${M.pct_target_2037}% by 2037 (~${Math.round((M.removal_rate||0)*100)}% cut).
+Priority = minmax(mature-plane SOURCE) x minmax(residents EXPOSURE). The source is an UNVALIDATED pollen PROXY (no measured Barcelona pollen series exists). Relief is MODELED exposure, NOT measured health.
+Grain/MAUP: section ranking vs 400m people-weighted ranking agree only Spearman ${M.grain_spearman}. Corroboration verdicts -- CORROBORATED ${cc.CORROBORATED} (high at BOTH grains, act first); ARTIFACT ${cc.ARTIFACT} (high at section grain only -- a MAUP cluster like Montjuic; execution unit, NOT a priority claim); UNDERRATED ${cc.UNDERRATED} (low at section grain but high at 400m -- dense residential the plane-count misses); minor ${cc.minor}.
+Objectives: efficiency (=priority, max relief); co_benefit (priority x monoculture share = biodiversity mandate + relief); equity (priority x income-deprivation); quick_wins (mature count); density (plane count = the city's naive rule); vulnerability (age-weighted; tested REDUNDANT for ranking).
+Heat guardrail: ${fmtN(M.n_heat_flagged)} sections flagged (high LST x low NDVI) -- removing canopy worsens the heat island; pair with immediate replanting.
+Top-15 sections hold ${M.top15_share_pct}% of total priority. Cost (illustrative, CoolSpend): EUR ${fmtN(cost.intervention_capex_eur)}/tree remove+replace CapEx.
+HONESTY: NO street-level priority (ecological fallacy). The city removes planes for biodiversity/monoculture; allergy relief is a co-benefit. Pollen, allergy burden, and health outcomes are NOT measured.\n`;
+    const d=districtAgg();
+    s+=`\n=== DISTRICTS (district | sections | mature | residents | corroborated | artifacts | underrated) ===\n`;
+    Object.keys(d).sort().forEach(k=>{const x=d[k]; s+=`${k} | ${x.n} | ${fmtN(x.mature)} | ${fmtN(x.pop)} | ${x.C} | ${x.A} | ${x.U}\n`;});
+    s+=`\n=== SECTIONS (all ${feats.length}; key|district|rank|planes|mature|residents|priority|corrob|rank400|platanus%|shannon|heat) ===\n`;
+    feats.slice().sort((a,b)=>a.rank-b.rank).forEach(p=>{
+      s+=`${p.key}|${p.district}|${p.rank}|${p.planes}|${p.mature}|${p.pop}|${(p.pri||0).toFixed(2)}|${p.corrob}|${p.rank400}|${Math.round((p.mono||0)*100)}|${(p.shannon||0).toFixed(1)}|${p.heat?"Y":"n"}\n`;
+    });
+    if(planKeys.size){
+      const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties).sort((a,b)=>a.rank-b.rank);
+      const totM=props.reduce((a,p)=>a+p.mature,0);
+      s+=`\n=== CURRENT PLAN (objective: ${OBJ_LABELS[objective]||objective}) ===\n${props.length} sections, ${fmtN(totM)} mature planes, ~EUR ${fmtN(totM*euroRate())} CapEx.\n`;
+      props.forEach(p=>{ s+=`#${p.rank} ${p.district} [${p.key}] ${p.corrob} mature=${p.mature} residents=${p.pop}\n`; });
+    } else { s+=`\n=== CURRENT PLAN ===\n(empty -- the user has not built a budget plan yet)\n`; }
+    return s;
+  }
+
+  // tiny Markdown -> HTML (bold, headings, bullets, pipe tables)
+  function mdToHtml(md){
+    let t=escapeHtml(md||""); const lines=t.split("\n"), out=[]; let i=0;
+    while(i<lines.length){
+      if(/^\s*\|.*\|\s*$/.test(lines[i]) && i+1<lines.length && /^\s*\|[-:\s|]+\|\s*$/.test(lines[i+1])){
+        const head=lines[i].trim().replace(/^\||\|$/g,"").split("|").map(x=>x.trim()); i+=2; const rows=[];
+        while(i<lines.length && /^\s*\|.*\|\s*$/.test(lines[i])){ rows.push(lines[i].trim().replace(/^\||\|$/g,"").split("|").map(x=>x.trim())); i++; }
+        out.push("<table><thead><tr>"+head.map(h=>`<th>${h}</th>`).join("")+"</tr></thead><tbody>"+
+          rows.map(r=>"<tr>"+r.map(c=>`<td>${c}</td>`).join("")+"</tr>").join("")+"</tbody></table>");
+        continue;
+      }
+      out.push(lines[i]); i++;
+    }
+    t=out.join("\n").replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")
+      .replace(/(^|\n)#{1,4}\s*(.+)/g,"$1<b>$2</b>")
+      .replace(/(^|\n)\s*[-*]\s+(.+)/g,"$1&bull; $2")
+      .replace(/\n/g,"<br>");
+    return t;
+  }
+
+  /* ---- chat ---- */
+  const veraEl=document.getElementById("vera"), veraLog=document.getElementById("veraLog"), veraIn=document.getElementById("veraIn");
+  let veraHistory=[], veraBusy=false;
+  function veraSay(who,text,flagged){
+    const div=document.createElement("div"); div.className="vmsg "+who;
+    div.innerHTML=`<div class="who">${who==="user"?"You":"Vera"}</div>`
+      +`<div class="bub${flagged?" warn":""}">${who==="user"?escapeHtml(text):mdToHtml(text)}</div>`
+      +(flagged?'<div class="meta">Flagged: a phrase may reach beyond the data — verify.</div>':"");
+    veraLog.appendChild(div); veraLog.scrollTop=veraLog.scrollHeight; return div;
+  }
+  function veraOpen(){
+    veraEl.classList.add("open"); veraEl.setAttribute("aria-hidden","false");
+    if(!veraHistory.length) veraSay("vera","Hola — I'm **Vera**. I read this map and answer only from its data. Ask me where to act, to brief a section, compare districts, or draft a report. If something isn't measured, I'll tell you.",false);
+    setTimeout(()=>veraIn.focus(),50);
+  }
+  function veraClose(){ if(veraEl.contains(document.activeElement)) document.activeElement.blur(); veraEl.classList.remove("open"); veraEl.setAttribute("aria-hidden","true"); }
+  async function veraSend(q){
+    if(veraBusy) return;
+    const text=(q||veraIn.value||"").trim(); if(!text) return;
+    const cfg=aiProvider(), key=cfg.key?document.getElementById("aiKey").value.trim():"", model=document.getElementById("aiModel").value.trim()||cfg.model;
+    if(cfg.key && !key){ veraSay("vera","I need an API key first — open **AI settings** below and paste your "+cfg.label+" key.",false); return; }
+    veraIn.value=""; autoGrow();
+    veraSay("user",text,false); veraHistory.push({role:"user",content:text});
+    veraBusy=true; document.getElementById("veraSend").disabled=true;
+    const typing=veraSay("vera","",false); typing.querySelector(".bub").innerHTML='<span class="vtyping">Vera is reading the data…</span>';
     try{
-      const text=await callAI(cfg,key,model,prompt,"Produce the deliverable now, following every rule above exactly.");
-      const flagged=overclaims(text||"");
-      out.classList.toggle("warn",flagged);
-      out.innerHTML=(flagged?'<div class="ai-warnbar">! Output may contain a claim beyond the data (health / benefit / street ranking). Verify before use.</div>':"")
-        +escapeHtml(text||"(empty response)").replace(/\n/g,"<br>");
-      out.hidden=false; document.getElementById("aiOutActions").hidden=false;
-      status.textContent="Done — "+cfg.label+" formatted your plan. Verify against the map before sending.";
+      const reply=await callAIChat(cfg,key,model,veraSystem()+"\n\n"+buildDataContext(),veraHistory.slice(-8));
+      veraHistory.push({role:"assistant",content:reply});
+      typing.remove(); veraSay("vera",reply||"(no answer)",overclaims(reply||""));
     }catch(e){
-      status.classList.add("err");
+      typing.remove();
       const cors=/Failed to fetch|NetworkError|CORS/i.test(e.message||"");
-      status.textContent="Failed: "+(e.message||"unknown")+(cors?" — provider likely blocks browser calls (CORS). Use Copy prompt (offline) instead.":"");
-    }finally{ btn.disabled=false; }
-  });
-  document.getElementById("copyAiOut").addEventListener("click",async()=>{
-    const t=document.getElementById("aiOut").textContent||"";
-    let ok=false; try{ await navigator.clipboard.writeText(t); ok=true; }catch(e){}
-    toast(ok?"Result copied":"Select the text and Ctrl+C");
-  });
+      veraSay("vera","I couldn't reach "+cfg.label+": "+(e.message||"error")+(cors?" — the provider may be blocking browser calls (CORS).":""),false);
+    }finally{ veraBusy=false; document.getElementById("veraSend").disabled=false; }
+  }
+  function autoGrow(){ veraIn.style.height="auto"; veraIn.style.height=Math.min(120,veraIn.scrollHeight)+"px"; }
+  document.getElementById("veraFab").addEventListener("click",veraOpen);
+  document.getElementById("veraClose").addEventListener("click",veraClose);
+  document.getElementById("veraSend").addEventListener("click",()=>veraSend());
+  veraIn.addEventListener("input",autoGrow);
+  veraIn.addEventListener("keydown",e=>{ if(e.key==="Enter" && !e.shiftKey){ e.preventDefault(); veraSend(); } });
+  document.querySelectorAll("#veraQuick .vchip").forEach(b=>b.addEventListener("click",()=>veraSend(b.getAttribute("data-q"))));
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape" && veraEl.classList.contains("open")) veraClose(); });
+
+  /* ---- artifacts: built from REAL PLANNER_DATA (numbers can't be hallucinated) ---- */
+  function stamp(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+  function exportExcel(){
+    if(typeof XLSX==="undefined"){ toast("Excel library still loading — retry in a moment"); return; }
+    const feats=DATA.sections.features.map(f=>f.properties);
+    const sec=feats.slice().sort((a,b)=>a.rank-b.rank).map(p=>({
+      key:p.key,district:p.district,rank:p.rank,planes:p.planes,mature:p.mature,residents:p.pop,
+      priority:+(p.pri||0).toFixed(4),corroboration:p.corrob,rank_400m:p.rank400,
+      platanus_share_pct:Math.round((p.mono||0)*100),shannon_diversity:+(p.shannon||0).toFixed(2),
+      species:p.nsp,heat_flag:p.heat?1:0,lst_celsius:p.lst
+    }));
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(sec),"Sections");
+    if(planKeys.size){
+      const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties).sort((a,b)=>a.rank-b.rank);
+      const plan=props.map(p=>({rank:p.rank,district:p.district,key:p.key,corroboration:p.corrob,mature:p.mature,residents:p.pop,euro_capex:Math.round(p.mature*euroRate())}));
+      XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(plan),"Plan");
+    }
+    const about=[["field","value"],
+      ["Product","Barcelona Plane-Tree Removal Priority"],["Sections",META.n_sections],
+      ["City residents",META.city_population],["Plane trees citywide",META.city_platanus_total],
+      ["Target % by 2037",META.pct_target_2037],["Grain Spearman (section vs 400m)",META.grain_spearman],
+      ["CAVEAT","Source = mature-plane count = UNVALIDATED pollen proxy. Relief = modeled exposure, NOT measured health."],
+      ["CAVEAT","No street-level priority (ecological fallacy). City removes for biodiversity; allergy relief is a co-benefit."],
+      ["CAVEAT","Costs illustrative (CoolSpend); verify locally."]];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(about),"About");
+    XLSX.writeFile(wb,"barcelona-plane-priority_"+stamp()+".xlsx");
+    toast("Excel exported — real data");
+  }
+  async function exportPDF(){
+    if(!window.jspdf || !window.jspdf.jsPDF){ toast("PDF library still loading — retry in a moment"); return; }
+    const { jsPDF }=window.jspdf; const doc=new jsPDF({unit:"pt",format:"a4"}); const W=doc.internal.pageSize.getWidth();
+    doc.setFont("helvetica","bold"); doc.setFontSize(16); doc.text("Barcelona Plane-Tree Removal Priority",40,46);
+    doc.setFont("helvetica","normal"); doc.setFontSize(9); doc.setTextColor(110);
+    doc.text("Modeled pollen-exposure proxy (NOT measured health). No street-level priority. Generated "+stamp()+".",40,62);
+    doc.setTextColor(20); doc.setFontSize(11); doc.setFont("helvetica","bold"); doc.text("City summary",40,92);
+    const cc=META.corrob_counts||{};
+    doc.autoTable({startY:98,theme:"grid",styles:{fontSize:8},head:[["metric","value"]],body:[
+      ["Sections",fmtN(META.n_sections)],["Residents",fmtN(META.city_population)],
+      ["Plane trees citywide",fmtN(META.city_platanus_total)+" ("+META.pct_now+"%)"],
+      ["Target by 2037",META.pct_target_2037+"%"],["Grain agreement (Spearman)",String(META.grain_spearman)],
+      ["Corroborated / Artifact / Underrated",(cc.CORROBORATED)+" / "+(cc.ARTIFACT)+" / "+(cc.UNDERRATED)]
+    ]});
+    const top=DATA.sections.features.map(f=>f.properties).sort((a,b)=>a.rank-b.rank).slice(0,15);
+    doc.setFont("helvetica","bold"); doc.text("Top 15 sections by priority",40,doc.lastAutoTable.finalY+24);
+    doc.autoTable({startY:doc.lastAutoTable.finalY+30,theme:"striped",styles:{fontSize:7.5},
+      head:[["#","district","key","planes","mature","residents","priority","verdict"]],
+      body:top.map(p=>[p.rank,p.district,p.key,p.planes,p.mature,fmtN(p.pop),(p.pri||0).toFixed(2),p.corrob])});
+    if(planKeys.size){
+      const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties).sort((a,b)=>a.rank-b.rank);
+      doc.setFont("helvetica","bold"); doc.text("Current plan — "+(OBJ_LABELS[objective]||objective),40,doc.lastAutoTable.finalY+24);
+      doc.autoTable({startY:doc.lastAutoTable.finalY+30,theme:"grid",styles:{fontSize:8},
+        head:[["#","district","key","verdict","mature","residents"]],
+        body:props.map(p=>[p.rank,p.district,p.key,p.corrob,p.mature,fmtN(p.pop)])});
+    }
+    // optional Vera narrative (clearly labelled; numbers above are the source of truth)
+    const cfg=aiProvider(), key=cfg.key?document.getElementById("aiKey").value.trim():"", model=document.getElementById("aiModel").value.trim()||cfg.model;
+    if(planKeys.size && (!cfg.key || key)){
+      toast("Drafting narrative with "+cfg.label+"…");
+      try{
+        const narr=await callAIChat(cfg,key,model,veraSystem()+"\n\n"+buildDataContext(),
+          [{role:"user",content:"Write a one-page director decision memo for the CURRENT PLAN, following every rule. Plain prose, NO markdown tables."}]);
+        if(narr){ doc.addPage();
+          doc.setFont("helvetica","bold"); doc.setFontSize(12); doc.text("AI-drafted narrative (verify against the tables above)",40,46);
+          doc.setFont("helvetica","normal"); doc.setFontSize(9.5);
+          doc.text(doc.splitTextToSize(narr,W-80),40,70);
+        }
+      }catch(e){ /* narrative optional; skip on error */ }
+    }
+    doc.save("barcelona-plane-report_"+stamp()+".pdf"); toast("PDF report exported");
+  }
+  document.getElementById("veraXlsx").addEventListener("click",exportExcel);
+  document.getElementById("veraPdf").addEventListener("click",exportPDF);
   // Apply optional local config (config.local.js, gitignored) -> prefill provider/model/key.
   function applyAiConfig(){
     const c=window.PLANNER_AI_CONFIG;
