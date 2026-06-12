@@ -129,10 +129,10 @@
     },
     "planner_app": {
       "path": "outputs/phase-6/app/planner.html",
-      "description": "Self-contained Leaflet planner app (priority/corroboration/archetype/hotspot/400m layers, objective + euro budget planner, marginal-relief curve, street worklists, deliverable generator = formatter-only LLM prompt export). Presentation aid; loads app_data.js. No model/API key. Not a maintained service.",
-      "version": "1.2.0",
-      "bytes": 73802,
-      "sha256": "3cf6c6509e1f349f0937e14a7a1267d34545b2e09d9c2a0eceffac3ae52caa0b"
+      "description": "Self-contained Leaflet planner app (priority/corroboration/archetype/hotspot/400m layers, objective + euro budget planner, marginal-relief curve, street worklists, deliverable generator = formatter-only AI writer with bring-your-own-key (DeepSeek/Claude/OpenAI) or local Ollama + offline prompt export + over-claim linter). No key in source; user key stored only in browser localStorage. Presentation aid; loads app_data.js. Not a maintained service.",
+      "version": "1.3.0",
+      "bytes": 84463,
+      "sha256": "c1557eac71a150367aa51ab15d1cad3f2c556f8cc4698c4c6e3b29f34cd83838"
     },
     "planner_app_data": {
       "path": "outputs/phase-6/app/app_data.js",

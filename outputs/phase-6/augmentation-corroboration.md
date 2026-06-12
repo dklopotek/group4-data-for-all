@@ -96,9 +96,16 @@ street-level ranking (ecological fallacy), never imply a health outcome ("relief
 exposure proxy), and keep every caveat visible. Each plan section is passed with its corroboration
 verdict, so an ARTIFACT-classed section is described to the reader as an execution unit, not a
 priority claim. This is the defensible version of the "what NOT to build" item below: an LLM that
-*translates* the deterministic plan, never one that *opines* over it. (v2, for a real municipal
-deployment, would wire a server-side key with schema validation + retry and an over-claim linter;
-out of scope for a self-contained seminar tool.)
+*translates* the deterministic plan, never one that *opines* over it.
+
+Two run modes ship: **offline** ("Copy prompt") pastes the grounded prompt into any chat assistant;
+**in-app** runs the model and renders the result inline via **bring-your-own-key** (DeepSeek,
+Claude, or OpenAI) or a **local Ollama** server (no key). Crucially, the app still contains **no key
+in source** -- the user's key lives only in this browser's `localStorage` and is sent only to the
+chosen provider, so the shippable file leaks no secret (P7). A client-side **over-claim linter**
+backstops the prompt: any output that mentions a health benefit, a cure, a guarantee, or a
+street-level ranking is flagged for review before the planner uses it. The in-app path was verified
+end to end (provider CORS reachable, key auth, request/response shape, UI wiring).
 
 ## What was deliberately NOT built
 
