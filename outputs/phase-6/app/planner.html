@@ -130,7 +130,7 @@ main.stage{position:relative;flex:1 1 auto;display:flex;min-height:0;}
 #caveat{
   position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:900;
   max-width:min(620px,52vw);pointer-events:none;text-align:center;
-  background:rgba(13,17,23,.82);backdrop-filter:blur(6px);
+  background:rgba(13,17,23,.95);
   border:1px solid var(--border);border-left:3px solid var(--warn);border-radius:9px;
   padding:7px 13px;font-size:11.5px;line-height:1.35;color:#c9d3de;box-shadow:var(--shadow);
 }
@@ -158,8 +158,7 @@ main.stage{position:relative;flex:1 1 auto;display:flex;min-height:0;}
   overflow:auto;padding-right:2px;
 }
 .card{
-  background:rgba(22,27,34,.92);
-  backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+  background:rgba(20,25,32,.97);
   border:1px solid var(--border);border-radius:var(--radius);
   box-shadow:var(--shadow);
 }
@@ -306,7 +305,7 @@ input[type=password],input[type=text].ai{width:100%;background:#0d1117;color:var
 /* MAUP explainer (shown only on cells layer) */
 .maup-box{
   position:absolute;top:14px;left:340px;z-index:1000;width:300px;
-  background:rgba(28,35,48,.94);backdrop-filter:blur(9px);
+  background:rgba(28,35,48,.98);
   border:1px solid var(--warn);border-left:3px solid var(--warn);
   border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;
   font-size:12px;color:var(--text);line-height:1.5;display:none;
@@ -319,7 +318,7 @@ input[type=password],input[type=text].ai{width:100%;background:#0d1117;color:var
    ============================================================ */
 .legend{
   position:absolute;bottom:28px;right:14px;z-index:1000;width:240px;
-  background:rgba(22,27,34,.92);backdrop-filter:blur(9px);
+  background:rgba(20,25,32,.97);
   border:1px solid var(--border);border-radius:var(--radius);
   box-shadow:var(--shadow);padding:11px 13px;
 }
@@ -339,7 +338,7 @@ input[type=password],input[type=text].ai{width:100%;background:#0d1117;color:var
   position:absolute;top:0;right:0;height:100%;width:380px;z-index:1100;
   background:linear-gradient(180deg,#171d26,#13181f);
   border-left:1px solid var(--border);box-shadow:-18px 0 48px -16px rgba(0,0,0,.65);
-  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);will-change:transform;
   display:flex;flex-direction:column;
 }
 .detail.open{transform:translateX(0);}
@@ -405,7 +404,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
    ============================================================ */
 .scrim{
   position:fixed;inset:0;z-index:2000;background:rgba(5,8,12,.74);
-  backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px;
+  display:none;align-items:center;justify-content:center;padding:24px;
 }
 .scrim.show{display:flex;animation:fade .2s ease;}
 .modal{
@@ -471,7 +470,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   position:absolute;top:0;right:0;height:100%;width:440px;max-width:92vw;z-index:1600;
   background:linear-gradient(180deg,#141a22,#10151c);
   border-left:1px solid var(--border);box-shadow:-20px 0 54px -16px rgba(0,0,0,.7);
-  transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  transform:translateX(100%);transition:transform .26s cubic-bezier(.4,0,.2,1);will-change:transform;
   display:flex;flex-direction:column;
 }
 .vera.open{transform:translateX(0);}
@@ -1592,7 +1591,7 @@ HONESTY: NO street-level priority (ecological fallacy). The city removes planes 
   function veraOpen(){
     veraEl.classList.add("open"); veraEl.setAttribute("aria-hidden","false");
     if(!veraHistory.length) veraSay("vera","Hola — I'm **Vera**. I read this map and answer only from its data. Ask me where to act, to brief a section, compare districts, or draft a report. If something isn't measured, I'll tell you.",false);
-    setTimeout(()=>veraIn.focus(),50);
+    setTimeout(()=>{ if(veraEl.classList.contains("open")) veraIn.focus(); },50);  // don't focus a panel that was closed in the meantime
   }
   function veraClose(){ if(veraEl.contains(document.activeElement)) document.activeElement.blur(); veraEl.classList.remove("open"); veraEl.setAttribute("aria-hidden","true"); }
   async function veraSend(q){
