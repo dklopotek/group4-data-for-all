@@ -192,6 +192,9 @@ select,input[type=number]{
   font-family:"IBM Plex Mono",monospace;font-size:13px;
 }
 select:hover,input[type=number]:hover{border-color:#46505c;}
+textarea.deliv{width:100%;min-height:150px;background:#0d1117;color:var(--text);
+  border:1px solid var(--border);border-radius:8px;padding:9px 10px;margin-top:10px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.45;resize:vertical;}
 
 /* budget */
 .check{display:flex;align-items:center;gap:9px;font-size:13px;margin:10px 0;cursor:pointer;}
@@ -562,6 +565,28 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
           <div class="btn-row" id="planActions" hidden>
             <button class="btn ghost" id="exportCsv">Export CSV</button>
             <button class="btn ghost" id="clearPlan">Clear plan</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Deliverable generator: builds a grounded, formatter-only LLM prompt from the plan -->
+      <section class="card" aria-label="Deliverable generator">
+        <div class="hd"><span class="dot" aria-hidden="true"></span><h2>Deliverable</h2></div>
+        <div class="bd">
+          <div class="field">
+            <label for="delivFormat">Turn this plan into…</label>
+            <select id="delivFormat" aria-label="Deliverable format">
+              <option value="director_memo">Director decision memo</option>
+              <option value="council_briefing">Council / public briefing</option>
+              <option value="procurement">Ops procurement worklist</option>
+              <option value="public_faq">Resident FAQ answer</option>
+            </select>
+          </div>
+          <button class="btn" id="genPrompt">Generate prompt for ChatGPT / Claude</button>
+          <p class="derived" id="delivNote" style="margin-top:9px">The app writes a grounded prompt from your plan; the assistant only <b>formats</b> it — it cannot add numbers or claims. No data leaves this file until you paste it.</p>
+          <textarea class="deliv" id="promptOut" readonly hidden aria-label="Generated prompt"></textarea>
+          <div class="btn-row" id="promptActions" hidden>
+            <button class="btn ghost" id="copyPrompt">Copy prompt</button>
           </div>
         </div>
       </section>
@@ -1212,6 +1237,70 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     toast(`Exported ${rowCount} street rows`);
   });
   function csv(v){ v=(v==null?"":String(v)); return /[",\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+
+  /* ================================================================
+     DELIVERABLE GENERATOR (LLM prompt export) -- formatter, not oracle
+     Builds a grounded, caveat-locked prompt from the current plan. The app
+     holds NO model/API key; the planner pastes the prompt into their own
+     ChatGPT/Claude. The prompt forbids inventing numbers, street-level
+     ranking, and any health claim -- the LLM may only re-format this plan.
+     ================================================================ */
+  const FMT_INSTR={
+    director_memo:"Write a one-page DECISION MEMO to the Director of Barcelona Espais Verds. Structure: Recommendation (which sections, this year); Why these sites (cite the corroboration verdict and resident counts); Cost; Risks & caveats; and a closing 'What we are NOT claiming'. Executive, crisp.",
+    council_briefing:"Write a short PUBLIC COUNCIL BRIEFING. Frame the removals as the city's biodiversity / monoculture-reduction programme (Pla Director de l'Arbrat), with pollen-allergen relief as a CO-BENEFIT. Plain, press-safe, honest. No health-outcome claims.",
+    procurement:"Write an OPERATIONS PROCUREMENT WORKLIST grouped by section then street: mature plane counts and suggested removals. Flag any heat-island section for immediate same-season replanting (no canopy gaps). Practical checklist style.",
+    public_faq:"Answer, for a RESIDENT: 'Why is the city removing plane trees on my street, and how was my area chosen?' Plain language; be honest that the priority is a modeled estimate, not a measurement."
+  };
+  function buildDeliverablePrompt(fmt){
+    const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties)
+                             .sort((a,b)=>a.rank-b.rank);
+    if(!props.length) return null;
+    const den=props.reduce((s,p)=>s+(p.pri_raw||0),0)||1;
+    const corPct=Math.round(100*props.filter(p=>p.corrob==="CORROBORATED").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    const artPct=Math.round(100*props.filter(p=>p.corrob==="ARTIFACT").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    const totMature=props.reduce((s,p)=>s+p.mature,0);
+    const rate=euroRate();
+    const lines=props.map(p=>{
+      const st=(Array.isArray(p.streets)?p.streets:[]).slice(0,4)
+        .map(s=>`${s.s} (${s.m} mature, suggest ${s.r})`).join("; ");
+      return `#${p.rank} ${p.district} [sec ${p.key}] verdict=${p.corrob} 400m-rank=${p.rank400} `
+        +`mature=${p.mature} residents=${p.pop} platanus-share=${Math.round((p.mono||0)*100)}%`
+        +(p.heat?" HEAT-FLAG":"")+(st?` | streets: ${st}`:" | (no street inventory)");
+    }).join("\n");
+    const rules=
+`You are a FORMATTER, not an analyst. Render the PLAN below as the requested document.
+HARD RULES (do not break):
+- Use ONLY the data given. Do NOT invent, estimate, or change any number, rank, street, or cost.
+- Sections are ranked; STREETS ARE NOT -- never present a street-level priority ranking.
+- "Relief"/"priority" is a MODELED pollen-EXPOSURE proxy, NOT a measured health outcome. Never imply reduced asthma/allergy or any health benefit.
+- Keep the CAVEATS visible in the output. Costs are illustrative planning figures, not quotes.
+- verdict=ARTIFACT means high only at section grain (MAUP) -- describe it as an execution unit, not a priority claim. CORROBORATED = trustworthy at both grains. UNDERRATED = dense-residential, surfaced by people-weighting.
+- If something is not in the data, write "not available" -- do not fill it in.`;
+    const ctx=
+`PLAN CONTEXT:
+- Objective used to sequence: ${OBJ_LABELS[objective]||objective}
+- ${props.length} sections, ${totMature} mature plane trees, ~EUR ${Math.round(totMature*rate).toLocaleString("en-US")} (illustrative CapEx).
+- Trust mix: ${corPct}% of modeled relief is CORROBORATED; ${artPct}% is from section-grain ARTIFACTS (flag for review).
+CAVEATS (must appear in the output): the pollen source is an UNVALIDATED PROXY (no measured Barcelona pollen series exists); relief is modeled exposure, not health; the people-weighting claim holds at the 400 m grain and sections are the execution unit (MAUP); the city's primary rationale is biodiversity/monoculture, allergen relief is a co-benefit; cost figures are illustrative, not procurement quotes.`;
+    return `${rules}\n\nTASK: ${FMT_INSTR[fmt]||FMT_INSTR.director_memo}\n\n${ctx}\n\nPLAN (best-first under the active objective):\n${lines}\n`;
+  }
+  document.getElementById("genPrompt").addEventListener("click",()=>{
+    const txt=buildDeliverablePrompt(document.getElementById("delivFormat").value);
+    if(!txt){ toast("Build a plan first"); return; }
+    const ta=document.getElementById("promptOut");
+    ta.value=txt; ta.hidden=false; document.getElementById("promptActions").hidden=false;
+    ta.focus(); ta.select();
+    toast("Prompt ready — copy it into ChatGPT / Claude");
+  });
+  document.getElementById("copyPrompt").addEventListener("click",async()=>{
+    const ta=document.getElementById("promptOut");
+    if(ta.hidden||!ta.value){ toast("Generate a prompt first"); return; }
+    ta.focus(); ta.select();
+    let ok=false;
+    try{ await navigator.clipboard.writeText(ta.value); ok=true; }
+    catch(e){ try{ ok=document.execCommand("copy"); }catch(e2){ ok=false; } }
+    toast(ok?"Prompt copied — paste into your assistant":"Press Ctrl+C to copy");
+  });
 
   /* ================================================================
      MARGINAL-RELIEF CURVE (NEW)

@@ -81,6 +81,25 @@ older neighborhoods, not flatten it.
 map. Rx is a demand signal (prevalence x severity x polypharmacy x care-seeking), not a prevalence
 measurement; elderly polypharmacy inflates counts. R03 (asthma/COPD) reported separately.
 
+## Deliverable generator (LLM output layer, v1) -- formatter, not oracle
+
+The CSV is only one shape of the output. The app now also turns a plan into whatever document
+the planner needs -- a director decision memo, a council/public briefing, an ops procurement
+worklist, or a resident FAQ -- via an **LLM prompt export**. Crucially, the app holds **no model
+and no API key**: it assembles a grounded, caveat-locked prompt from the current plan and the
+planner pastes it into their own ChatGPT/Claude. This keeps the app self-contained (file://-safe,
+no secret to leak) and free.
+
+The honesty line is enforced in the prompt itself: the LLM is instructed it is a **FORMATTER, not
+an analyst** -- use only the given numbers, never invent or change a value, never produce a
+street-level ranking (ecological fallacy), never imply a health outcome ("relief" is a modeled
+exposure proxy), and keep every caveat visible. Each plan section is passed with its corroboration
+verdict, so an ARTIFACT-classed section is described to the reader as an execution unit, not a
+priority claim. This is the defensible version of the "what NOT to build" item below: an LLM that
+*translates* the deterministic plan, never one that *opines* over it. (v2, for a real municipal
+deployment, would wire a server-side key with schema validation + retry and an over-claim linter;
+out of scope for a self-contained seminar tool.)
+
 ## What was deliberately NOT built
 
 - No revival of the failed source-estimator as a "predicted pollen" surface (it failed spatial CV;

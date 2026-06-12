@@ -261,6 +261,8 @@ The deployment honest-negative (§8.2) is normally where a project apologizes. W
 
 We also reframed how the app describes its models, which had read as "the ML failed." It now states the position accurately: three models run in the project — unsupervised k-means/GMM typologies (the live Archetype layer) and Getis-Ord Gi*/Local Moran's I spatial statistics (the live Hotspot layer) are used in the product, while the supervised source-estimator was pre-registered and returned a spatial-CV honest negative and so correctly touches nothing. A properly cross-validated model that returns a negative is machine learning done right, not its absence (§6.4).
 
+Finally, the output itself is no longer fixed to a CSV. A small **deliverable generator** turns any plan into the document a planner actually needs — a director memo, a council briefing, an operations worklist, or a resident FAQ — through an LLM prompt the app assembles and the planner pastes into their own assistant. The app holds no model and no API key, so it stays self-contained and leaks no secret; and the prompt enforces the project's honesty line by construction — the assistant is instructed to act as a *formatter, not an analyst*: use only the given numbers, never produce a street-level ranking, never imply a health outcome (relief is a modeled proxy), and keep every caveat and corroboration verdict visible. This is the defensible form of an LLM layer — one that translates the deterministic plan rather than opining over an uncertain base.
+
 ---
 
 ## 9. Discussion
