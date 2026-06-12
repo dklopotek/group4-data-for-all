@@ -1,0 +1,54 @@
+{
+  "method": "XAC station-to-cell spot-check",
+  "scope": "n=1 in-city station; directional check only, not a calibration",
+  "calibration_status": "NOT FEASIBLE with current data. Annual pollen totals (grains x day / m3 per year) are not accessible via the public XAC API, which only exposes 7-day forecasts on a 0-4 ordinal scale. Contact aerobiologia@uab.cat for the historical Platanus series.",
+  "data_source": "XAC API https://aerobiologia.cat/api/v0/forecast/[station]/en/xml",
+  "stations": [
+    {
+      "station": "Barcelona",
+      "lat": 41.393728,
+      "lon": 2.164922,
+      "in_grid": true,
+      "cell_id": "C023_022",
+      "district": "EIXAMPLE",
+      "source_raw": 180.04,
+      "source_std": 0.3886,
+      "source_percentile_all_cells": 85.6,
+      "source_percentile_nonzero_cells": 82.9,
+      "plane_density": 184,
+      "maturity": 0.979,
+      "notes": "XAC in-city station (Eixample / city centre area)",
+      "api_forecast": {
+        "ok": true,
+        "level": 1,
+        "forecast_trend": "=",
+        "scale": "0=null 1=low 2=moderate 3=high 4=max",
+        "source_url": "https://aerobiologia.cat/api/v0/forecast/barcelona/en/xml",
+        "note": ""
+      }
+    },
+    {
+      "station": "Bellaterra",
+      "lat": 41.500604,
+      "lon": 2.108034,
+      "in_grid": true,
+      "cell_id": "C025_041",
+      "district": "NOU BARRIS",
+      "source_raw": 0.0,
+      "source_std": 0.0,
+      "source_percentile_all_cells": 15.8,
+      "source_percentile_nonzero_cells": 0.0,
+      "plane_density": 0,
+      "maturity": 1.0,
+      "notes": "XAC UAB-campus station -- outside Barcelona city boundary",
+      "api_forecast": {
+        "ok": true,
+        "level": 0,
+        "forecast_trend": "=",
+        "scale": "0=null 1=low 2=moderate 3=high 4=max",
+        "source_url": "https://aerobiologia.cat/api/v0/forecast/bellaterra/en/xml",
+        "note": "level 0=null (out-of-season or below detection)"
+      }
+    }
+  ]
+}
