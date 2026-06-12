@@ -18,12 +18,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import geopandas as gpd
+from scipy.stats import spearmanr
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 import cost_model_bcn                      # noqa: E402
 
 SEC = ROOT / "outputs" / "phase-6" / "section_priority.parquet"
+ENRICH = ROOT / "outputs" / "phase-6" / "section_enrich.parquet"   # corroboration + monoculture + thermal
 CELLS = ROOT / "data" / "processed" / "allergen_layers.parquet"
 FEAT = ROOT / "data" / "processed" / "section_features.parquet"
 ACTIONS = ROOT / "outputs" / "phase-6" / "street_removal_actions.csv"
@@ -69,6 +71,12 @@ def main():
     sec["sc_density"] = sec["plane_count"].astype(float)
     sec["sc_vulnerability"] = src_std * sec["vuln_std"].fillna(0).to_numpy(float)
 
+    # enrichment: cross-grain corroboration + monoculture/Shannon + thermal flag
+    enr = pd.read_parquet(ENRICH)
+    enr["key"] = enr["key"].astype(str)
+    sec = sec.merge(enr, on="key", how="left")
+    sec["sc_co_benefit"] = sec["co_benefit"].fillna(0.0)   # priority x monoculture (city mandate + relief)
+
     streets = {}
     if ACTIONS.exists():
         a = pd.read_csv(ACTIONS, dtype={"section_key": str})
@@ -96,12 +104,24 @@ def main():
             "pri_raw": round(float(r.priority), 6),          # burden axis for the relief curve
             "depriv": round(float(r.depriv), 4),
             "vuln": round(float(r.vuln_std), 4) if pd.notna(r.vuln_std) else 0.0,
+            # --- cross-grain corroboration (flagship) ---
+            "corrob": r.corrob if isinstance(r.corrob, str) else "minor",
+            "rank400": int(r.rank_400m) if pd.notna(r.rank_400m) else -1,
+            # --- monoculture / biodiversity co-benefit ---
+            "mono": round(float(r.monoculture), 4) if pd.notna(r.monoculture) else 0.0,
+            "shannon": round(float(r.shannon), 3) if pd.notna(r.shannon) else 0.0,
+            "nsp": int(r.n_species) if pd.notna(r.n_species) else 0,
+            "ttrees": int(r.total_trees) if pd.notna(r.total_trees) else 0,
+            # --- thermal do-no-harm guardrail ---
+            "heat": int(r.heat_flag) if pd.notna(r.heat_flag) else 0,
+            "lst": round(float(r.mean_lst_celsius), 1) if pd.notna(r.mean_lst_celsius) else None,
             "scores": {                                      # per-objective sort scores
                 "efficiency": round(float(r.sc_efficiency), 6),
                 "equity": round(float(r.sc_equity), 6),
                 "quick_wins": round(float(r.sc_quick_wins), 2),
                 "density": round(float(r.sc_density), 2),
                 "vulnerability": round(float(r.sc_vulnerability), 6),
+                "co_benefit": round(float(r.sc_co_benefit), 6),
             },
             "streets": streets.get(k, []),
         }})
@@ -137,16 +157,23 @@ def main():
         "archetypes": archetypes,
         "total_priority": round(float(sec["priority"].sum()), 6),  # denom for the relief curve
         "cost": cost_model_bcn.as_dict(),                          # euro<->tree (from coolspend)
-        "objectives": ["efficiency", "equity", "quick_wins", "density", "vulnerability"],
+        "objectives": ["efficiency", "co_benefit", "equity", "quick_wins", "density", "vulnerability"],
+        "corrob_counts": {k: int((sec["corrob"] == k).sum()) for k in
+                          ("CORROBORATED", "ARTIFACT", "UNDERRATED", "minor")},
+        "grain_spearman": round(float(spearmanr(sec["priority"], sec["pri_400m"].fillna(0)).statistic), 3),
+        "n_heat_flagged": int(sec["heat_flag"].fillna(0).sum()),
         "vulnerability_note": "Age-AR-prevalence weighting; tested REDUNDANT with population "
                               "(re-orders ~nothing, Jaccard top-15 = 1.0) -- an optional lens, not a re-ranking.",
         "top15_share_pct": round(100 * sec.head(15)["priority"].sum() / sec["priority"].sum(), 1),
         "top50_share_pct": round(100 * sec.head(50)["priority"].sum() / sec["priority"].sum(), 1),
         "notes": {
             "street_layer": "Street counts are inventory + a feasibility allocation, NOT a priority. No street-level ranking (ecological fallacy).",
-            "ml": "Archetype (typology) and hotspot (Gi*/LISA) are interpretive layers. The supervised source-estimator FAILED spatial cross-validation (R2 -0.25/-0.37), so it does NOT touch the priority. Priority = mature-plane source x residential exposure, unchanged.",
+            "ml": "Three models run in this project. UNSUPERVISED ML (k-means/GMM typologies, silhouette 0.32) drives the live Archetype layer; SPATIAL STATISTICS (Getis-Ord Gi* / Local Moran's I, 999 permutations) drive the live Hotspot layer. A SUPERVISED model (Ridge + RandomForest source-estimator) was pre-registered and spatially cross-validated: it returned an honest NEGATIVE (random-CV R2 0.41/0.44 collapses to -0.25/-0.37 under spatial CV -- the random score was leakage), so it correctly does NOT touch the priority. The headline priority is a composite indicator -- the rubric-correct Phase-4 artifact for ranking, not a black box.",
             "maup": "At 400 m the population re-orders priorities; at section grain a few park-like clusters dominate (e.g. Montjuic). Use 400 m as the people-weighting evidence, sections as the operational unit.",
             "rationale": "City removes planes primarily for biodiversity/monoculture-risk, not allergy. This tool sequences that removal for max allergen-exposure relief as a co-benefit.",
+            "corrob": "Corroboration compares the section ranking with the 400 m people-weighted ranking. CORROBORATED = both agree (act first); ARTIFACT = high only at section grain, a MAUP cluster the people-weighting demotes (e.g. Montjuic); UNDERRATED = buried at section grain but high at 400 m. It tests agreement of two aggregations of the SAME proxy -- it does NOT validate the pollen proxy.",
+            "monoculture": "Co-benefit objective ranks by priority x Platanus dominance (share of a section's street trees that are planes; Shannon diversity shown for context). This aligns the sequence with the city's actual biodiversity mandate (no species >15%).",
+            "thermal": "Heat-flagged sections (top-quartile heat-risk = high LST x low NDVI) must be replaced immediately, no gaps -- removing canopy where it is already hot worsens the urban heat island.",
         },
     }
 

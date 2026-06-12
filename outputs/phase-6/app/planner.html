@@ -192,6 +192,23 @@ select,input[type=number]{
   font-family:"IBM Plex Mono",monospace;font-size:13px;
 }
 select:hover,input[type=number]:hover{border-color:#46505c;}
+textarea.deliv{width:100%;min-height:150px;background:#0d1117;color:var(--text);
+  border:1px solid var(--border);border-radius:8px;padding:9px 10px;margin-top:10px;
+  font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.45;resize:vertical;}
+input[type=password],input[type=text].ai{width:100%;background:#0d1117;color:var(--text);
+  border:1px solid var(--border);border-radius:8px;padding:8px 10px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;}
+.ai-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.ai-grid .field{margin-bottom:0;}
+.ai-key{margin-top:8px;}
+.ai-out{margin-top:11px;background:#0f141c;border:1px solid var(--border-soft);border-radius:9px;
+  padding:12px 13px;font-size:12.5px;line-height:1.5;color:#d7dee6;white-space:pre-wrap;
+  max-height:320px;overflow:auto;}
+.ai-out.warn{border-left:3px solid var(--warn);}
+.ai-warnbar{font-size:11px;color:var(--warn);font-style:italic;margin:-2px 0 8px;}
+.ai-status{font-size:11.5px;color:var(--muted);margin-top:8px;min-height:14px;}
+.ai-status.err{color:#e5484d;}
+.ai-priv{font-size:10.5px;color:var(--muted-2);margin-top:7px;line-height:1.45;}
 
 /* budget */
 .check{display:flex;align-items:center;gap:9px;font-size:13px;margin:10px 0;cursor:pointer;}
@@ -464,11 +481,15 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
           </label>
           <label class="layer-opt">
             <input type="radio" name="layer" value="archetype" aria-describedby="ld-arch">
-            <span><span class="lbl">Archetype</span><span class="desc" id="ld-arch">Typology &amp; suggested action (interpretive).</span></span>
+            <span><span class="lbl">Archetype</span><span class="desc" id="ld-arch">Unsupervised ML — k-means typology &amp; suggested action.</span></span>
+          </label>
+          <label class="layer-opt">
+            <input type="radio" name="layer" value="corrob" aria-describedby="ld-corrob">
+            <span><span class="lbl">Corroboration — trust verdict</span><span class="desc" id="ld-corrob">Does the 400&nbsp;m evidence back this section? (the MAUP check, made actionable)</span></span>
           </label>
           <label class="layer-opt">
             <input type="radio" name="layer" value="hotspot" aria-describedby="ld-hot">
-            <span><span class="lbl">Hotspot</span><span class="desc" id="ld-hot">Gi* / LISA spatial clusters (interpretive).</span></span>
+            <span><span class="lbl">Hotspot</span><span class="desc" id="ld-hot">Spatial statistics — Gi* / LISA clusters (999 perms).</span></span>
           </label>
           <label class="layer-opt">
             <input type="radio" name="layer" value="cells" aria-describedby="ld-cells">
@@ -489,6 +510,16 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
           <div class="field">
             <label for="fAction">Suggested action</label>
             <select id="fAction" aria-label="Filter by suggested action"></select>
+          </div>
+          <div class="field">
+            <label for="fCorrob">Cross-grain corroboration</label>
+            <select id="fCorrob" aria-label="Filter by cross-grain corroboration">
+              <option value="All">All sections</option>
+              <option value="CORROBORATED">Corroborated — act first</option>
+              <option value="ARTIFACT">Section-grain artifacts</option>
+              <option value="UNDERRATED">Underrated by section grain</option>
+              <option value="minor">Minor (lower tier)</option>
+            </select>
           </div>
         </div>
       </section>
@@ -551,6 +582,60 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
           </div>
         </div>
       </section>
+
+      <!-- Deliverable generator: grounded, formatter-only LLM. AI in-app (BYOK / local) or copy-out. -->
+      <section class="card" aria-label="Deliverable generator">
+        <div class="hd"><span class="dot" aria-hidden="true"></span><h2>Deliverable — AI writer</h2></div>
+        <div class="bd">
+          <div class="field">
+            <label for="delivFormat">Turn this plan into…</label>
+            <select id="delivFormat" aria-label="Deliverable format">
+              <option value="director_memo">Director decision memo</option>
+              <option value="council_briefing">Council / public briefing</option>
+              <option value="procurement">Ops procurement worklist</option>
+              <option value="public_faq">Resident FAQ answer</option>
+            </select>
+          </div>
+
+          <div class="ai-grid">
+            <div class="field">
+              <label for="aiProvider">AI provider</label>
+              <select id="aiProvider" aria-label="AI provider">
+                <option value="deepseek">DeepSeek</option>
+                <option value="anthropic">Claude (Anthropic)</option>
+                <option value="openai">OpenAI</option>
+                <option value="ollama">Local (Ollama)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="aiModel">Model</label>
+              <input type="text" class="ai" id="aiModel" aria-label="Model id" placeholder="claude-opus-4-8">
+            </div>
+          </div>
+          <div class="ai-key field" id="aiKeyRow">
+            <label for="aiKey">API key <span id="aiKeyHint" style="text-transform:none;color:var(--muted-2)"></span></label>
+            <input type="password" id="aiKey" aria-label="API key" placeholder="sk-…" autocomplete="off">
+          </div>
+
+          <button class="btn solid" id="genAI" style="margin-top:10px">Generate with AI</button>
+          <div class="ai-status" id="aiStatus" aria-live="polite"></div>
+          <div class="ai-out" id="aiOut" hidden></div>
+          <div class="btn-row" id="aiOutActions" hidden>
+            <button class="btn ghost" id="copyAiOut">Copy result</button>
+          </div>
+
+          <p class="ai-priv" id="aiPriv"></p>
+
+          <div class="btn-row" style="margin-top:10px">
+            <button class="btn ghost" id="genPrompt">Copy prompt (offline)</button>
+          </div>
+          <p class="derived" id="delivNote" style="margin-top:9px">The app writes a grounded prompt; the AI only <b>formats</b> your plan — it cannot add numbers or claims. Offline mode copies the prompt to paste into any chat assistant.</p>
+          <textarea class="deliv" id="promptOut" readonly hidden aria-label="Generated prompt"></textarea>
+          <div class="btn-row" id="promptActions" hidden>
+            <button class="btn ghost" id="copyPrompt">Copy</button>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- MAUP explainer (cells layer only) -->
@@ -603,6 +688,9 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
       <div class="notes-block">
         <h4>Honesty notes — please keep these in mind</h4>
         <div class="note" id="noteRationale"></div>
+        <div class="note" id="noteCorrob"></div>
+        <div class="note" id="noteMono"></div>
+        <div class="note" id="noteThermal"></div>
         <div class="note" id="noteMl"></div>
         <div class="note" id="noteStreet"></div>
         <div class="note" id="noteMaup"></div>
@@ -618,6 +706,8 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
 
 <!-- Data global (must load BEFORE the app script) -->
 <script src="app_data.js"></script>
+<!-- OPTIONAL local AI config (gitignored; NOT shipped). Sets window.PLANNER_AI_CONFIG = {provider, apiKey, model}. Missing on a fresh clone -> app runs in bring-your-own-key mode. -->
+<script src="config.local.js" onerror="void 0"></script>
 
 <script>
 "use strict";
@@ -667,9 +757,29 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     return "#3a4150";
   }
 
+  // Cross-grain corroboration colours (the flagship trust verdict)
+  const CORR_COLORS={CORROBORATED:"#2ea043",ARTIFACT:"#f0883e",UNDERRATED:"#a371f7",minor:"#3a4150"};
+  function corrColor(c){ return CORR_COLORS[c]||"#3a4150"; }
+  function corrLabel(c){
+    return c==="CORROBORATED"?"Corroborated — act first"
+      : c==="ARTIFACT"?"Section-grain artifact"
+      : c==="UNDERRATED"?"Underrated by section grain"
+      : "Concordant (lower tier)";
+  }
+  // verdict sentence for the detail badge (uses section rank vs 400 m rank)
+  function corrMsg(p){
+    if(p.corrob==="CORROBORATED")
+      return `Both grains agree (section #${p.rank}, 400 m #${p.rank400}). The people-weighted evidence backs this — act first.`;
+    if(p.corrob==="ARTIFACT")
+      return `High here only because it is a big mature-plane cluster. The 400 m people-weighting ranks it #${p.rank400}. Use as an execution unit — do NOT claim priority (the Montjuïc trap).`;
+    if(p.corrob==="UNDERRATED")
+      return `Buried at section grain (#${p.rank}) but the 400 m people-weighting ranks it #${p.rank400} — a dense-residential area the naive plane-count misses.`;
+    return `Not top-tier at either grain (section #${p.rank}, 400 m #${p.rank400}).`;
+  }
+
   /* ---------- state ---------- */
   let currentLayer="priority";
-  let fDistrict="All", fAction="All";
+  let fDistrict="All", fAction="All", fCorrob="All";
   const planKeys=new Set();      // section keys currently in the plan (Set preserves insertion order)
   const featByKey={};            // key -> leaflet layer (sections)
   let selectedKey=null;          // open in detail panel
@@ -703,6 +813,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   }
   const OBJ_LABELS={
     efficiency:"Efficiency — max relief",
+    co_benefit:"Co-benefit — relief × monoculture",
     equity:"Equity — favour deprived",
     quick_wins:"Quick wins — fewest sites",
     density:"Density — city's naive rule",
@@ -772,13 +883,15 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     let fill;
     if(currentLayer==="priority")   fill=priColor(p.pri);
     else if(currentLayer==="archetype") fill=archColor(p.action);
+    else if(currentLayer==="corrob") fill=corrColor(p.corrob);
     else /* hotspot */              fill=hotColor(p);
 
+    const faint=((currentLayer==="hotspot"||currentLayer==="corrob") && fill==="#3a4150");
     return {
       color: inPlan ? "#39c5cf" : "#0d1117",
       weight: inPlan ? 2.6 : .5,
       fillColor: fill,
-      fillOpacity: visible ? (currentLayer==="hotspot" && fill==="#3a4150" ? .35 : .8) : .05,
+      fillOpacity: visible ? (faint ? .32 : .8) : .05,
       opacity: visible ? (inPlan?1:.85) : .12
     };
   }
@@ -793,6 +906,7 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   function passesFilter(p){
     if(fDistrict!=="All" && p.district!==fDistrict) return false;
     if(fAction!=="All"   && p.action!==fAction)     return false;
+    if(fCorrob!=="All"   && p.corrob!==fCorrob)     return false;
     return true;
   }
 
@@ -818,7 +932,17 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
       if(!map.hasLayer(sectionLayer)) map.addLayer(sectionLayer);
       restyle();
     }
-    document.getElementById("maupBox").classList.toggle("show",showCells);
+    // explainer box: MAUP text on cells, corroboration text on the corrob layer
+    const showCorrob=currentLayer==="corrob";
+    const mb=document.getElementById("maupBox"), h3=mb.querySelector("h3");
+    if(showCorrob){
+      h3.textContent="Corroboration — read with care";
+      document.getElementById("maupText").textContent=(META.notes&&META.notes.corrob)||"";
+    }else{
+      h3.textContent="MAUP — read with care";
+      document.getElementById("maupText").textContent=(META.notes&&META.notes.maup)||"";
+    }
+    mb.classList.toggle("show",showCells||showCorrob);
   }
 
   /* ================================================================
@@ -837,6 +961,12 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
         swatch("#d4a72c","monitor")+
         swatch("#5b7fa6","defer (park-like)")+
         swatch("#444c56","low-relevance");
+    }else if(currentLayer==="corrob"){
+      html=`<h4>Cross-grain trust verdict</h4>`+
+        swatch("#2ea043","Corroborated (act first)")+
+        swatch("#f0883e","Section-grain artifact")+
+        swatch("#a371f7","Underrated by section grain")+
+        swatch("#3a4150","Minor (lower tier)");
     }else{ // hotspot
       html=`<h4>Spatial clusters (Gi* / LISA)</h4>`+
         swatch("#e5484d","Priority cluster (HH)")+
@@ -872,10 +1002,18 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
          <div class="k" style="margin-bottom:5px">priority (0–1)</div>
          <div class="pri-bar-wrap"><div class="pri-bar"><i style="width:${(p.pri*100).toFixed(0)}%"></i></div></div>
          <div class="v" style="font-size:14px;margin-top:5px">${p.pri.toFixed(3)}</div>
-       </div>`;
+       </div>`+
+      stat(`${((p.mono||0)*100).toFixed(0)}`,`<small>%</small>`,"Platanus share")+
+      stat(`${(p.shannon||0).toFixed(2)}`,`<small>(${p.nsp||0} sp)</small>`,"Shannon diversity");
 
-    // archetype + hotspot badges
+    // badges: corroboration (flagship) FIRST, then archetype, hotspot, optional thermal
     document.getElementById("dBadges").innerHTML=
+      `<div class="badge" style="border-color:${corrColor(p.corrob)}55">
+         <span class="swl" style="background:${corrColor(p.corrob)}"></span>
+         <div><div class="bt">${escapeHtml(corrLabel(p.corrob))}</div>
+              <div class="bd2">${escapeHtml(corrMsg(p))}</div>
+              <div class="bd2" style="color:var(--muted-2);font-style:italic;margin-top:3px">Tests agreement of two aggregations of the same exposure proxy — not the proxy itself.</div></div>
+       </div>`+
       `<div class="badge">
          <span class="swl" style="background:${archColor(p.action)}"></span>
          <div><div class="bt">${escapeHtml(archetypeName(p))}</div>
@@ -885,7 +1023,13 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
          <span class="swl" style="background:${hotColor(p)}"></span>
          <div><div class="bt">${hotspotLabel(p)}</div>
               <div class="bd2">Gi* z = ${(+p.gi_z).toFixed(2)} · ${p.hot==="hot"?"hot":"not hot"}</div></div>
-       </div>`;
+       </div>`+
+      (p.heat?
+      `<div class="badge" style="border-color:#f0883e55">
+         <span class="swl" style="background:#f0883e"></span>
+         <div><div class="bt">Heat-island caution</div>
+              <div class="bd2">LST ${p.lst==null?"—":p.lst+"°C"}, low canopy — pair removal with immediate replacement, no gaps.</div></div>
+       </div>`:"");
 
     // street worklist (guard empty/missing)
     renderWorklist(p);
@@ -999,6 +1143,12 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     let meta=`${props.length} section${props.length>1?"s":""}`;
     if(budget!=null){ meta+=`<br>target ${fmt(budget)} mature`; }
     meta+=`<br>${fmt(total)} planes &asymp; <b style="color:var(--text)">${fmtEuro(total*rate)}</b>`;
+    // corroboration KPI: how much of the plan's modeled relief is cross-grain-trustworthy vs MAUP artifact
+    const den=props.reduce((s,p)=>s+(p.pri_raw||0),0)||1;
+    const corPct=Math.round(100*props.filter(p=>p.corrob==="CORROBORATED").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    const artPct=Math.round(100*props.filter(p=>p.corrob==="ARTIFACT").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    meta+=`<br><span style="color:#2ea043">${corPct}% relief corroborated</span>`
+        + (artPct>0?` · <span style="color:#f0883e">${artPct}% from artifacts — review</span>`:"");
     if(COST.caveat){ meta+=`<br><span style="color:var(--muted-2);font-style:italic">${escapeHtml(COST.caveat)}</span>`; }
     document.getElementById("planMeta").innerHTML=meta;
     summary.hidden=false; actions.hidden=false;
@@ -1137,6 +1287,187 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   function csv(v){ v=(v==null?"":String(v)); return /[",\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
 
   /* ================================================================
+     DELIVERABLE GENERATOR (LLM prompt export) -- formatter, not oracle
+     Builds a grounded, caveat-locked prompt from the current plan. The app
+     holds NO model/API key; the planner pastes the prompt into their own
+     ChatGPT/Claude. The prompt forbids inventing numbers, street-level
+     ranking, and any health claim -- the LLM may only re-format this plan.
+     ================================================================ */
+  const FMT_INSTR={
+    director_memo:"Write a one-page DECISION MEMO to the Director of Barcelona Espais Verds. Structure: Recommendation (which sections, this year); Why these sites (cite the corroboration verdict and resident counts); Cost; Risks & caveats; and a closing 'What we are NOT claiming'. Executive, crisp.",
+    council_briefing:"Write a short PUBLIC COUNCIL BRIEFING. Frame the removals as the city's biodiversity / monoculture-reduction programme (Pla Director de l'Arbrat), with pollen-allergen relief as a CO-BENEFIT. Plain, press-safe, honest. No health-outcome claims.",
+    procurement:"Write an OPERATIONS PROCUREMENT WORKLIST grouped by section then street: mature plane counts and suggested removals. Flag any heat-island section for immediate same-season replanting (no canopy gaps). Practical checklist style.",
+    public_faq:"Answer, for a RESIDENT: 'Why is the city removing plane trees on my street, and how was my area chosen?' Plain language; be honest that the priority is a modeled estimate, not a measurement."
+  };
+  function buildDeliverablePrompt(fmt){
+    const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties)
+                             .sort((a,b)=>a.rank-b.rank);
+    if(!props.length) return null;
+    const den=props.reduce((s,p)=>s+(p.pri_raw||0),0)||1;
+    const corPct=Math.round(100*props.filter(p=>p.corrob==="CORROBORATED").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    const artPct=Math.round(100*props.filter(p=>p.corrob==="ARTIFACT").reduce((s,p)=>s+(p.pri_raw||0),0)/den);
+    const totMature=props.reduce((s,p)=>s+p.mature,0);
+    const rate=euroRate();
+    const lines=props.map(p=>{
+      const st=(Array.isArray(p.streets)?p.streets:[]).slice(0,4)
+        .map(s=>`${s.s} (${s.m} mature, suggest ${s.r})`).join("; ");
+      return `#${p.rank} ${p.district} [sec ${p.key}] verdict=${p.corrob} 400m-rank=${p.rank400} `
+        +`mature=${p.mature} residents=${p.pop} platanus-share=${Math.round((p.mono||0)*100)}%`
+        +(p.heat?" HEAT-FLAG":"")+(st?` | streets: ${st}`:" | (no street inventory)");
+    }).join("\n");
+    const rules=
+`You are a FORMATTER, not an analyst. Render the PLAN below as the requested document.
+HARD RULES (do not break):
+- Use ONLY the data given. Do NOT invent, estimate, or change any number, rank, street, or cost.
+- Sections are ranked; STREETS ARE NOT -- never present a street-level priority ranking.
+- "Relief"/"priority" is a MODELED pollen-EXPOSURE proxy, NOT a measured health outcome. Never imply reduced asthma/allergy or any health benefit.
+- Keep the CAVEATS visible in the output. Costs are illustrative planning figures, not quotes.
+- verdict=ARTIFACT means high only at section grain (MAUP) -- describe it as an execution unit, not a priority claim. CORROBORATED = trustworthy at both grains. UNDERRATED = dense-residential, surfaced by people-weighting.
+- If something is not in the data, write "not available" -- do not fill it in.`;
+    const ctx=
+`PLAN CONTEXT:
+- Objective used to sequence: ${OBJ_LABELS[objective]||objective}
+- ${props.length} sections, ${totMature} mature plane trees, ~EUR ${Math.round(totMature*rate).toLocaleString("en-US")} (illustrative CapEx).
+- Trust mix: ${corPct}% of modeled relief is CORROBORATED; ${artPct}% is from section-grain ARTIFACTS (flag for review).
+CAVEATS (must appear in the output): the pollen source is an UNVALIDATED PROXY (no measured Barcelona pollen series exists); relief is modeled exposure, not health; the people-weighting claim holds at the 400 m grain and sections are the execution unit (MAUP); the city's primary rationale is biodiversity/monoculture, allergen relief is a co-benefit; cost figures are illustrative, not procurement quotes.`;
+    return `${rules}\n\nTASK: ${FMT_INSTR[fmt]||FMT_INSTR.director_memo}\n\n${ctx}\n\nPLAN (best-first under the active objective):\n${lines}\n`;
+  }
+  document.getElementById("genPrompt").addEventListener("click",()=>{
+    const txt=buildDeliverablePrompt(document.getElementById("delivFormat").value);
+    if(!txt){ toast("Build a plan first"); return; }
+    const ta=document.getElementById("promptOut");
+    ta.value=txt; ta.hidden=false; document.getElementById("promptActions").hidden=false;
+    ta.focus(); ta.select();
+    toast("Prompt ready — copy it into ChatGPT / Claude");
+  });
+  document.getElementById("copyPrompt").addEventListener("click",async()=>{
+    const ta=document.getElementById("promptOut");
+    if(ta.hidden||!ta.value){ toast("Generate a prompt first"); return; }
+    ta.focus(); ta.select();
+    let ok=false;
+    try{ await navigator.clipboard.writeText(ta.value); ok=true; }
+    catch(e){ try{ ok=document.execCommand("copy"); }catch(e2){ ok=false; } }
+    toast(ok?"Prompt copied — paste into your assistant":"Press Ctrl+C to copy");
+  });
+
+  /* ---- AI IN-APP: bring-your-own-key (DeepSeek / Claude / OpenAI) or local Ollama ----
+     The app holds NO key in source. The user's key lives only in this browser's
+     localStorage and is sent only to the chosen provider. The grounded prompt
+     (buildDeliverablePrompt) is the system message, so the model can only FORMAT
+     the plan. A client-side over-claim linter (BAN) flags any output that drifts
+     past the data. ---- */
+  const AI_PROVIDERS={
+    deepseek:{label:"DeepSeek",url:"https://api.deepseek.com/chat/completions",model:"deepseek-chat",key:true,kind:"openai",hint:"(platform.deepseek.com)"},
+    anthropic:{label:"Claude",url:"https://api.anthropic.com/v1/messages",model:"claude-opus-4-8",key:true,kind:"anthropic",hint:"(console.anthropic.com)"},
+    openai:{label:"OpenAI",url:"https://api.openai.com/v1/chat/completions",model:"gpt-4o",key:true,kind:"openai",hint:"(platform.openai.com)"},
+    ollama:{label:"Ollama",url:"http://localhost:11434/api/chat",model:"llama3.1",key:false,kind:"ollama",hint:"(runs locally, no key)"}
+  };
+  const BAN=[/\bcure[sd]?\b/i,/(reduc\w*|lower\w*|prevent\w*|improv\w*)\s+(asthma|allerg|public\s+health|health)/i,/\bguarantee\w*/i,/street[-\s]?level\s+priorit/i,/most\s+important\s+street/i,/\bhealth\s+benefit/i];
+  // negation-aware: an over-claim only counts if it is NOT disclaimed (the model often
+  // CORRECTLY writes "not a street-level priority" / "no health benefit" -- don't flag those).
+  function overclaims(t){
+    const neg=/\b(not|no|never|cannot|can.?t|isn.?t|aren.?t|won.?t|does not|do not|don.?t|without|rather than|instead of|nor|avoid)\b/i;
+    return BAN.some(re=>{
+      let m, rx=new RegExp(re.source,"gi");
+      while((m=rx.exec(t))){
+        // clause = from the nearest sentence/line boundary before the match up to it (cap 200 chars)
+        const start=Math.max(0, m.index-200,
+          t.lastIndexOf(".",m.index-1)+1, t.lastIndexOf("\n",m.index-1)+1,
+          t.lastIndexOf(":",m.index-1)+1, t.lastIndexOf(";",m.index-1)+1);
+        if(!neg.test(t.slice(start,m.index))) return true;   // an UN-disclaimed over-claim
+      }
+      return false;
+    });
+  }
+  function aiProvider(){ return AI_PROVIDERS[document.getElementById("aiProvider").value]||AI_PROVIDERS.deepseek; }
+  function syncProviderUI(){
+    const p=document.getElementById("aiProvider").value, cfg=AI_PROVIDERS[p];
+    document.getElementById("aiModel").placeholder=cfg.model;
+    document.getElementById("aiKeyHint").textContent=cfg.hint;
+    document.getElementById("aiKeyRow").hidden=!cfg.key;
+    let k=""; try{ k=localStorage.getItem("platans_aikey_"+p)||""; }catch(e){}
+    document.getElementById("aiKey").value=k;
+    let m=""; try{ m=localStorage.getItem("platans_aimodel_"+p)||""; }catch(e){}
+    document.getElementById("aiModel").value=m;
+    document.getElementById("aiPriv").textContent = cfg.key
+      ? "Your key is stored only in this browser (localStorage) and sent only to "+cfg.label+". Never committed or shared. Browser-key use is at your own risk — revoke it if this file leaves your machine."
+      : "Runs against a local Ollama server (localhost:11434). No key; nothing leaves your machine.";
+  }
+  document.getElementById("aiProvider").addEventListener("change",syncProviderUI);
+  document.getElementById("aiKey").addEventListener("change",()=>{
+    try{ localStorage.setItem("platans_aikey_"+document.getElementById("aiProvider").value,document.getElementById("aiKey").value.trim()); }catch(e){} });
+  document.getElementById("aiModel").addEventListener("change",()=>{
+    try{ localStorage.setItem("platans_aimodel_"+document.getElementById("aiProvider").value,document.getElementById("aiModel").value.trim()); }catch(e){} });
+
+  async function callAI(cfg,key,model,system,user){
+    const headers={"content-type":"application/json"}; let body;
+    if(cfg.kind==="anthropic"){
+      headers["x-api-key"]=key; headers["anthropic-version"]="2023-06-01";
+      headers["anthropic-dangerous-direct-browser-access"]="true";
+      body={model,max_tokens:4096,system,messages:[{role:"user",content:user}]};
+    }else if(cfg.kind==="openai"){
+      headers["authorization"]="Bearer "+key;
+      body={model,max_tokens:4096,messages:[{role:"system",content:system},{role:"user",content:user}]};
+    }else{
+      body={model,stream:false,messages:[{role:"system",content:system},{role:"user",content:user}]};
+    }
+    const r=await fetch(cfg.url,{method:"POST",headers,body:JSON.stringify(body)});
+    if(!r.ok){ let d=""; try{ d=((await r.json()).error||{}).message||""; }catch(e){} throw new Error("HTTP "+r.status+(d?": "+d:"")); }
+    const data=await r.json();
+    if(cfg.kind==="anthropic"){
+      if(data.stop_reason==="refusal") throw new Error("the model refused this request");
+      return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("").trim();
+    }
+    if(cfg.kind==="openai") return (((((data.choices||[])[0]||{}).message)||{}).content||"").trim();
+    return ((data.message||{}).content||"").trim();
+  }
+
+  document.getElementById("genAI").addEventListener("click",async()=>{
+    const status=document.getElementById("aiStatus"), out=document.getElementById("aiOut");
+    const prompt=buildDeliverablePrompt(document.getElementById("delivFormat").value);
+    if(!prompt){ toast("Build a plan first"); return; }
+    const cfg=aiProvider();
+    const key=cfg.key?document.getElementById("aiKey").value.trim():"";
+    const model=document.getElementById("aiModel").value.trim()||cfg.model;
+    if(cfg.key && !key){ status.classList.add("err"); status.textContent="Enter your "+cfg.label+" API key first."; return; }
+    status.classList.remove("err"); status.textContent="Generating with "+cfg.label+" ("+model+")…";
+    out.hidden=true; document.getElementById("aiOutActions").hidden=true;
+    const btn=document.getElementById("genAI"); btn.disabled=true;
+    try{
+      const text=await callAI(cfg,key,model,prompt,"Produce the deliverable now, following every rule above exactly.");
+      const flagged=overclaims(text||"");
+      out.classList.toggle("warn",flagged);
+      out.innerHTML=(flagged?'<div class="ai-warnbar">! Output may contain a claim beyond the data (health / benefit / street ranking). Verify before use.</div>':"")
+        +escapeHtml(text||"(empty response)").replace(/\n/g,"<br>");
+      out.hidden=false; document.getElementById("aiOutActions").hidden=false;
+      status.textContent="Done — "+cfg.label+" formatted your plan. Verify against the map before sending.";
+    }catch(e){
+      status.classList.add("err");
+      const cors=/Failed to fetch|NetworkError|CORS/i.test(e.message||"");
+      status.textContent="Failed: "+(e.message||"unknown")+(cors?" — provider likely blocks browser calls (CORS). Use Copy prompt (offline) instead.":"");
+    }finally{ btn.disabled=false; }
+  });
+  document.getElementById("copyAiOut").addEventListener("click",async()=>{
+    const t=document.getElementById("aiOut").textContent||"";
+    let ok=false; try{ await navigator.clipboard.writeText(t); ok=true; }catch(e){}
+    toast(ok?"Result copied":"Select the text and Ctrl+C");
+  });
+  // Apply optional local config (config.local.js, gitignored) -> prefill provider/model/key.
+  function applyAiConfig(){
+    const c=window.PLANNER_AI_CONFIG;
+    const ps=document.getElementById("aiProvider");
+    if(c && c.provider && AI_PROVIDERS[c.provider]) ps.value=c.provider;
+    syncProviderUI();                                  // sets fields from localStorage + placeholders
+    if(c){
+      const p=ps.value;
+      if(c.model){ document.getElementById("aiModel").value=c.model; try{localStorage.setItem("platans_aimodel_"+p,c.model);}catch(e){} }
+      if(c.apiKey){ document.getElementById("aiKey").value=c.apiKey; try{localStorage.setItem("platans_aikey_"+p,c.apiKey);}catch(e){} }
+      if(c.apiKey){ document.getElementById("aiStatus").textContent="Local key loaded for "+(AI_PROVIDERS[p].label)+" — ready to generate."; }
+    }
+  }
+  applyAiConfig();
+
+  /* ================================================================
      MARGINAL-RELIEF CURVE (NEW)
      X = cumulative mature planes removed; Y = cumulative exposure burden
      captured (%) = Σ pri_raw / meta.total_priority * 100. Walks sections in
@@ -1230,6 +1561,9 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     as.innerHTML=`<option value="All">All actions</option>`+
       acts.map(a=>`<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join("");
     as.addEventListener("change",()=>{fAction=as.value;restyle();});
+
+    const cs=document.getElementById("fCorrob");
+    cs.addEventListener("change",()=>{fCorrob=cs.value;restyle();});
   }
 
   /* ================================================================
@@ -1253,7 +1587,10 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
   function fillNotes(){
     const n=META.notes||{};
     document.getElementById("noteRationale").innerHTML=`<b>Why this exists:</b> ${escapeHtml(n.rationale||"")}`;
-    document.getElementById("noteMl").innerHTML=`<b>The ML failed:</b> ${escapeHtml(n.ml||"")}`;
+    document.getElementById("noteCorrob").innerHTML=`<b>Corroboration verdict:</b> ${escapeHtml(n.corrob||"")}`;
+    document.getElementById("noteMono").innerHTML=`<b>Co-benefit objective:</b> ${escapeHtml(n.monoculture||"")}`;
+    document.getElementById("noteThermal").innerHTML=`<b>Heat guardrail:</b> ${escapeHtml(n.thermal||"")}`;
+    document.getElementById("noteMl").innerHTML=`<b>Models used:</b> ${escapeHtml(n.ml||"")}`;
     document.getElementById("noteStreet").innerHTML=`<b>Streets ≠ ranking:</b> ${escapeHtml(n.street_layer||"")}`;
     document.getElementById("noteMaup").innerHTML=`<b>MAUP:</b> ${escapeHtml(n.maup||"")}`;
     document.getElementById("maupText").textContent=n.maup||"";
