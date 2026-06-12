@@ -1597,9 +1597,13 @@ HONESTY: NO street-level priority (ecological fallacy). The city removes planes 
   function veraClose(){ if(veraEl.contains(document.activeElement)) document.activeElement.blur(); veraEl.classList.remove("open"); veraEl.setAttribute("aria-hidden","true"); }
   async function veraSend(q){
     if(veraBusy) return;
-    const text=(q||veraIn.value||"").trim(); if(!text) return;
+    const text=(typeof q==="string"?q:veraIn.value||"").trim(); if(!text) return;
     const cfg=aiProvider(), key=cfg.key?document.getElementById("aiKey").value.trim():"", model=document.getElementById("aiModel").value.trim()||cfg.model;
-    if(cfg.key && !key){ veraSay("vera","I need an API key first — open **AI settings** below and paste your "+cfg.label+" key.",false); return; }
+    if(cfg.key && !key){ 
+      document.querySelector(".vsettings").open=true;
+      veraSay("vera","I need an API key first — I've opened the **AI settings** below for you to paste your "+cfg.label+" key.",false); 
+      return; 
+    }
     veraIn.value=""; autoGrow();
     veraSay("user",text,false); veraHistory.push({role:"user",content:text});
     veraBusy=true; document.getElementById("veraSend").disabled=true;
