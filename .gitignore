@@ -25,3 +25,6 @@ group_internal_meeting.md
 # Local AI config for the planner app (holds an API key -- never commit)
 config.local.js
 outputs/phase-6/app/config.local.js
+
+# CALIOPE downloads (large external data; not committed)
+caliope_tmp/
