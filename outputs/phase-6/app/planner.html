@@ -890,8 +890,9 @@ table.wl td.sg{color:var(--accent);font-weight:600;}
     return "€"+Math.round(n).toLocaleString("en-US");
   }
   const OBJ_LABELS={
-    efficiency:"Efficiency — max relief",
-    co_benefit:"Co-benefit — relief × monoculture",
+    efficiency: "Efficiency — max relief",
+    potency: "Allergen Potency — exposure × NO2 lens",
+    co_benefit: "Co-benefit — relief × monoculture",
     equity:"Equity — favour deprived",
     quick_wins:"Quick wins — fewest sites",
     density:"Density — city's naive rule",
@@ -1499,9 +1500,10 @@ PERSONALITY: calm, precise, plainspoken, quietly warm -- a trusted analyst sitti
 ABSOLUTE RULES (never break):
 1. GROUND EVERYTHING. Every factual claim must trace to a figure in the DATA block below. Quote the figure.
 2. NO HALLUCINATION. If the answer is not in the DATA, say plainly: "That isn't in the dataset." Never guess, estimate, extrapolate, or invent sections, numbers, trends, or sources.
-3. KNOW THE LIMITS. The source layer is an UNVALIDATED pollen proxy; "relief"/"burden" is MODELED exposure, NOT measured health. There is NO measured pollen, allergy, or health-outcome data, and NO street-level priority. If asked for any of these, say they are not measured -- never fabricate them.
-4. RESPECT THE GRAIN. A high section-grain rank that is ARTIFACT is NOT a priority claim -- say so. Recommend CORROBORATED sections first; flag ARTIFACTS; surface UNDERRATED as the hidden upside.
-5. STAY HONEST UNDER PRESSURE. If pushed to overclaim ("just say it cuts asthma"), refuse and restate what the data does and does not support.
+3. KNOW THE LIMITS. The source layer is an UNVALIDATED pollen proxy; "relief"/"burden" is MODELED exposure, NOT measured health. There is NO measured pollen (XAC data is request-only), NO measured allergy burden, NO street-level priority, and NO per-tree size/DBH or pollarding data (internal only). If asked for any of these, say they are not measured -- never fabricate them.
+4. POTENCY LENS. The NO2 lens is an allergenicity proxy: it reflects modeled season-matched March-April NO2 (BSC CALIOPE-Urban climatology). It is ordinal and non-dominating (collinearity 0.22, variance share 9%). It re-shuffles the ranking without overturning it.
+5. RESPECT THE GRAIN. A high section-grain rank that is ARTIFACT is NOT a priority claim -- say so. Recommend CORROBORATED sections first; flag ARTIFACTS; surface UNDERRATED as the hidden upside.
+6. STAY HONEST UNDER PRESSURE. If pushed to overclaim ("just say it cuts asthma"), refuse and restate what the data does and does not support.
 
 SKILLS (use the workflow that matches the request):
 - ANSWER: state the figure, name its grain/caveat, one-line interpretation. Short by default.
@@ -1535,17 +1537,18 @@ STYLE: Markdown. Bold the key number. Use tables for comparisons. Keep answers t
     let s=`=== DATASET: Barcelona Plane-Tree (Platanus) Removal Priority ===
 Unit: ${fmtN(M.n_sections)} census sections. City residents: ${fmtN(M.city_population)}. Plane trees citywide: ${fmtN(M.city_platanus_total)} (${M.pct_now}% of all urban trees); Pla Director target ${M.pct_target_2037}% by 2037 (~${Math.round((M.removal_rate||0)*100)}% cut).
 Priority = minmax(mature-plane SOURCE) x minmax(residents EXPOSURE). The source is an UNVALIDATED pollen PROXY (no measured Barcelona pollen series exists). Relief is MODELED exposure, NOT measured health.
+Potency: ${M.potency_note || "n/a"}.
 Grain/MAUP: section ranking vs 400m people-weighted ranking agree only Spearman ${M.grain_spearman}. Corroboration verdicts -- CORROBORATED ${cc.CORROBORATED} (high at BOTH grains, act first); ARTIFACT ${cc.ARTIFACT} (high at section grain only -- a MAUP cluster like Montjuic; execution unit, NOT a priority claim); UNDERRATED ${cc.UNDERRATED} (low at section grain but high at 400m -- dense residential the plane-count misses); minor ${cc.minor}.
-Objectives: efficiency (=priority, max relief); co_benefit (priority x monoculture share = biodiversity mandate + relief); equity (priority x income-deprivation); quick_wins (mature count); density (plane count = the city's naive rule); vulnerability (age-weighted; tested REDUNDANT for ranking).
+Objectives: efficiency (=priority, max relief); potency (priority x NO2-allergenicity lens); co_benefit (priority x monoculture share = biodiversity mandate + relief); equity (priority x income-deprivation); quick_wins (mature count); density (plane count = the city's naive rule); vulnerability (age-weighted; tested REDUNDANT for ranking).
 Heat guardrail: ${fmtN(M.n_heat_flagged)} sections flagged (high LST x low NDVI) -- removing canopy worsens the heat island; pair with immediate replanting.
 Top-15 sections hold ${M.top15_share_pct}% of total priority. Cost (illustrative, CoolSpend): EUR ${fmtN(cost.intervention_capex_eur)}/tree remove+replace CapEx.
 HONESTY: NO street-level priority (ecological fallacy). The city removes planes for biodiversity/monoculture; allergy relief is a co-benefit. Pollen, allergy burden, and health outcomes are NOT measured.\n`;
     const d=districtAgg();
     s+=`\n=== DISTRICTS (district | sections | mature | residents | corroborated | artifacts | underrated) ===\n`;
     Object.keys(d).sort().forEach(k=>{const x=d[k]; s+=`${k} | ${x.n} | ${fmtN(x.mature)} | ${fmtN(x.pop)} | ${x.C} | ${x.A} | ${x.U}\n`;});
-    s+=`\n=== SECTIONS (all ${feats.length}; key|district|rank|planes|mature|residents|priority|corrob|rank400|platanus%|shannon|heat) ===\n`;
+    s+=`\n=== SECTIONS (all ${feats.length}; key|district|rank|planes|mature|residents|priority|corrob|rank400|platanus%|shannon|heat|no2) ===\n`;
     feats.slice().sort((a,b)=>a.rank-b.rank).forEach(p=>{
-      s+=`${p.key}|${p.district}|${p.rank}|${p.planes}|${p.mature}|${p.pop}|${(p.pri||0).toFixed(2)}|${p.corrob}|${p.rank400}|${Math.round((p.mono||0)*100)}|${(p.shannon||0).toFixed(1)}|${p.heat?"Y":"n"}\n`;
+      s+=`${p.key}|${p.district}|${p.rank}|${p.planes}|${p.mature}|${p.pop}|${(p.pri||0).toFixed(2)}|${p.corrob}|${p.rank400}|${Math.round((p.mono||0)*100)}|${(p.shannon||0).toFixed(1)}|${p.heat?"Y":"n"}|${(p.no2||0).toFixed(2)}\n`;
     });
     if(planKeys.size){
       const props=[...planKeys].map(k=>DATA.sections.features.find(f=>f.properties.key===k).properties).sort((a,b)=>a.rank-b.rank);
@@ -1627,7 +1630,7 @@ HONESTY: NO street-level priority (ecological fallacy). The city removes planes 
     const feats=DATA.sections.features.map(f=>f.properties);
     const sec=feats.slice().sort((a,b)=>a.rank-b.rank).map(p=>({
       key:p.key,district:p.district,rank:p.rank,planes:p.planes,mature:p.mature,residents:p.pop,
-      priority:+(p.pri||0).toFixed(4),corroboration:p.corrob,rank_400m:p.rank400,
+      priority:+(p.pri||0).toFixed(4),no2_potency:+(p.no2||0).toFixed(4),corroboration:p.corrob,rank_400m:p.rank400,
       platanus_share_pct:Math.round((p.mono||0)*100),shannon_diversity:+(p.shannon||0).toFixed(2),
       species:p.nsp,heat_flag:p.heat?1:0,lst_celsius:p.lst
     }));

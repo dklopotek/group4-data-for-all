@@ -26,6 +26,7 @@ import cost_model_bcn                      # noqa: E402
 
 SEC = ROOT / "outputs" / "phase-6" / "section_priority.parquet"
 ENRICH = ROOT / "outputs" / "phase-6" / "section_enrich.parquet"   # corroboration + monoculture + thermal
+NO2 = ROOT / "data" / "processed" / "no2_april_climatology.csv"
 CELLS = ROOT / "data" / "processed" / "allergen_layers.parquet"
 FEAT = ROOT / "data" / "processed" / "section_features.parquet"
 ACTIONS = ROOT / "outputs" / "phase-6" / "street_removal_actions.csv"
@@ -62,6 +63,16 @@ def main():
     feat = gpd.read_parquet(FEAT)[["key", "income", "vuln_std"]].copy()
     feat["key"] = feat["key"].astype(str)
     sec = sec.merge(feat, on="key", how="left")
+
+    # NO2 potency lens (ordinal, season-matched climatology)
+    if NO2.exists():
+        no2 = pd.read_csv(NO2, dtype={"key": str})
+        sec = sec.merge(no2, on="key", how="left")
+        sec["no2_val"] = sec["no2_avg"].fillna(sec["no2_avg"].median())
+        sec["no2_potency"] = minmax(sec["no2_val"].to_numpy())
+    else:
+        sec["no2_potency"] = 0.0
+
     sec["depriv"] = minmax(-sec["income"].to_numpy(float))            # poorest = 1
     src_std = sec["source_std"].to_numpy(float)
     pri = sec["priority"].to_numpy(float)
@@ -70,6 +81,7 @@ def main():
     sec["sc_quick_wins"] = sec["mature_count"].astype(float)
     sec["sc_density"] = sec["plane_count"].astype(float)
     sec["sc_vulnerability"] = src_std * sec["vuln_std"].fillna(0).to_numpy(float)
+    sec["sc_potency"] = pri * sec["no2_potency"]
 
     # enrichment: cross-grain corroboration + monoculture/Shannon + thermal flag
     enr = pd.read_parquet(ENRICH)
@@ -112,6 +124,7 @@ def main():
             "shannon": round(float(r.shannon), 3) if pd.notna(r.shannon) else 0.0,
             "nsp": int(r.n_species) if pd.notna(r.n_species) else 0,
             "ttrees": int(r.total_trees) if pd.notna(r.total_trees) else 0,
+            "no2": round(float(r.no2_potency), 4) if hasattr(r, "no2_potency") else 0.0,
             # --- thermal do-no-harm guardrail ---
             "heat": int(r.heat_flag) if pd.notna(r.heat_flag) else 0,
             "lst": round(float(r.mean_lst_celsius), 1) if pd.notna(r.mean_lst_celsius) else None,
@@ -157,13 +170,15 @@ def main():
         "archetypes": archetypes,
         "total_priority": round(float(sec["priority"].sum()), 6),  # denom for the relief curve
         "cost": cost_model_bcn.as_dict(),                          # euro<->tree (from coolspend)
-        "objectives": ["efficiency", "co_benefit", "equity", "quick_wins", "density", "vulnerability"],
+        "objectives": ["efficiency", "potency", "co_benefit", "equity", "quick_wins", "density", "vulnerability"],
         "corrob_counts": {k: int((sec["corrob"] == k).sum()) for k in
                           ("CORROBORATED", "ARTIFACT", "UNDERRATED", "minor")},
         "grain_spearman": round(float(spearmanr(sec["priority"], sec["pri_400m"].fillna(0)).statistic), 3),
         "n_heat_flagged": int(sec["heat_flag"].fillna(0).sum()),
         "vulnerability_note": "Age-AR-prevalence weighting; tested REDUNDANT with population "
                               "(re-orders ~nothing, Jaccard top-15 = 1.0) -- an optional lens, not a re-ranking.",
+        "potency_note": "NO2-allergenicity lens (BSC CALIOPE-Urban). March-April climatology (2019-2024). "
+                        "Gate: collinearity 0.22 (independent), variance share 9% (non-dominating).",
         "top15_share_pct": round(100 * sec.head(15)["priority"].sum() / sec["priority"].sum(), 1),
         "top50_share_pct": round(100 * sec.head(50)["priority"].sum() / sec["priority"].sum(), 1),
         "notes": {
@@ -172,6 +187,7 @@ def main():
             "maup": "At 400 m the population re-orders priorities; at section grain a few park-like clusters dominate (e.g. Montjuic). Use 400 m as the people-weighting evidence, sections as the operational unit.",
             "rationale": "City removes planes primarily for biodiversity/monoculture-risk, not allergy. This tool sequences that removal for max allergen-exposure relief as a co-benefit.",
             "corrob": "Corroboration compares the section ranking with the 400 m people-weighted ranking. CORROBORATED = both agree (act first); ARTIFACT = high only at section grain, a MAUP cluster the people-weighting demotes (e.g. Montjuic); UNDERRATED = buried at section grain but high at 400 m. It tests agreement of two aggregations of the SAME proxy -- it does NOT validate the pollen proxy.",
+            "potency": "The Potency lens (NO2) re-ranks priority by multiplying exposure by a cycle-averaged March-April NO2 surface. It reflects the mechanism where NO2 damages pollen membranes, releasing more allergens (e.g. Pla a 3) per grain. It is ordinal and season-matched (climatology reframe), not a real-time prediction.",
             "monoculture": "Co-benefit objective ranks by priority x Platanus dominance (share of a section's street trees that are planes; Shannon diversity shown for context). This aligns the sequence with the city's actual biodiversity mandate (no species >15%).",
             "thermal": "Heat-flagged sections (top-quartile heat-risk = high LST x low NDVI) must be replaced immediately, no gaps -- removing canopy where it is already hot worsens the urban heat island.",
         },

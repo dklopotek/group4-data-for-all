@@ -28,3 +28,4 @@ outputs/phase-6/app/config.local.js
 
 # CALIOPE downloads (large external data; not committed)
 caliope_tmp/
+data/caliope/
