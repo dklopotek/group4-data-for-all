@@ -58,21 +58,21 @@ const STEPS = [
   {
     chip:   'A GRAIN\'S PATH',
     title:  'Through the\nCanyon',
-    body:   'Watch a single grain leave the canopy. The CFD wind field picks it up — it accelerates where the street narrows, deflects at building faces, and stalls in the dead zones behind facades.\n\nGrains at 26 μm stay airborne for hours. They do not drift at random: they follow the same fluid-mechanics rules as the wind, which is why tree position relative to canyon geometry determines who is exposed.',
-    source: 'Simulation: BlockParticles · CFD speed grid · Pasquill-Gifford D stability · grain diameter 26 μm',
+    body:   'Watch a single grain leave the canopy. The CFD wind field picks it up — it accelerates where the street narrows, deflects at building faces, and stalls in the dead zones behind facades.\n\nGrains at 32 μm settle at 0.003 m/s. Released from the 18 m Platanus canopy, one grain has ~1.7 h of airborne time in still air. In a 4 m/s sea breeze it can travel over 600 m before settling — which is why tree position relative to canyon geometry determines who is exposed.',
+    source: 'Simulation: BlockParticles · CFD speed grid · Pasquill-Gifford D stability · grain 32 μm · settling 0.003 m/s',
     camera: { center: [2.1589, 41.3907], zoom: 17.8, pitch: 74, bearing: -10 },
     callout: [
-      { stat: '8 h+',  label: 'airborne time for a 26 μm grain in calm air' },
-      { stat: '×1.7',  label: 'speed-up factor inside a street canyon (Tramontane)' },
-      { stat: '0 m/s', label: 'speed in the dead zone behind a building — grains settle here' },
+      { stat: '1.7 h',  label: 'airborne time for a 32 μm grain from 18 m canopy (still air)' },
+      { stat: '600 m',  label: 'max modelled dispersion radius at 4 m/s sea breeze' },
+      { stat: '0 m/s',  label: 'speed in the dead zone behind a building — grains settle here' },
     ],
     layerKey: 'canyon',
   },
   {
     chip:   'DISPERSION MODEL',
     title:  'Pollen Follows the Physics',
-    body:   'Gaussian plume dispersion (Pasquill-Gifford D stability) combined with real CFD wind vectors.\n\nPollen grains don\'t drift randomly — they accelerate through street canyons, stall behind buildings, and accumulate at intersections.',
-    source: 'Model: Pasquill-Gifford D · σy = 0.22x⁰·⁹ · grain 32 μm',
+    body:   'Gaussian plume dispersion (Pasquill-Gifford D stability) combined with real CFD wind vectors.\n\nPollen grains don\'t drift randomly — they accelerate through street canyons, stall behind buildings, and accumulate at intersections. Each 32 μm Platanus grain settles at 0.003 m/s — released at 18 m canopy height, it has ~1.7 h of airborne time in still air.',
+    source: 'Model: Pasquill-Gifford D · σy = 0.22x⁰·⁹ · grain 32 μm · settling 0.003 m/s · Gabarra et al. 2002',
     camera: { center: [2.1585, 41.3905], zoom: 16.6, pitch: 55, bearing: -20 },
     callout: null,
     layerKey: 'pollen',
@@ -80,13 +80,13 @@ const STEPS = [
   {
     chip:   'ONE SOURCE',
     title:  'One Tree,\nBillions of Grains',
-    body:   'February to April — over 6 weeks, a single mature Platanus sheds ~3.2 billion grains into streets where residents walk every day.\n\nFor the 30% of Barcelonans living with pollen allergy, peak season means weeks of antihistamines and restricted outdoor time. City planners at Espais Verds use this to decide which trees to remove first — where one removal relieves the most people.',
-    source: 'Source: Manzano et al. 2021 · Recio et al. 2018 · BCN aerobiological station · INE health survey 2022',
+    body:   'March to April — over 60 days, a single mature Platanus sheds ~3.2 billion grains into streets where residents walk every day.\n\nFor the 30% of Barcelonans living with pollen allergy, peak season means weeks of antihistamines and restricted outdoor time. City planners at Espais Verds use this to decide which trees to remove first — where one removal relieves the most people.',
+    source: 'Source: Manzano et al. 2021 · Recio et al. 2018 · BCN aerobiological station · INE health survey 2022 · config_barcelona.json',
     camera: { center: [2.15895, 41.39075], zoom: 19.0, pitch: 62, bearing: -15 },
     callout: [
-      { stat: '530 K',  label: 'Barcelonans with pollen allergy (30% of residents)' },
-      { stat: 'Feb–Apr', label: 'peak season — when removals have most relief value' },
-      { stat: '85%',    label: 'exposure drop beyond 150 m from the source' },
+      { stat: '530 K',   label: 'Barcelonans with pollen allergy (30% of residents)' },
+      { stat: 'Mar–Apr', label: '60-day peak season — when removals have most relief value' },
+      { stat: '32 μm',   label: 'grain diameter — settles at 0.003 m/s, released at 18 m height' },
     ],
     layerKey: 'singletree',
   },
@@ -223,21 +223,39 @@ async function loadAllTrees() {
 
 // ── Layer builders ────────────────────────────────────────────────────────────
 function treeLayer(trees) {
-  return new ColumnLayer({
-    id:             'intro-trees',
-    data:           trees,
-    getPosition:    d => d.position,
-    getElevation:   d => 4 + d.emission * 14,
-    getFillColor:   d => {
-      const g = (130 + d.emission * 110) | 0;
-      return [62, g, 28, 230];   // brown-to-green trunks (distinct from pollen)
-    },
-    getLineColor:   [0, 0, 0, 0],
-    radius:         2.0,
-    diskResolution: 8,
-    extruded:       true,
-    pickable:       false,
-  });
+  // Crown points: one per tree at the trunk-top altitude
+  const crownPts = trees.map(t => ({
+    pos: [t.position[0], t.position[1], 10 + t.emission * 5],
+    em:  t.emission,
+  }));
+
+  return [
+    // Thin brown trunk
+    new ColumnLayer({
+      id:             'intro-tree-trunks',
+      data:           trees,
+      getPosition:    d => d.position,
+      getElevation:   d => 10 + d.emission * 5,
+      getFillColor:   [90, 55, 22, 230],
+      getLineColor:   [0, 0, 0, 0],
+      radius:         0.65,
+      diskResolution: 6,
+      extruded:       true,
+      pickable:       false,
+    }),
+    // Round canopy blob at trunk top
+    new PointCloudLayer({
+      id:          'intro-tree-crowns',
+      data:        crownPts,
+      getPosition: d => d.pos,
+      getColor:    d => {
+        const g = (120 + d.em * 110) | 0;
+        return [30, g, 28, 220];
+      },
+      pointSize:   16,
+      pickable:    false,
+    }),
+  ];
 }
 
 function allTreesLayer(features) {
@@ -260,7 +278,7 @@ function allTreesLayer(features) {
 
 function buildingLayer(buildings, withTrees, trees) {
   const layers = [];
-  if (withTrees) layers.push(treeLayer(trees));
+  if (withTrees) layers.push(...treeLayer(trees));
   layers.push(new PolygonLayer({
     id:           'intro-buildings',
     data:         buildings,
@@ -361,9 +379,10 @@ function singleTreeLayer(trees) {
 
   // Dispersal halos: 300 m → 150 m → 50 m
   const rings = [
-    { id: 'ring-300', radius: 300, fill: [200, 255,  40,  30], line: [200, 255, 40,  80] },
-    { id: 'ring-150', radius: 150, fill: [200, 255,  40,  70], line: [200, 255, 40, 150] },
-    { id: 'ring-50',  radius:  50, fill: [200, 255,  40, 130], line: [200, 255, 40, 220] },
+    { id: 'ring-600', radius: 600, fill: [200, 255,  40,  15], line: [200, 255, 40,  50] },
+    { id: 'ring-300', radius: 300, fill: [200, 255,  40,  40], line: [200, 255, 40,  90] },
+    { id: 'ring-150', radius: 150, fill: [200, 255,  40,  80], line: [200, 255, 40, 160] },
+    { id: 'ring-50',  radius:  50, fill: [200, 255,  40, 140], line: [200, 255, 40, 230] },
   ];
 
   return [
