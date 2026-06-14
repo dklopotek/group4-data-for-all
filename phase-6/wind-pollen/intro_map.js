@@ -55,6 +55,19 @@ const STEPS = [
     layerKey: 'wind',
   },
   {
+    chip:   'A GRAIN\'S PATH',
+    title:  'Through the\nCanyon',
+    body:   'Watch a single grain leave the canopy. The CFD wind field picks it up — it accelerates where the street narrows, deflects at building faces, and stalls in the dead zones behind facades.\n\nGrains at 26 μm stay airborne for hours. They do not drift at random: they follow the same fluid-mechanics rules as the wind, which is why tree position relative to canyon geometry determines who is exposed.',
+    source: 'Simulation: BlockParticles · CFD speed grid · Pasquill-Gifford D stability · grain diameter 26 μm',
+    camera: { center: [2.1589, 41.3907], zoom: 17.8, pitch: 74, bearing: -10 },
+    callout: [
+      { stat: '8 h+',  label: 'airborne time for a 26 μm grain in calm air' },
+      { stat: '×1.7',  label: 'speed-up factor inside a street canyon (Tramontane)' },
+      { stat: '0 m/s', label: 'speed in the dead zone behind a building — grains settle here' },
+    ],
+    layerKey: 'canyon',
+  },
+  {
     chip:   'DISPERSION MODEL',
     title:  'Pollen Follows the Physics',
     body:   'Gaussian plume dispersion (Pasquill-Gifford D stability) combined with real CFD wind vectors.\n\nPollen grains don\'t drift randomly — they accelerate through street canyons, stall behind buildings, and accumulate at intersections.',
@@ -75,6 +88,19 @@ const STEPS = [
       { stat: '85%',    label: 'exposure drop beyond 150 m from the source' },
     ],
     layerKey: 'singletree',
+  },
+  {
+    chip:   'WHERE TO ACT FIRST',
+    title:  'Priority Map:\nRemove These First',
+    body:   'Each 400 m cell is ranked by pollen source intensity — mature Platanus density weighted by tree age class. The top 15 cells (lime) hold 12.8% of the city\'s trees but dominate the peak-exposure map.\n\nSant Martí leads: La Verneda i la Pau concentrates the highest mature-plane density in Barcelona. This is the sequencing tool for Espais Verds — not which trees to remove, but in what spatial order to maximise relief per removal.',
+    source: 'Source: allergen_source.py · arbrat-viari 2026_1T · priority = source_std (mature Platanus per 400 m cell)',
+    camera: { center: [2.1700, 41.3888], zoom: 12.8, pitch: 0, bearing: 0 },
+    callout: [
+      { stat: '#1',     label: 'La Verneda i la Pau, Sant Martí — 464 mature Platanus' },
+      { stat: '15',     label: 'priority cells identified across 3 districts' },
+      { stat: '12.8%',  label: 'of city trees in top-15 zones' },
+    ],
+    layerKey: 'priority',
   },
 ];
 
@@ -178,6 +204,13 @@ async function loadBlockWind() {
   if (blockWindData) return blockWindData;
   blockWindData = await (await fetch('block_wind_field_sea_breeze.json')).json();
   return blockWindData;
+}
+
+let priorityGridData = null;
+async function loadPriorityGrid() {
+  if (priorityGridData) return priorityGridData;
+  priorityGridData = (await (await fetch('priority_grid.geojson')).json()).features;
+  return priorityGridData;
 }
 
 // ── Layer builders ────────────────────────────────────────────────────────────
@@ -345,13 +378,62 @@ function singleTreeLayer(trees) {
   ];
 }
 
+function priorityGridLayer(cells) {
+  return [
+    // All 494 cells — filled by source priority
+    new PolygonLayer({
+      id:          'priority-fill',
+      data:        cells,
+      getPolygon:  d => d.geometry.coordinates[0],
+      extruded:    false,
+      getFillColor: d => {
+        const t = d.properties.source_std;
+        if (t < 0.01) return [10, 10, 30, 0];
+        if (d.properties.top15) {
+          // Lime → orange gradient in top-15
+          const f = Math.min(1, t);
+          return [200 + (55*f)|0, 255 - (100*f)|0, 40 - (30*f)|0, 210];
+        }
+        return [(30 + t*60)|0, (40 + t*80)|0, (20 + t*20)|0, (40 + t*90)|0];
+      },
+      getLineColor: d => d.properties.top15
+        ? [255, 120, 40, 220]
+        : [255, 255, 255, 20],
+      getLineWidth: d => d.properties.top15 ? 2 : 0.5,
+      lineWidthUnits: 'pixels',
+      pickable: false,
+      updateTriggers: { getFillColor: [], getLineColor: [] },
+    }),
+    // Rank labels for top 5 via ScatterplotLayer (dot + rank approximation)
+    new ScatterplotLayer({
+      id:          'priority-dots',
+      data:        cells.filter(d => d.properties.rank <= 5),
+      getPosition: d => {
+        const coords = d.geometry.coordinates[0];
+        const cx = coords.reduce((s,c) => s+c[0],0)/coords.length;
+        const cy = coords.reduce((s,c) => s+c[1],0)/coords.length;
+        return [cx, cy];
+      },
+      getRadius:    400,
+      radiusUnits:  'meters',
+      getFillColor: [255, 100, 30, 0],
+      getLineColor: [255, 100, 30, 220],
+      stroked: true, filled: false,
+      lineWidthMinPixels: 2,
+      pickable: false,
+    }),
+  ];
+}
+
 // ── Accent colors per chip label ──────────────────────────────────────────────
 const CHIP_COLORS = {
   'OPEN DATA LAYER 01': '#3ddd6a',
   'OPEN DATA LAYER 02': '#7b9fff',
   'CFD SIMULATION':     '#22ccff',
+  'A GRAIN\'S PATH':    '#22ccff',
   'DISPERSION MODEL':   '#c8ff28',
   'ONE SOURCE':         '#c8ff28',
+  'WHERE TO ACT FIRST': '#ff6b35',
 };
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
@@ -448,10 +530,21 @@ async function applyStep(n) {
     } else if (s.layerKey === 'wind') {
       const [trees, bldgs, bw] = await Promise.all([loadTrees(), loadBuildings(), loadBlockWind()]); setLoading(true, 80);
       layers = windHeatmapLayer(bw, bldgs, trees);
-      // Start streamlines
       if (streamlines && bw.wind_speed_ms > 0) {
         streamlines.updateWind(bw.wind_direction_deg, bw.wind_speed_ms);
         streamlines.start();
+      }
+    } else if (s.layerKey === 'canyon') {
+      // Street-level camera: show buildings + trees + live particles (no heatmap)
+      const [trees, bldgs, bw] = await Promise.all([loadTrees(), loadBuildings(), loadBlockWind()]); setLoading(true, 80);
+      layers = buildingLayer(bldgs, true, trees);
+      if (streamlines) streamlines.stop();
+      document.getElementById('pollen-canvas').style.display = 'block';
+      if (particles) {
+        particles.stop();
+        await new Promise(r => setTimeout(r, 1350));
+        particles.init(map, bw, bldgs);
+        particles.start();
       }
     } else if (s.layerKey === 'pollen') {
       const [trees, bldgs, pg, bw] = await Promise.all([
@@ -467,12 +560,17 @@ async function applyStep(n) {
         particles.start();
       }
     } else if (s.layerKey === 'singletree') {
-      // Stop pollen particles and streamlines — this step is static
       if (particles) particles.stop();
       if (streamlines) streamlines.stop();
       document.getElementById('pollen-canvas').style.display = 'none';
       const trees = await loadTrees(); setLoading(true, 80);
       layers = singleTreeLayer(trees);
+    } else if (s.layerKey === 'priority') {
+      if (particles) particles.stop();
+      if (streamlines) streamlines.stop();
+      document.getElementById('pollen-canvas').style.display = 'none';
+      const cells = await loadPriorityGrid(); setLoading(true, 80);
+      layers = priorityGridLayer(cells);
     }
   } catch (err) {
     console.error('Layer load error:', err);
