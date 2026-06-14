@@ -141,10 +141,10 @@ async function buildLayers(scenarioKey) {
       id: 'buildings',
       data: buildings,
       getPolygon: d => d.geometry.coordinates[0],
-      getFillColor:  [18, 20, 26, 230],
-      getLineColor:  [70, 75, 95, 120],
+      getFillColor:  [28, 30, 40, 210],
+      getLineColor:  [90, 95, 120, 160],
       getLineWidth:  1,
-      lineWidthMinPixels: 0.5,
+      lineWidthMinPixels: 0.8,
       pickable: false,
     }));
   }
@@ -309,8 +309,8 @@ async function init() {
     streamCanvas.width  = window.innerWidth;
     streamCanvas.height = window.innerHeight;
     streamlines = new WindStreamlines(streamCanvas);
-    const sc = SCENARIOS[activeScenario];
-    streamlines.setWind(sc.windDir, sc.windSpeed);
+    const sc0 = SCENARIOS[activeScenario];
+    streamlines.setWind(sc0.windDir, sc0.windSpeed);
   }
 
   window.addEventListener('resize', () => {
