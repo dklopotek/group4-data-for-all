@@ -66,13 +66,13 @@ const STEPS = [
   {
     chip:   'ONE SOURCE',
     title:  'One Tree,\nBillions of Grains',
-    body:   'A single EXEMPLAR Platanus releases ~3.2 billion pollen grains in 6 weeks.\n\nEach grain is 26 μm — invisible, but allergenic on contact. Concentration drops 85% beyond 150 m. Removing one tree cuts peak exposure for ~70,000 m² of street.',
-    source: 'Source: Manzano et al. 2021 · Recio et al. 2018 · BCN aerobiological station (XAC)',
+    body:   'February to April — over 6 weeks, a single mature Platanus sheds ~3.2 billion grains into streets where residents walk every day.\n\nFor the 30% of Barcelonans living with pollen allergy, peak season means weeks of antihistamines and restricted outdoor time. City planners at Espais Verds use this to decide which trees to remove first — where one removal relieves the most people.',
+    source: 'Source: Manzano et al. 2021 · Recio et al. 2018 · BCN aerobiological station · INE health survey 2022',
     camera: { center: [2.15895, 41.39075], zoom: 19.0, pitch: 62, bearing: -15 },
     callout: [
-      { stat: '3.2 B',  label: 'pollen grains / season (EXEMPLAR)' },
-      { stat: '150 m',  label: 'concentrated exposure radius' },
-      { stat: '26 μm',  label: 'grain size — reaches the bronchi' },
+      { stat: '530 K',  label: 'Barcelonans with pollen allergy (30% of residents)' },
+      { stat: 'Feb–Apr', label: 'peak season — when removals have most relief value' },
+      { stat: '85%',    label: 'exposure drop beyond 150 m from the source' },
     ],
     layerKey: 'singletree',
   },
