@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data For All — Mycorrhizal Barcelona</title>
+
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script type="importmap">
+  {
+    "imports": {
+      "@deck.gl/core":   "https://esm.sh/@deck.gl/core@9.1.5",
+      "@deck.gl/layers": "https://esm.sh/@deck.gl/layers@9.1.5",
+      "@deck.gl/mapbox": "https://esm.sh/@deck.gl/mapbox@9.1.5"
+    }
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --panel-w:      420px;
+      --c-tree:       #3ddd6a;
+      --c-bldg:       #7b9fff;
+      --c-wind:       #22ccff;
+      --c-pollen:     #c8ff28;
+      --c-strip:      #1a1a2e;
+      --bg:           #060610;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      overflow: hidden;
+      color: #e0e0e8;
+    }
+
+    /* ── Map ──────────────────────────────────────────── */
+    #map { position: fixed; inset: 0; }
+
+    #stream-canvas, #pollen-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 5;
+    }
+    #pollen-canvas { display: none; z-index: 6; }
+
+    /* ── Panel ────────────────────────────────────────── */
+    #panel {
+      position: fixed; left: 0; top: 0; bottom: 0;
+      width: var(--panel-w); z-index: 20;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 64px 48px 64px 52px;
+      background: linear-gradient(90deg,
+        rgba(6,6,16,0.97) 0%,
+        rgba(6,6,16,0.90) 78%,
+        transparent 100%);
+      /* Left accent strip — color set by JS */
+      border-left: 4px solid var(--c-strip);
+      transition: border-color 0.7s ease;
+    }
+
+    /* Large faded step counter (background) */
+    #step-bg-num {
+      position: absolute;
+      bottom: 64px; right: 20px;
+      font-size: 130px; font-weight: 900;
+      line-height: 1; letter-spacing: -0.06em;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.05);
+      pointer-events: none; user-select: none;
+      transition: color 0.6s, -webkit-text-stroke 0.6s;
+    }
+
+    /* Chip label */
+    #step-chip {
+      font-size: 9.5px; font-weight: 700;
+      letter-spacing: 0.20em; text-transform: uppercase;
+      color: var(--c-strip); margin-bottom: 18px;
+      min-height: 14px;
+      transition: color 0.5s;
+    }
+
+    /* Main title */
+    #step-title {
+      font-size: 36px; font-weight: 800;
+      line-height: 1.12; letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 22px;
+      transition: opacity 0.4s;
+    }
+
+    /* Sub-label under title (appears on first step only) */
+    #step-eyebrow {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+      color: #404058; margin-bottom: 8px; min-height: 16px;
+    }
+
+    /* Body text */
+    #step-body {
+      font-size: 13.5px; font-weight: 400; line-height: 1.75;
+      color: #7a7a94; margin-bottom: 24px;
+      transition: opacity 0.4s;
+    }
+
+    /* Source citation */
+    #step-source {
+      font-size: 9.5px; color: #505068; letter-spacing: 0.04em;
+      border-left: 2px solid rgba(255,255,255,0.08);
+      padding-left: 10px; margin-bottom: 40px;
+      min-height: 16px; line-height: 1.5;
+      transition: border-color 0.5s, color 0.5s;
+    }
+
+    /* ── Navigation ──────────────────────────────────── */
+    #nav { display: flex; align-items: center; gap: 12px; }
+
+    .nav-btn {
+      padding: 11px 24px; border-radius: 24px;
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; border: none;
+      font-family: inherit; letter-spacing: 0.01em;
+    }
+    #btn-next {
+      background: #ffffff; color: #060610;
+    }
+    #btn-next:hover { background: #e8ffe0; transform: translateY(-1px); }
+    #btn-back {
+      background: transparent; color: #3a3a50;
+      border: 1px solid #1e1e2e;
+    }
+    #btn-back:hover:not(:disabled) { color: #888; border-color: #333; }
+    #btn-back:disabled { opacity: 0.15; cursor: default; }
+
+    #btn-launch {
+      display: none; text-decoration: none;
+      padding: 12px 28px; border-radius: 24px;
+      font-size: 13px; font-weight: 700;
+      background: var(--c-pollen); color: #06060d;
+      transition: all 0.25s; font-family: inherit;
+    }
+    #btn-launch:hover {
+      background: #d8ff50; transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(200,255,40,0.35);
+    }
+
+    /* ── Progress bar (horizontal, bottom of panel) ──── */
+    #progress {
+      position: absolute; bottom: 32px; left: 52px; right: 24px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .prog-seg {
+      height: 2px; flex: 1; border-radius: 2px;
+      background: rgba(255,255,255,0.10);
+      transition: background 0.5s, transform 0.3s;
+    }
+    .prog-seg.done   { background: rgba(255,255,255,0.28); }
+    .prog-seg.active { background: #ffffff; transform: scaleY(2.5); }
+
+    /* ── Right callout cards ──────────────────────────── */
+    #callout {
+      position: fixed; right: 28px; top: 50%;
+      transform: translateY(-50%);
+      z-index: 20; display: none;
+      flex-direction: column; gap: 12px; max-width: 200px;
+    }
+    .callout-card {
+      background: rgba(6,6,22,0.92);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px; padding: 16px 18px;
+      backdrop-filter: blur(12px);
+      animation: cardIn 0.45s cubic-bezier(0.22,0.61,0.36,1) both;
+    }
+    .callout-card:nth-child(2) { animation-delay: 0.1s; }
+    @keyframes cardIn {
+      from { opacity:0; transform: translateX(16px); }
+      to   { opacity:1; transform: none; }
+    }
+    .callout-card .stat {
+      font-size: 30px; font-weight: 800;
+      letter-spacing: -0.03em; color: #fff;
+      line-height: 1.1;
+    }
+    .callout-card .label {
+      font-size: 9.5px; font-weight: 500;
+      color: #3a3a58; text-transform: uppercase;
+      letter-spacing: 0.1em; margin-top: 4px;
+    }
+    /* Strip on callout cards matches current accent */
+    .callout-card { border-left: 3px solid var(--c-strip); }
+
+    /* ── Content fade animation ───────────────────────── */
+    .text-group { transition: opacity 0.3s, transform 0.3s; }
+    .text-group.fading { opacity: 0; transform: translateY(6px); }
+
+    /* ── Loading progress bar ─────────────────────────── */
+    #loader {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 1.5px; background: transparent; z-index: 40; display: none;
+    }
+    #loader-bar {
+      height: 100%; background: var(--c-strip);
+      width: 0%; transition: width 0.6s ease;
+    }
+
+    /* ── Vignette overlay (right side) ───────────────── */
+    #vignette {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: 300px; pointer-events: none; z-index: 8;
+      background: linear-gradient(270deg, rgba(6,6,16,0.5) 0%, transparent 100%);
+    }
+
+    /* ── Responsive: short/narrow screens ────────────── */
+    @media (max-height: 750px) {
+      #panel { padding: 44px 40px 52px 42px; }
+      #step-title { font-size: 28px; margin-bottom: 14px; }
+      #step-body  { font-size: 12.5px; margin-bottom: 16px; }
+      #step-source { margin-bottom: 28px; }
+      #progress { bottom: 22px; }
+    }
+    @media (max-height: 600px) {
+      #panel { padding: 32px 36px 44px 38px; }
+      #step-title { font-size: 24px; margin-bottom: 10px; }
+      #step-body  { font-size: 12px; line-height: 1.6; margin-bottom: 12px; }
+      #step-source { margin-bottom: 20px; }
+    }
+    @media (max-width: 600px) {
+      :root { --panel-w: 100vw; }
+      #panel { padding: 52px 28px 56px 28px; }
+      #callout { display: none !important; }
+      #vignette { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<canvas id="stream-canvas"></canvas>
+<canvas id="pollen-canvas"></canvas>
+<div id="vignette"></div>
+
+<!-- Panel -->
+<div id="panel">
+  <div id="step-bg-num"></div>
+  <div class="text-group" id="text-group">
+    <div id="step-eyebrow"></div>
+    <div id="step-chip"></div>
+    <div id="step-title"></div>
+    <div id="step-body"></div>
+    <div id="step-source"></div>
+  </div>
+  <div id="nav">
+    <button class="nav-btn" id="btn-back" disabled>← Back</button>
+    <button class="nav-btn" id="btn-next">Begin →</button>
+    <a id="btn-launch" href="block_viewer.html" target="_blank">Explore →</a>
+  </div>
+  <div id="progress"></div>
+</div>
+
+<!-- Right callout -->
+<div id="callout"></div>
+
+<!-- Loading indicator -->
+<div id="loader"><div id="loader-bar"></div></div>
+
+<script type="module" src="intro_map.js"></script>
+</body>
+</html>

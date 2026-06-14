@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eixample Block — Pollen Particles · CFD Wind</title>
+
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "@deck.gl/core":   "https://esm.sh/@deck.gl/core@9.1.5",
+      "@deck.gl/layers": "https://esm.sh/@deck.gl/layers@9.1.5",
+      "@deck.gl/mapbox": "https://esm.sh/@deck.gl/mapbox@9.1.5"
+    }
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #06060d; color: #e8e8e8; }
+
+    #map          { position: fixed; inset: 0; }
+    #pollen-canvas {
+      position: fixed; inset: 0; pointer-events: none; z-index: 10;
+    }
+
+    /* ── Top bar ─────────────────────────────────────── */
+    #topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 10px 16px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.90) 0%, transparent 100%);
+      backdrop-filter: blur(4px);
+    }
+    #title-block { flex-shrink: 0; }
+    #title   { font-size: 13px; font-weight: 700; letter-spacing: 0.05em; color: #fff; }
+    #subtitle{ font-size: 10px; color: #777; }
+
+    .sc-btn {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.05);
+      color: #888; font-size: 12px; cursor: pointer;
+      transition: all 0.2s; font-weight: 500;
+    }
+    .sc-btn:hover { background: rgba(255,255,255,0.10); color: #ccc; }
+
+    /* Per-scenario accent colors */
+    [data-scenario="sea_breeze"].active {
+      background: rgba(30,200,255,0.18);
+      border-color: rgba(30,200,255,0.55); color: #5de0ff;
+    }
+    [data-scenario="tramontane"].active {
+      background: rgba(255,150,30,0.18);
+      border-color: rgba(255,150,30,0.55); color: #ffb060;
+    }
+    [data-scenario="calm"].active {
+      background: rgba(80,240,100,0.18);
+      border-color: rgba(80,240,100,0.55); color: #60ee80;
+    }
+
+    #wind-arrow {
+      font-size: 20px; display: inline-block; transition: transform 0.7s;
+      color: #7de8ff; user-select: none;
+    }
+
+    /* ── Bottom status bar ───────────────────────────── */
+    #statusbar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 16px;
+      background: linear-gradient(0deg, rgba(0,0,0,0.88) 0%, transparent 100%);
+      backdrop-filter: blur(4px);
+    }
+    #status { font-size: 11px; color: #888; }
+
+    /* ── Legend ──────────────────────────────────────── */
+    #legend {
+      position: fixed; bottom: 38px; left: 16px; z-index: 20;
+      background: rgba(0,0,0,0.78); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px; padding: 12px 15px; min-width: 180px;
+      backdrop-filter: blur(6px);
+    }
+    #legend h3 { font-size: 10px; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: 0.08em; color: #aaa; margin-bottom: 8px; }
+    .leg-row { display: flex; align-items: center; gap: 8px;
+                font-size: 10px; color: #888; margin-bottom: 5px; }
+    .leg-swatch { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    #legend-note { font-size: 9.5px; color: #484848; margin-top: 8px; line-height: 1.5; }
+
+    /* ── Speed ramp bar ──────────────────────────────── */
+    #speed-ramp {
+      position: fixed; bottom: 38px; right: 16px; z-index: 20;
+      background: rgba(0,0,0,0.78); border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 10px; padding: 12px 15px; min-width: 160px;
+      backdrop-filter: blur(6px);
+    }
+    #speed-ramp h3 { font-size: 10px; font-weight: 700; text-transform: uppercase;
+                      letter-spacing: 0.08em; color: #aaa; margin-bottom: 8px; }
+    #speed-bar {
+      height: 8px; border-radius: 3px; margin-bottom: 4px;
+      background: linear-gradient(90deg,
+        #04040e 0%, #081860 20%, #1060d0 45%, #18b0f0 70%, #c0f0ff 100%);
+      box-shadow: 0 0 8px rgba(30,170,255,0.25);
+    }
+    .spd-labels { display: flex; justify-content: space-between; font-size: 9.5px; color: #555; }
+
+    /* ── 2D/3D toggle ────────────────────────────────── */
+    #toggle-3d {
+      padding: 5px 12px; border-radius: 16px; font-size: 11px; cursor: pointer;
+      border: 1px solid rgba(120,180,255,0.36); color: #90b8ff;
+      background: rgba(120,180,255,0.08); transition: all 0.18s;
+    }
+    #toggle-3d:hover { background: rgba(120,180,255,0.18); }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<canvas id="pollen-canvas"></canvas>
+
+<!-- Top bar -->
+<div id="topbar">
+  <div id="title-block">
+    <div id="title">Pollen Particle Flow · Eixample Block</div>
+    <div id="subtitle">Real CFD wind field (Infrared SDK) · Platanus × acerifolia</div>
+  </div>
+  <button class="sc-btn active" data-scenario="sea_breeze">↙ Sea Breeze</button>
+  <button class="sc-btn"        data-scenario="tramontane">↗ Tramontane</button>
+  <button class="sc-btn"        data-scenario="calm">↑ Calm S</button>
+  <span id="wind-arrow" title="Wind travel direction">↑</span>
+  <button id="toggle-3d">3D</button>
+  <a href="index.html" style="font-size:11px;color:#555;text-decoration:none;margin-left:6px" title="Back to intro">← Intro</a>
+</div>
+
+<!-- Legend -->
+<div id="legend">
+  <h3>Layer Guide</h3>
+  <div class="leg-row">
+    <div class="leg-swatch" style="background:rgba(200,255,30,0.85)"></div>
+    <span>Pollen grains — Platanus</span>
+  </div>
+  <div class="leg-row">
+    <div class="leg-swatch" style="background:rgba(20,160,30,0.85)"></div>
+    <span>Tree crowns (3D)</span>
+  </div>
+  <div class="leg-row">
+    <div class="leg-swatch" style="background:rgba(55,60,100,0.85)"></div>
+    <span>Buildings (real OSM heights)</span>
+  </div>
+  <div id="legend-note">
+    Wind: Infrared SDK CFD · 1m resolution<br>
+    Particles follow street canyons<br>
+    Speed field from GPU fluid simulation<br>
+    Eixample: Balmes × Provença area
+  </div>
+</div>
+
+<!-- Wind speed ramp -->
+<div id="speed-ramp">
+  <h3>Wind Speed (CFD)</h3>
+  <div id="speed-bar"></div>
+  <div class="spd-labels"><span>0 m/s</span><span>4+ m/s</span></div>
+</div>
+
+<!-- Bottom status -->
+<div id="statusbar">
+  <span id="status">Initialising…</span>
+</div>
+
+<script type="module" src="block_map.js"></script>
+</body>
+</html>

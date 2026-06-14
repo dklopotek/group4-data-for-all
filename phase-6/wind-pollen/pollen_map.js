@@ -128,6 +128,39 @@ async function loadBuildings() {
   return buildingsData;
 }
 
+// ── Tree crown sphere ─────────────────────────────────────────────────────────
+// Expand each tree into N sample points arranged in a hemisphere so the crown
+// renders as a visible green blob rather than a single flat pixel.
+function makeCrownPoints(mature, treeH) {
+  // azimuth (deg), zenith (deg from up) — top point + two rings
+  const DIRS = [
+    [0,   0 ],                                                 // apex
+    [  0, 38], [ 72, 38], [144, 38], [216, 38], [288, 38],    // upper ring
+    [ 36, 68], [108, 68], [180, 68], [252, 68], [324, 68],    // lower ring
+  ];
+  const MLAT = 1 / 111_000;
+  const pts  = [];
+  for (const tree of mature) {
+    const h   = treeH(tree);
+    const r   = 2.5 + tree.emission * 3.5;  // 2.5 – 6 m crown radius
+    const lat = tree.position[1];
+    const MLNG = 1 / (111_000 * Math.cos(lat * Math.PI / 180));
+    for (const [az, ze] of DIRS) {
+      const azR = az * Math.PI / 180;
+      const zeR = ze * Math.PI / 180;
+      pts.push({
+        ...tree,
+        position: [
+          tree.position[0] + r * Math.sin(zeR) * Math.sin(azR) * MLNG,
+          lat               + r * Math.sin(zeR) * Math.cos(azR) * MLAT,
+          h + 1.5 + r * Math.cos(zeR),   // 1.5 m gap above trunk tip
+        ],
+      });
+    }
+  }
+  return pts;
+}
+
 // ── deck.gl layers ────────────────────────────────────────────────────────────
 async function buildLayers(scenarioKey) {
   const [data, trees, buildings] = await Promise.all([
@@ -147,13 +180,13 @@ async function buildLayers(scenarioKey) {
       getElevation: d => is3D ? (d.properties.height || 20) : 0,
       getFillColor: d => {
         const h = Math.min(d.properties.height || 20, 50);
-        const b = Math.round(28 + h * 0.6);
-        return [b, b + 2, b + 12, 220];
+        const t = h / 50;
+        return [(48 + t * 42) | 0, (53 + t * 46) | 0, (95 + t * 58) | 0, 238];
       },
-      getLineColor:       [100, 108, 140, 180],
+      getLineColor:       [160, 175, 235, 200],
       getLineWidth:       1,
-      lineWidthMinPixels: 0.7,
-      material:           { ambient: 0.15, diffuse: 0.65, shininess: 20 },
+      lineWidthMinPixels: 1,
+      material:           { ambient: 0.50, diffuse: 0.60, shininess: 8 },
       pickable:           false,
     }));
   }
@@ -180,21 +213,22 @@ async function buildLayers(scenarioKey) {
         getPosition:    d => d.position,
         getElevation:   treeH,
         getFillColor:   [80, 50, 20, 240],
-        radius:         1.0,
-        diskResolution: 6,
+        radius:         2.0,
+        diskResolution: 10,
         pickable:       false,
       }));
 
-      // Crown: green sphere floating at tree-top (PointCloudLayer takes [lng,lat,z])
+      // Crown: 11-point sphere per tree → visible green blob at tree-top
+      const crownPts = makeCrownPoints(mature, treeH);
       layers.push(new PointCloudLayer({
         id:          'platanus-trees',
-        data:        mature,
-        getPosition: d => [d.position[0], d.position[1], treeH(d) + 3],
+        data:        crownPts,
+        getPosition: d => d.position,
         getColor:    d => {
-          const g = Math.round(130 + d.emission * 90);
-          return [20, g, 15, 235];
+          const g = Math.round(120 + d.emission * 100);
+          return [15, g, 20, 220];
         },
-        pointSize:   8,          // pixels — scales naturally with zoom
+        pointSize:   10,
         pickable:    true,
         onHover: ({ object, x, y }) => showTooltip(object, x, y),
         onClick: ({ object, x, y }) => {
@@ -393,6 +427,9 @@ async function init() {
   });
 
   map.on('load', () => {
+    ['building', 'building-extrusion', 'building-underground']
+      .filter(id => map.getLayer(id))
+      .forEach(id => map.setLayoutProperty(id, 'visibility', 'none'));
     if (streamlines) streamlines.start();
     updateMap(activeScenario);
   });
