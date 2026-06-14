@@ -20,13 +20,14 @@ const STEPS = [
   },
   {
     chip:   'OPEN DATA LAYER 01',
-    title:  'Public Tree Registry',
-    body:   '40,398 Platanus × acerifolia trees from Ajuntament de Barcelona\'s open catalogue.\n\nEach is a pollen source rated by maturity — from EXEMPLAR trees (100% emission) to TERCERA (45%).',
+    title:  'Street Tree\nRegistry',
+    body:   '7,468 street trees in the study area — catalogued by Ajuntament de Barcelona. Not all trees are equal: Platanus (lime) is the dominant allergen. Celtis australis (amber) and Tilia (orange) are secondary sources. Jacaranda and Cercis (purple/teal) are ornamental with low pollen risk.\n\nAcross all of Barcelona, 40,341 Platanus line the streets — 28% of the entire street-tree stock.',
     source: 'Source: XAC / PIA · Ajuntament de Barcelona · arbrat-viari.csv (CC BY 4.0)',
     camera: { center: [2.1594, 41.3888], zoom: 14.8, pitch: 0, bearing: 0 },
     callout: [
-      { stat: '40,398', label: 'Platanus trees catalogued' },
-      { stat: '27%',    label: 'are EXEMPLAR or PRIMERA maturity' },
+      { stat: '3,008',  label: 'Platanus in study area (lime) — primary allergen' },
+      { stat: '1,981',  label: 'Celtis australis (amber) — secondary allergen' },
+      { stat: '727',    label: 'Tilia species (orange) — allergenic in May–Jun' },
     ],
     layerKey: 'trees',
   },
@@ -213,6 +214,13 @@ async function loadPriorityGrid() {
   return priorityGridData;
 }
 
+let allTreesData = null;
+async function loadAllTrees() {
+  if (allTreesData) return allTreesData;
+  allTreesData = (await (await fetch('all_trees.geojson')).json()).features;
+  return allTreesData;
+}
+
 // ── Layer builders ────────────────────────────────────────────────────────────
 function treeLayer(trees) {
   return new ColumnLayer({
@@ -229,6 +237,24 @@ function treeLayer(trees) {
     diskResolution: 8,
     extruded:       true,
     pickable:       false,
+  });
+}
+
+function allTreesLayer(features) {
+  return new ScatterplotLayer({
+    id:           'intro-all-trees',
+    data:         features,
+    getPosition:  d => d.geometry.coordinates,
+    getRadius:    d => d.properties.group === 'platanus' ? 5 : 3.5,
+    radiusUnits:  'pixels',
+    getFillColor: d => {
+      const [r, g, b] = d.properties.color;
+      const alpha = d.properties.group === 'platanus' ? 230 : 160;
+      return [r, g, b, alpha];
+    },
+    getLineColor: [0, 0, 0, 0],
+    stroked:      false,
+    pickable:     false,
   });
 }
 
@@ -522,8 +548,8 @@ async function applyStep(n) {
     if (s.layerKey === 'empty') {
       layers = [];
     } else if (s.layerKey === 'trees') {
-      const trees = await loadTrees(); setLoading(true, 80);
-      layers = [treeLayer(trees)];
+      const all = await loadAllTrees(); setLoading(true, 80);
+      layers = [allTreesLayer(all)];
     } else if (s.layerKey === 'buildings') {
       const [trees, bldgs] = await Promise.all([loadTrees(), loadBuildings()]); setLoading(true, 80);
       layers = buildingLayer(bldgs, true, trees);
