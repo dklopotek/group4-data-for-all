@@ -3,7 +3,7 @@
 import { MAPBOX_TOKEN } from './tokens.js';
 import { ParticleSystem }    from './particles.js';
 import { WindStreamlines }   from './wind_streamlines.js';
-import { BitmapLayer, ScatterplotLayer, PolygonLayer, ColumnLayer } from '@deck.gl/layers';
+import { BitmapLayer, ScatterplotLayer, PolygonLayer, ColumnLayer, PointCloudLayer } from '@deck.gl/layers';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -171,19 +171,31 @@ async function buildLayers(scenarioKey) {
   if (trees) {
     const mature = trees.filter(t => t.emission > 0.75);
     if (is3D) {
-      // ColumnLayer — green cylinders, height = maturity proxy (5–22 m)
+      const treeH = d => 5 + d.emission * 17; // 5m (young) – 22m (EXEMPLAR)
+
+      // Trunk: narrow dark-brown cylinder
       layers.push(new ColumnLayer({
-        id:             'platanus-trees',
+        id:             'tree-trunks',
         data:           mature,
         getPosition:    d => d.position,
-        getElevation:   d => d.emission * 22,
-        getFillColor:   d => {
-          const g = Math.round(140 + d.emission * 90);
-          return [30, g, 25, 240];
+        getElevation:   treeH,
+        getFillColor:   [80, 50, 20, 240],
+        radius:         1.0,
+        diskResolution: 6,
+        pickable:       false,
+      }));
+
+      // Crown: green sphere floating at tree-top (PointCloudLayer takes [lng,lat,z])
+      layers.push(new PointCloudLayer({
+        id:          'platanus-trees',
+        data:        mature,
+        getPosition: d => [d.position[0], d.position[1], treeH(d) + 3],
+        getColor:    d => {
+          const g = Math.round(130 + d.emission * 90);
+          return [20, g, 15, 235];
         },
-        radius:         3.5,
-        diskResolution: 8,
-        pickable:       true,
+        pointSize:   8,          // pixels — scales naturally with zoom
+        pickable:    true,
         onHover: ({ object, x, y }) => showTooltip(object, x, y),
         onClick: ({ object, x, y }) => {
           if (object) activateParticles(object, x, y, scenarioKey);
