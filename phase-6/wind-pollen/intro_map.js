@@ -259,7 +259,7 @@ function pollenLayer(pollenGrid, buildings, trees) {
 }
 
 function singleTreeLayer(trees) {
-  // Pick the highest-emission tree within ~60 m of the step-5 camera center
+  // Pick highest-emission tree within ~60 m of camera centre
   const cx = 2.15895, cy = 41.39075;
   let best = null, bestScore = -Infinity;
   for (const t of trees) {
@@ -271,10 +271,39 @@ function singleTreeLayer(trees) {
   }
   if (!best) best = trees.reduce((a, b) => a.emission > b.emission ? a : b);
 
-  // Dispersal halos: 300 m → 150 m → 50 m, all centred on the tree
+  const [lng, lat] = best.position;
+  const trunkH  = 14;                      // trunk top in metres
+  const crownR  = 9;                       // crown sphere radius
+  const crownCy = trunkH + crownR * 0.35; // crown centre height
+
+  // Convert metres to degrees for crown-point offsets
+  const mPerDegLat = 111320;
+  const mPerDegLng = 111320 * Math.cos(lat * Math.PI / 180);
+
+  // Build a sphere of green points for the crown (skip below trunk top)
+  const crownPts = [];
+  const PHI_N = 6, THETA_N = 10;
+  for (let pi = 0; pi <= PHI_N; pi++) {
+    const phi  = (pi / PHI_N) * Math.PI;
+    const cosPhi = Math.cos(phi), sinPhi = Math.sin(phi);
+    const z    = crownCy + crownR * cosPhi;
+    if (z < trunkH - 2) continue;
+    const rRing = crownR * sinPhi;
+    for (let ti = 0; ti < THETA_N; ti++) {
+      const theta = (ti / THETA_N) * 2 * Math.PI;
+      crownPts.push([
+        lng + rRing * Math.cos(theta) / mPerDegLng,
+        lat + rRing * Math.sin(theta) / mPerDegLat,
+        z,
+      ]);
+    }
+  }
+  crownPts.push([lng, lat, crownCy + crownR]); // apex point
+
+  // Dispersal halos: 300 m → 150 m → 50 m
   const rings = [
-    { id: 'ring-300', radius: 300, fill: [200, 255,  40, 30],  line: [200, 255, 40, 80]  },
-    { id: 'ring-150', radius: 150, fill: [200, 255,  40, 70],  line: [200, 255, 40, 150] },
+    { id: 'ring-300', radius: 300, fill: [200, 255,  40,  30], line: [200, 255, 40,  80] },
+    { id: 'ring-150', radius: 150, fill: [200, 255,  40,  70], line: [200, 255, 40, 150] },
     { id: 'ring-50',  radius:  50, fill: [200, 255,  40, 130], line: [200, 255, 40, 220] },
   ];
 
@@ -282,28 +311,36 @@ function singleTreeLayer(trees) {
     ...rings.map(r => new ScatterplotLayer({
       id: `singletree-${r.id}`,
       data: [best.position],
-      getPosition: d => d,
-      getRadius:   r.radius,
-      radiusUnits: 'meters',
+      getPosition:   d => d,
+      getRadius:     r.radius,
+      radiusUnits:   'meters',
       getFillColor:  r.fill,
       getLineColor:  r.line,
       stroked: true, filled: true,
       lineWidthMinPixels: 1.5,
       pickable: false,
     })),
-    // Exemplar trunk — taller and brighter than the background trees
+    // Trunk — thin narrow column, brown
     new ColumnLayer({
       id:             'singletree-trunk',
       data:           [best],
       getPosition:    d => d.position,
-      getElevation:   d => 28 + d.emission * 42,
-      getFillColor:   [62, 230, 28, 255],
-      getLineColor:   [200, 255, 40, 200],
-      lineWidthMinPixels: 1,
-      radius:         4.0,
-      diskResolution: 20,
+      getElevation:   trunkH,
+      getFillColor:   [101, 67, 33, 255],
+      getLineColor:   [70, 44, 18, 200],
+      radius:         1.1,
+      diskResolution: 12,
       extruded:       true,
       pickable:       false,
+    }),
+    // Crown — sphere of green point-cloud dots
+    new PointCloudLayer({
+      id:          'singletree-crown',
+      data:        crownPts,
+      getPosition: d => d,
+      getColor:    [34, 180, 48, 225],
+      pointSize:   22,
+      pickable:    false,
     }),
   ];
 }
