@@ -228,7 +228,13 @@
     }
     @media (max-width: 600px) {
       :root { --panel-w: 100vw; }
-      #panel { padding: 52px 28px 56px 28px; }
+      #panel {
+        padding: 52px 28px 56px 28px;
+        /* full-width on mobile — kill the transparent right edge */
+        background: linear-gradient(180deg,
+          rgba(6,6,16,0.98) 0%,
+          rgba(6,6,16,0.96) 100%);
+      }
       #callout { display: none !important; }
       #vignette { display: none; }
     }

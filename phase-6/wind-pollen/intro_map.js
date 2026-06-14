@@ -4,7 +4,7 @@
 import { MAPBOX_TOKEN }    from './tokens.js';
 import { WindStreamlines } from './wind_streamlines.js';
 import { BlockParticles }  from './block_particles.js';
-import { BitmapLayer, ScatterplotLayer, PolygonLayer } from '@deck.gl/layers';
+import { BitmapLayer, ColumnLayer, PolygonLayer } from '@deck.gl/layers';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 
 // ── Step definitions ──────────────────────────────────────────────────────────
@@ -169,19 +169,20 @@ async function loadBlockWind() {
 
 // ── Layer builders ────────────────────────────────────────────────────────────
 function treeLayer(trees) {
-  return new ScatterplotLayer({
-    id:              'intro-trees',
-    data:            trees,
-    getPosition:     d => d.position,
-    getRadius:       d => 3 + d.emission * 4,
-    getFillColor:    d => {
-      const g = (160 + d.emission * 95) | 0;
-      return [30, g, 45, 200];
+  return new ColumnLayer({
+    id:             'intro-trees',
+    data:           trees,
+    getPosition:    d => d.position,
+    getElevation:   d => 4 + d.emission * 14,
+    getFillColor:   d => {
+      const g = (130 + d.emission * 110) | 0;
+      return [62, g, 28, 230];   // brown-to-green trunks (distinct from pollen)
     },
-    radiusUnits:     'meters',
-    radiusMinPixels: 1,
-    radiusMaxPixels: 9,
-    pickable:        false,
+    getLineColor:   [0, 0, 0, 0],
+    radius:         2.0,
+    diskResolution: 8,
+    extruded:       true,
+    pickable:       false,
   });
 }
 
@@ -214,14 +215,15 @@ function windHeatmapLayer(blockWind, buildings, trees) {
     WIND_RAMP, false
   );
   return [
-    ...buildingLayer(buildings, true, trees),
+    // heatmap first so 3D buildings render on top (no red rooftops)
     new BitmapLayer({
       id:       'intro-wind',
       bounds:   blockWind.bbox,
       image:    bitmap,
-      opacity:  0.72,
+      opacity:  0.68,
       pickable: false,
     }),
+    ...buildingLayer(buildings, true, trees),
   ];
 }
 
@@ -231,14 +233,15 @@ function pollenLayer(pollenGrid, buildings, trees) {
     POLLEN_RAMP, true
   );
   return [
-    ...buildingLayer(buildings, true, trees),
+    // heatmap first so 3D buildings render on top (no red rooftops)
     new BitmapLayer({
       id:       'intro-pollen',
       bounds:   CITY_BOUNDS,
       image:    bitmap,
-      opacity:  0.60,
+      opacity:  0.48,
       pickable: false,
     }),
+    ...buildingLayer(buildings, true, trees),
   ];
 }
 
