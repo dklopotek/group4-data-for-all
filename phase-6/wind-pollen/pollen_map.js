@@ -43,6 +43,7 @@ function lerpColor(ramp, t) {
 // ── State ────────────────────────────────────────────────────────────────────
 let map, deckOverlay;
 let activeScenario    = 'sea_breeze';
+let is3D              = true;
 let gridCache         = {};
 let treesData         = null;
 let buildingsData     = null;
@@ -135,16 +136,24 @@ async function buildLayers(scenarioKey) {
   const bitmap = buildBitmap(data);
   const layers = [];
 
-  // 1 — Building footprints (real OSM) as dark fill, subtle outline
+  // 1 — Building footprints with 3D extrusion (shows urban canyon structure)
   if (buildings) {
     layers.push(new PolygonLayer({
-      id: 'buildings',
-      data: buildings,
-      getPolygon: d => d.geometry.coordinates[0],
-      getFillColor:  [28, 30, 40, 210],
-      getLineColor:  [90, 95, 120, 160],
-      getLineWidth:  1,
-      lineWidthMinPixels: 0.8,
+      id:           'buildings',
+      data:         buildings,
+      getPolygon:   d => d.geometry.coordinates[0],
+      getElevation: d => d.properties.height || 20,
+      extruded:     is3D,
+      getFillColor: d => {
+        // Taller buildings = slightly lighter grey so canyon depth is readable
+        const h = Math.min(d.properties.height || 20, 50);
+        const b = Math.round(28 + h * 0.6);
+        return [b, b + 2, b + 12, 220];
+      },
+      getLineColor:       [100, 108, 140, 180],
+      getLineWidth:       1,
+      lineWidthMinPixels: 0.7,
+      material: { ambient: 0.15, diffuse: 0.65, shininess: 20 },
       pickable: false,
     }));
   }
@@ -291,8 +300,8 @@ async function init() {
     style:     'mapbox://styles/mapbox/dark-v11',
     center:    CENTER,
     zoom:      14.5,
-    pitch:     0,
-    bearing:   0,
+    pitch:     50,
+    bearing:   -20,
   });
   map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
@@ -331,6 +340,14 @@ async function init() {
   });
 
   document.getElementById('close-particles')?.addEventListener('click', closeParticles);
+
+  document.getElementById('toggle-3d')?.addEventListener('click', () => {
+    is3D = !is3D;
+    const btn = document.getElementById('toggle-3d');
+    btn.textContent = is3D ? '3D' : '2D';
+    map.easeTo({ pitch: is3D ? 50 : 0, bearing: is3D ? -20 : 0, duration: 600 });
+    updateMap(activeScenario);
+  });
 
   document.getElementById('toggle-wind')?.addEventListener('click', () => {
     particleWindOn = !particleWindOn;
