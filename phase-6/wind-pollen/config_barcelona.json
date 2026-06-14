@@ -1,0 +1,47 @@
+{
+  "study_area": {
+    "name": "Eixample — Platanus pollen dispersion",
+    "lat": 41.3888,
+    "lng": 2.1594,
+    "boundary": {
+      "type": "Polygon",
+      "coordinates": [[
+        [2.1490, 41.3820],
+        [2.1700, 41.3820],
+        [2.1700, 41.3960],
+        [2.1490, 41.3960],
+        [2.1490, 41.3820]
+      ]]
+    },
+    "notes": "~1.5km x 1.5km Eixample core — high Platanus density confirmed by priority map top cells"
+  },
+  "wind": {
+    "march_april_sea_breeze": {
+      "speed_ms": 4,
+      "direction_deg": 135,
+      "label": "SE sea breeze (dominant March-April daytime)"
+    },
+    "tramontane": {
+      "speed_ms": 6,
+      "direction_deg": 315,
+      "label": "NW Tramontane (episodic, strongest dispersal event)"
+    },
+    "calm": {
+      "speed_ms": 2,
+      "direction_deg": 180,
+      "label": "Calm S wind (worst case — pollen stays near source)"
+    }
+  },
+  "pollen": {
+    "platanus_peak_season": {"start_month": 3, "start_day": 1, "end_month": 4, "end_day": 30},
+    "grain_diameter_um": 32,
+    "release_height_m": 18,
+    "settling_velocity_ms": 0.003,
+    "source": "Gabarra et al. 2002; Fitxa Botanica SCAIC/PIA 2022"
+  },
+  "simulation": {
+    "grid_resolution_m": 5,
+    "plume_model": "gaussian",
+    "max_dispersion_radius_m": 600
+  }
+}

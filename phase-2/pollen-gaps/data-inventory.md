@@ -20,7 +20,7 @@
 | **Per-tree size (DBH/canopy)** for Katz allometry | Open Data BCN `arbrat-viari/zona/parcs` | **No continuous measure** — only ordinal `categoria_arbrat`; legacy `ALCADA` also a class | Cannot instantiate allometry per tree. Fallback: declared per-class size weights. |
 | **Pollarding (esporga) regime** | Parcs i Jardins per-tree `fitxa` (pruning dates) | **Exists internally, NOT open**; city-wide avg **~5-yr** cycle IS documented | Per-tree correction impossible with open data → declared limitation + optional uniform prior. |
 | **NO2 allergenicity surface** | **BSC CALIOPE-Urban (Zenodo 16737066)** | **YES — open, 25 m, pre-aggregated to the 1,068 census tracts** | **Recommended: wire it in.** The one genuine new layer. |
-| **Measured Platanus pollen** | XAC / PIA (UAB-ICTA, Belmonte) | **Request-only** (CC-BY-NC); 1 trap, ~15–30 km catchment | Temporal calibration target only; cannot validate the spatial map. Not wire-able this session. |
+| **Measured Platanus pollen** | XAC / PIA (UAB-ICTA, Belmonte) | **Published outputs freely accessible** (calendar PDF, 30-yr chart, Fitxa Botànica, real-time forecast); raw daily series CC-BY-NC request-only; 1 trap, ~15–30 km catchment | Temporal + species validation adopted in Phase 5. Cannot validate spatial ranking. Full documentation: `phase-5/aerobiological-validation-sources.md`. |
 
 ## Candidate scorecard (5-dimension rubric, 0–3 each)
 
@@ -30,7 +30,7 @@
 | Ajuntament/ASPB *Mapes d'immissió* NO2 (street-segment) | 3 | 2 | 3 | 3 | 2 | 13 | Cross-check / official corroborant |
 | XVPCA hourly stations (9 pts) | 3 | 0 | 2 | 3 | 2 | 10 | Ground-truth points only (fails 2x as a surface) |
 | BCN tree inventory — as a SIZE source | 3 | 0 | 3 | 3 | 2 | 11 | Insufficient for allometry (no DBH); already used for location/source |
-| XAC Platanus pollen series | 3 | 1* | 3 | 1 | 2 | 10 | Temporal calibration only; request-gated → out of scope this session |
+| XAC Platanus pollen series | 3 | 1* | 3 | 1 | 2 | 10 | **UPDATED 2026-06-14**: Published outputs (pollen calendar PDF, 30-year aggregate chart, Fitxa Botànica SCAIC/PIA 2022, real-time weekly forecast) are freely accessible — no request needed. Raw daily time-series still request-gated (CC-BY-NC). Published outputs adopted as external validation evidence in Phase 5. See `phase-5/aerobiological-validation-sources.md`. |
 | Pollarding / esporga (per-tree) | — | — | — | — | — | — | **No open dataset exists** → declared limitation |
 | CAMS NO2 (~10 km) | 3 | 0 | 3 | 3 | 2 | 11 | EXCLUDED — one pixel ~ whole city |
 | EEA interpolated NO2 (1 km) | 3 | 1 | 3 | 3 | 2 | 12 | EXCLUDED for intra-city (fails 2x by 5–10x) |

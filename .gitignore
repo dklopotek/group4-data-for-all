@@ -25,7 +25,12 @@ group_internal_meeting.md
 # Local AI config for the planner app (holds an API key -- never commit)
 config.local.js
 outputs/phase-6/app/config.local.js
+phase-6/wind-pollen/tokens.js
 
 # CALIOPE downloads (large external data; not committed)
 caliope_tmp/
 data/caliope/
+
+# Phase-6 wind-pollen: large intermediate GeoJSON grids and raw wind results
+phase-6/wind-pollen/pollen_grid_*.geojson
+phase-6/wind-pollen/wind_result_*.json

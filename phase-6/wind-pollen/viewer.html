@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Barcelona Platanus Pollen — Mycorrhizal Urban Risk</title>
+
+  <!-- Mapbox GL JS v3 UMD (must load before ES modules that reference mapboxgl) -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+
+  <!-- deck.gl ES modules via importmap -->
+  <script type="importmap">
+  {
+    "imports": {
+      "@deck.gl/core":    "https://esm.sh/@deck.gl/core@9.1.5",
+      "@deck.gl/layers":  "https://esm.sh/@deck.gl/layers@9.1.5",
+      "@deck.gl/mapbox":  "https://esm.sh/@deck.gl/mapbox@9.1.5"
+    }
+  }
+  </script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #0a0a0a; color: #e8e8e8; }
+
+    #map { position: fixed; inset: 0; }
+
+    /* Particle canvas sits above the map */
+    #particle-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      display: none;
+      z-index: 10;
+    }
+
+    /* ── Top bar ─────────────────────────────────────────────── */
+    #topbar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 20;
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+      backdrop-filter: blur(4px);
+    }
+
+    #title {
+      font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
+      color: #fff; white-space: nowrap;
+    }
+    #subtitle {
+      font-size: 11px; color: #aaa; white-space: nowrap;
+    }
+
+    .scenario-btn {
+      padding: 6px 12px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.07);
+      color: #ccc; font-size: 12px; cursor: pointer;
+      transition: all 0.2s;
+    }
+    .scenario-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .scenario-btn.active {
+      background: rgba(255, 160, 0, 0.35);
+      border-color: rgba(255, 160, 0, 0.7);
+      color: #ffe080;
+    }
+
+    #wind-arrow {
+      font-size: 22px; display: inline-block;
+      transition: transform 0.5s;
+      color: #7de8ff; cursor: default;
+    }
+
+    /* ── Legend ──────────────────────────────────────────────── */
+    #legend {
+      position: fixed; bottom: 32px; left: 16px;
+      z-index: 20;
+      background: rgba(0,0,0,0.78);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 14px 16px;
+      min-width: 180px;
+      backdrop-filter: blur(6px);
+    }
+    #legend h3 { font-size: 11px; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: 0.08em; color: #ccc; margin-bottom: 10px; }
+    .legend-row { display: flex; align-items: center; gap: 8px;
+                   font-size: 11px; color: #bbb; margin-bottom: 5px; }
+    .legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+    #legend-bar {
+      height: 10px; border-radius: 4px; margin: 8px 0 4px;
+      background: linear-gradient(90deg,
+        rgba(80,200,60,0.3) 0%,
+        rgba(255,180,0,0.75) 40%,
+        rgba(255,80,0,0.85) 70%,
+        rgba(200,0,0,1) 100%);
+    }
+    .legend-labels { display: flex; justify-content: space-between;
+                      font-size: 10px; color: #888; }
+
+    #legend-note { font-size: 10px; color: #666; margin-top: 8px; line-height: 1.4; }
+
+    /* ── Loading ─────────────────────────────────────────────── */
+    #loading {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      z-index: 30; background: rgba(0,0,0,0.8); padding: 20px 28px;
+      border-radius: 10px; font-size: 14px; color: #ccc;
+      display: none;
+    }
+
+    /* ── Particle panel ──────────────────────────────────────── */
+    #particle-panel {
+      position: fixed; bottom: 32px; right: 16px;
+      z-index: 25;
+      background: rgba(0,0,0,0.82);
+      border: 1px solid rgba(100,220,80,0.3);
+      border-radius: 10px; padding: 14px 16px;
+      min-width: 220px; display: none;
+      backdrop-filter: blur(6px);
+    }
+    #particle-panel h3 { font-size: 11px; font-weight: 700; text-transform: uppercase;
+                          letter-spacing: 0.08em; color: #7de87d; margin-bottom: 8px; }
+    #particle-info { font-size: 10px; color: #999; margin-bottom: 10px; line-height: 1.4; }
+    .pp-hint { font-size: 10px; color: #666; margin-bottom: 10px; }
+    .pp-buttons { display: flex; gap: 8px; }
+    .pp-btn {
+      padding: 5px 10px; border-radius: 16px; font-size: 11px; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08); color: #ccc;
+      transition: all 0.2s;
+    }
+    .pp-btn:hover { background: rgba(255,255,255,0.18); }
+    #toggle-wind { border-color: rgba(100,220,80,0.4); color: #90e890; }
+    #toggle-wind.wind-off { border-color: rgba(255,80,80,0.4); color: #e89090; }
+    #close-particles { border-color: rgba(255,80,80,0.3); color: #e09090; }
+
+    /* ── Info hint ───────────────────────────────────────────── */
+    #click-hint {
+      position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+      z-index: 20;
+      background: rgba(0,0,0,0.7); border-radius: 20px;
+      padding: 5px 14px; font-size: 11px; color: #aaa;
+      pointer-events: none; opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<canvas id="particle-canvas"></canvas>
+
+<!-- Top bar -->
+<div id="topbar">
+  <div>
+    <div id="title">Platanus Pollen Risk — Barcelona Eixample</div>
+    <div id="subtitle">Mycorrhizal Barcelona · March–April peak season</div>
+  </div>
+  <button class="scenario-btn" data-scenario="no_wind">○ No Wind</button>
+  <button class="scenario-btn active" data-scenario="sea_breeze">↙ Sea Breeze</button>
+  <button class="scenario-btn" data-scenario="tramontane">↗ Tramontane</button>
+  <button class="scenario-btn" data-scenario="calm">↑ Calm S</button>
+  <span id="wind-arrow" title="Pollen travel direction">↑</span>
+</div>
+
+<!-- Click hint -->
+<div id="click-hint">Click any green tree dot to see pollen particles</div>
+
+<!-- Legend -->
+<div id="legend">
+  <h3>Pollen Concentration</h3>
+  <div id="legend-bar"></div>
+  <div class="legend-labels"><span>Low</span><span>Peak</span></div>
+
+  <div style="height:10px"></div>
+
+  <div class="legend-row">
+    <div class="legend-swatch" style="background:rgba(60,180,20,0.7)"></div>
+    <span>Platanus tree (dot = emission weight)</span>
+  </div>
+
+  <div id="legend-note">
+    Gaussian plume model · Pasquill-Gifford D<br>
+    Grain 32 μm · release height 18 m<br>
+    Source: XAC / PIA aerobiological data
+  </div>
+</div>
+
+<!-- Loading indicator -->
+<div id="loading">Loading pollen scenario…</div>
+
+<!-- Particle panel (appears on tree click) -->
+<div id="particle-panel">
+  <h3>Pollen Particle View</h3>
+  <div id="particle-info"></div>
+  <div class="pp-hint">Dots show pollen grains drifting from this tree</div>
+  <div class="pp-buttons">
+    <button class="pp-btn" id="toggle-wind">Wind: ON</button>
+    <button class="pp-btn" id="close-particles">Close</button>
+  </div>
+</div>
+
+<!-- Main module — loads after importmap resolves -->
+<script type="module" src="pollen_map.js"></script>
+</body>
+</html>
