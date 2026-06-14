@@ -4,7 +4,7 @@
 import { MAPBOX_TOKEN }    from './tokens.js';
 import { WindStreamlines } from './wind_streamlines.js';
 import { BlockParticles }  from './block_particles.js';
-import { BitmapLayer, ColumnLayer, PolygonLayer } from '@deck.gl/layers';
+import { BitmapLayer, ColumnLayer, PolygonLayer, ScatterplotLayer, PointCloudLayer } from '@deck.gl/layers';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 
 // ── Step definitions ──────────────────────────────────────────────────────────
@@ -62,6 +62,19 @@ const STEPS = [
     camera: { center: [2.1585, 41.3905], zoom: 16.6, pitch: 55, bearing: -20 },
     callout: null,
     layerKey: 'pollen',
+  },
+  {
+    chip:   'ONE SOURCE',
+    title:  'One Tree,\nBillions of Grains',
+    body:   'A single EXEMPLAR Platanus releases ~3.2 billion pollen grains in 6 weeks.\n\nEach grain is 26 μm — invisible, but allergenic on contact. Concentration drops 85% beyond 150 m. Removing one tree cuts peak exposure for ~70,000 m² of street.',
+    source: 'Source: Manzano et al. 2021 · Recio et al. 2018 · BCN aerobiological station (XAC)',
+    camera: { center: [2.15895, 41.39075], zoom: 19.0, pitch: 62, bearing: -15 },
+    callout: [
+      { stat: '3.2 B',  label: 'pollen grains / season (EXEMPLAR)' },
+      { stat: '150 m',  label: 'concentrated exposure radius' },
+      { stat: '26 μm',  label: 'grain size — reaches the bronchi' },
+    ],
+    layerKey: 'singletree',
   },
 ];
 
@@ -245,12 +258,63 @@ function pollenLayer(pollenGrid, buildings, trees) {
   ];
 }
 
+function singleTreeLayer(trees) {
+  // Pick the highest-emission tree within ~60 m of the step-5 camera center
+  const cx = 2.15895, cy = 41.39075;
+  let best = null, bestScore = -Infinity;
+  for (const t of trees) {
+    const dx = t.position[0] - cx, dy = t.position[1] - cy;
+    const dist2 = dx * dx + dy * dy;
+    if (dist2 > 0.00055 * 0.00055) continue;
+    const score = t.emission - dist2 * 80000;
+    if (score > bestScore) { bestScore = score; best = t; }
+  }
+  if (!best) best = trees.reduce((a, b) => a.emission > b.emission ? a : b);
+
+  // Dispersal halos: 300 m → 150 m → 50 m, all centred on the tree
+  const rings = [
+    { id: 'ring-300', radius: 300, fill: [200, 255,  40, 30],  line: [200, 255, 40, 80]  },
+    { id: 'ring-150', radius: 150, fill: [200, 255,  40, 70],  line: [200, 255, 40, 150] },
+    { id: 'ring-50',  radius:  50, fill: [200, 255,  40, 130], line: [200, 255, 40, 220] },
+  ];
+
+  return [
+    ...rings.map(r => new ScatterplotLayer({
+      id: `singletree-${r.id}`,
+      data: [best.position],
+      getPosition: d => d,
+      getRadius:   r.radius,
+      radiusUnits: 'meters',
+      getFillColor:  r.fill,
+      getLineColor:  r.line,
+      stroked: true, filled: true,
+      lineWidthMinPixels: 1.5,
+      pickable: false,
+    })),
+    // Exemplar trunk — taller and brighter than the background trees
+    new ColumnLayer({
+      id:             'singletree-trunk',
+      data:           [best],
+      getPosition:    d => d.position,
+      getElevation:   d => 28 + d.emission * 42,
+      getFillColor:   [62, 230, 28, 255],
+      getLineColor:   [200, 255, 40, 200],
+      lineWidthMinPixels: 1,
+      radius:         4.0,
+      diskResolution: 20,
+      extruded:       true,
+      pickable:       false,
+    }),
+  ];
+}
+
 // ── Accent colors per chip label ──────────────────────────────────────────────
 const CHIP_COLORS = {
   'OPEN DATA LAYER 01': '#3ddd6a',
   'OPEN DATA LAYER 02': '#7b9fff',
   'CFD SIMULATION':     '#22ccff',
   'DISPERSION MODEL':   '#c8ff28',
+  'ONE SOURCE':         '#c8ff28',
 };
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
@@ -365,6 +429,13 @@ async function applyStep(n) {
         particles.init(map, bw, bldgs);
         particles.start();
       }
+    } else if (s.layerKey === 'singletree') {
+      // Stop pollen particles and streamlines — this step is static
+      if (particles) particles.stop();
+      if (streamlines) streamlines.stop();
+      document.getElementById('pollen-canvas').style.display = 'none';
+      const trees = await loadTrees(); setLoading(true, 80);
+      layers = singleTreeLayer(trees);
     }
   } catch (err) {
     console.error('Layer load error:', err);
