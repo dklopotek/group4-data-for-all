@@ -3,7 +3,7 @@
 import { MAPBOX_TOKEN } from './tokens.js';
 import { ParticleSystem }    from './particles.js';
 import { WindStreamlines }   from './wind_streamlines.js';
-import { BitmapLayer, ScatterplotLayer, PolygonLayer } from '@deck.gl/layers';
+import { BitmapLayer, ScatterplotLayer, PolygonLayer, ColumnLayer } from '@deck.gl/layers';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -136,16 +136,16 @@ async function buildLayers(scenarioKey) {
   const bitmap = buildBitmap(data);
   const layers = [];
 
-  // 1 — Building footprints with 3D extrusion (shows urban canyon structure)
+  // 1 — Buildings: always extruded=true to avoid shader recompile on toggle.
+  //     In 2D mode elevation is set to 0 (flat footprints, same shader path).
   if (buildings) {
     layers.push(new PolygonLayer({
       id:           'buildings',
       data:         buildings,
       getPolygon:   d => d.geometry.coordinates[0],
-      getElevation: d => d.properties.height || 20,
-      extruded:     is3D,
+      extruded:     true,
+      getElevation: d => is3D ? (d.properties.height || 20) : 0,
       getFillColor: d => {
-        // Taller buildings = slightly lighter grey so canyon depth is readable
         const h = Math.min(d.properties.height || 20, 50);
         const b = Math.round(28 + h * 0.6);
         return [b, b + 2, b + 12, 220];
@@ -153,38 +153,59 @@ async function buildLayers(scenarioKey) {
       getLineColor:       [100, 108, 140, 180],
       getLineWidth:       1,
       lineWidthMinPixels: 0.7,
-      material: { ambient: 0.15, diffuse: 0.65, shininess: 20 },
-      pickable: false,
+      material:           { ambient: 0.15, diffuse: 0.65, shininess: 20 },
+      pickable:           false,
     }));
   }
 
-  // 2 — Pollen heatmap
+  // 2 — Pollen heatmap (ground plane)
   layers.push(new BitmapLayer({
-    id:      'pollen-heatmap',
-    bounds:  BOUNDS,
-    image:   bitmap,
-    opacity: 0.62,
+    id:       'pollen-heatmap',
+    bounds:   BOUNDS,
+    image:    bitmap,
+    opacity:  0.62,
     pickable: false,
   }));
 
-  // 3 — Platanus tree dots (mature trees only)
+  // 3 — Trees: cylinders in 3D, flat dots in 2D
   if (trees) {
     const mature = trees.filter(t => t.emission > 0.75);
-    layers.push(new ScatterplotLayer({
-      id:           'platanus-trees',
-      data:         mature,
-      getPosition:  d => d.position,
-      getRadius:    4,
-      getFillColor: [60, 230, 50, 230],
-      stroked:      false,
-      pickable:     true,
-      radiusMinPixels: 1.5,
-      radiusMaxPixels: 7,
-      onHover: ({ object, x, y }) => showTooltip(object, x, y),
-      onClick: ({ object, x, y }) => {
-        if (object) activateParticles(object, x, y, scenarioKey);
-      },
-    }));
+    if (is3D) {
+      // ColumnLayer — green cylinders, height = maturity proxy (5–22 m)
+      layers.push(new ColumnLayer({
+        id:             'platanus-trees',
+        data:           mature,
+        getPosition:    d => d.position,
+        getElevation:   d => d.emission * 22,
+        getFillColor:   d => {
+          const g = Math.round(140 + d.emission * 90);
+          return [30, g, 25, 240];
+        },
+        radius:         3.5,
+        diskResolution: 8,
+        pickable:       true,
+        onHover: ({ object, x, y }) => showTooltip(object, x, y),
+        onClick: ({ object, x, y }) => {
+          if (object) activateParticles(object, x, y, scenarioKey);
+        },
+      }));
+    } else {
+      layers.push(new ScatterplotLayer({
+        id:              'platanus-trees',
+        data:            mature,
+        getPosition:     d => d.position,
+        getRadius:       4,
+        getFillColor:    [60, 230, 50, 230],
+        stroked:         false,
+        pickable:        true,
+        radiusMinPixels: 1.5,
+        radiusMaxPixels: 7,
+        onHover: ({ object, x, y }) => showTooltip(object, x, y),
+        onClick: ({ object, x, y }) => {
+          if (object) activateParticles(object, x, y, scenarioKey);
+        },
+      }));
+    }
   }
 
   return layers;
@@ -343,10 +364,12 @@ async function init() {
 
   document.getElementById('toggle-3d')?.addEventListener('click', () => {
     is3D = !is3D;
-    const btn = document.getElementById('toggle-3d');
-    btn.textContent = is3D ? '3D' : '2D';
+    document.getElementById('toggle-3d').textContent = is3D ? '3D' : '2D';
     map.easeTo({ pitch: is3D ? 50 : 0, bearing: is3D ? -20 : 0, duration: 600 });
-    updateMap(activeScenario);
+    // Rebuild layers from cache — no loading spinner, no re-fetch
+    buildLayers(activeScenario).then(layers => {
+      if (deckOverlay) deckOverlay.setProps({ layers });
+    });
   });
 
   document.getElementById('toggle-wind')?.addEventListener('click', () => {
