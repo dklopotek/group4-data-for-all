@@ -188,6 +188,47 @@ Cycle B).
 
 ---
 
+## Components — planned (Phase 6–7)
+
+| Component | Lands in | One-line role |
+|---|---|---|
+| Decision-facing output | Session 6 | Two maps (v1 efficiency + v3 equity) + trade-off number, aggregated to section/axis procurement unit — for Espais Verds planner |
+| Stakeholder Monday-test | Session 6 | Real Espais Verds analyst reviews output in context; determines deployment readiness |
+| Independent reproduction | Session 6 | Second operator, clean clone, `Run all` → reproduces the verdict |
+| Final presentation | Session 7 | Communicates verdict + limits to the decision-maker; §6 NOT-list travels with every output |
+
+---
+
+## The contracts
+
+### Seam 1 · build → evaluate
+
+- **Track B (Cycle B):** `allergen_layers.parquet` is frozen; the product is a deterministic
+  composite (seed 42, no fitted parameters). No out-of-sample slice exists for the source layer
+  by construction (no open pollen series). The out-of-sample analog for the composite is T4
+  (perturbation under three held-back aggregation/normalisation choices).
+- **Track A (Cycle A):** `model_artifact.joblib` loads with `joblib.load` and `.predict` works;
+  `data/splits/test.parquet` was written at split time and **never opened before Phase-5 final
+  assessment** (verified: `split_data.py` timestamps precede all evaluation scripts).
+- **Stability promise:** re-running `notebooks/05-evaluation.ipynb` from a clean kernel
+  reproduces every number in `evaluation-report.md`. If Phase-4 artifacts change, the notebook
+  breaks loudly.
+
+### Seam 2 · evaluate → decide
+
+The verdict in `evaluation-report.md §7` reads only from sections 2–6 of that report. Every
+number in the verdict traces to a logged entry in `evaluation-log.md`. No number appears in
+the report that isn't backed by a notebook cell. Verified 2026-06-09.
+
+### Seam 3 · decide → Session 6 deployment (planned)
+
+`evaluation-report.md` is the spec for the decision-facing output. The NOT-list (§6) is the
+list the output must refuse to show or must caveat — it travels with every downstream product.
+The two open gates (Monday-test, independent reproduction) are the planned Phase-6 agenda,
+not analytical defects.
+
+---
+
 ## Open seams carried into v3
 
 - **The un-closable one (L1):** SOURCE is a literature-anchored emission proxy; **no measured
@@ -204,10 +245,15 @@ Cycle B).
 
 ## Sign-off
 
-- **Team:** Group 4 (Rafik El Khoury). Drawn by Rafik + Claude (Opus 4.8).
-- **Last updated:** 2026-06-09
+- **Drawn by:** Group 4 (Rafik El Khoury / Dominika Klopotek). Built with Claude Code (Sonnet 4.6).
+- **Last updated:** 2026-06-14
 - **CRISP-DM Phase:** 5 (Evaluation) — analytical evaluation complete; deployment gates open by design.
 - **Pipeline source (canonical):** `src/clean_data.py` → `src/split_data.py` → `src/train_model.py`
   → `src/external_validation.py` + `src/phase5_robustness.py` (Cycle A) → pivot →
   `src/allergen_source.py` + `src/exposure_layer.py` + `src/equity_layer.py` →
   `src/allergen_priority.py` (Cycle B). Evidence harness: `notebooks/05-evaluation.ipynb`.
+
+- [x] Diagram matches the notebook + report (all gate results verified 2026-06-09).
+- [x] All implemented boxes have file paths (`src/*.py`, `outputs/phase-4/`, `outputs/phase-5/`, `data/processed/`).
+- [x] All planned boxes say "(planned · Session 6/7)".
+- [x] Supersedes `docs/pipeline-architecture-v1.md` (v1 kept for history — upstream C1–C12 reference).

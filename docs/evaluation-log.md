@@ -170,12 +170,48 @@
 
 ---
 
-## Cross-team review feedback (Session-5 block 03)
+## Tests we did NOT run — and why
 
-> _Reserved for the hostile-reviewer team's three bullets (per the Session-5 peer-review prompt)._
+> Honesty about coverage. What we didn't get to is a known limit.
+
+| Test we skipped | Why | What downstream needs to know |
+|---|---|---|
+| Aerobiological validation against measured pollen counts | No open machine-readable Barcelona *Platanus*-pollen series exists (Test 22); declared as un-closable | SOURCE layer is a literature proxy, not field-validated; confidence bounded at ~75% |
+| Mobility-adjusted population (commuter correction) | Padró and Porcioles district daytime population estimates are not open at 400 m grain | Residential population undercounts daytime exposure in commercial centres (Gràcia, Eixample core); noted in NOT-list §4 |
+| MAUP resampling sensitivity (alternative grid sizes) | Out of scope given frozen `scored_grid.parquet`; re-gridding would require re-running Phases 2–3 | Results are conditional on 400 m grain; do not extrapolate to finer resolutions |
+| Seasonal emission weighting (spring peak vs annual) | Pla Director removal schedule is annual, not seasonal; and *Platanus* peak is well-characterised (Feb–Apr) | A seasonal heat-map is a Phase-6 enhancement, not an evaluation defect |
+| Within-section heterogeneity / siting check | Product claims sequencing at section/axis level; cell-level siting was explicitly out of scope (NOT-list §4) | Do not use the 400 m map to locate a specific tree for removal |
 
 ---
 
-> **Discipline check:** every number in `docs/evaluation-report.md` has a backing entry above.
-> 22 tests logged across both cycles; **3 killed/rejected a claim, 5 weakened one** — the log is
-> not all-positive, by design.
+## Cumulative effect
+
+Test 4 (Cell A4) changed the verdict most: the external GBIF test was the only gate the mycorrhizal claim had to clear, it returned ΔAdj-R² −0.0195 and partial-F p = 0.989, and that killed Cycle A with high confidence. Everything that follows — the pivot, the allergen product, the dual-track report — is downstream of that one number.
+
+The worst thing found is that the Cycle-A model is not just wrong about fungi: it is structurally a sealed-surface re-skin. The ecological features (total trees, species richness, AM/EM host balance) carry ≈0 weight; r(prediction, sealed\_surface) = 0.94; drop `mean_sealed` and the MAE rises 11×. A reviewer who only saw the Phase-4 headline (R² 0.877) would believe they had an ecological model. They would not.
+
+The Cycle-B product is not for sub-400 m siting, not for clinical allergy prediction, and not validated against measured pollen — it ranks sequencing of an already-decided removal programme at the section/axis procurement unit.
+
+Confidence in the Cycle-A STOP is high: the kill is triangulated across three external-test variants (richness, log-richness, drop-effort), a Moran's I check, and a 44-source literature review. Confidence in the Cycle-B SHIP is ~75% analytical: all six pre-registered criteria met and 3/3 perturbations survived, bounded by the one un-closable limitation (no open pollen series).
+
+---
+
+## Peer review (block 03)
+
+- **Reviewed by:** _(reviewer team — to be filled during Session-5 block 03)_
+- **The overclaim they hunted for:** _(what they attacked)_
+- **Three bullets they left:**
+  1. _(...)_
+  2. _(...)_
+  3. _(...)_
+
+---
+
+## Sign-off
+
+- [x] Every number in `evaluation-report.md` traces to an entry here (22 tests; discipline check verified 2026-06-09).
+- [x] At least one entry **weakened or killed** a claim — 3 killed/rejected, 5 weakened.
+- [x] The verdict in the report matches the cumulative effect above (STOP Cycle A / SHIP ~75% Cycle B).
+- [ ] A fresh clone + `Run all` on `hermes-agent` venv reproduces every logged number _(pre-commit ritual — run on Windows before 4 PM)_.
+
+**Evaluated by:** Group 4 (Rafik El Khoury / Dominika Klopotek). Built with Claude Code (Sonnet 4.6).

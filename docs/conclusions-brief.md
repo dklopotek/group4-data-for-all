@@ -6,10 +6,11 @@
 
 - **Analysis:** Barcelona plane-tree (*Platanus*) pollen-allergen exposure priority
 - **Version:** v1.0 · 2026-06-09
-- **Produced by:** Group 4 (Rafik El Khoury). Built with Claude Code (Opus 4.8).
+- **Produced by:** Group 4 (Rafik El Khoury / Dominika Klopotek). Built with Claude Code (Sonnet 4.6).
 - **Notebook:** `notebooks/05-evaluation.ipynb` · **Validity audit:** `docs/validity-audit.md`
 - **Code:** `src/allergen_source.py`, `src/exposure_layer.py`, `src/allergen_priority.py`,
   `src/equity_layer.py` (deterministic, seed 42)
+- **Contact:** klopotek.dominika@gmail.com · https://github.com/dklopotek/group4-data-for-all
 
 ---
 
@@ -121,10 +122,16 @@
 
 ## Sign-off
 
-- **Brief written by:** Group 4 (Rafik El Khoury)
-- **Reviewed by another team:** pending (Session-5 cross-team review)
-- **Reviewer feedback:** to land in `docs/evaluation-log.md`
-- **Last updated:** 2026-06-09
+- **Brief written by:** Group 4 (Rafik El Khoury / Dominika Klopotek)
+- **Reviewed by another team:** _(reviewer team — to be filled during Session-5 block 03)_
+- **Reviewer feedback:** `docs/evaluation-log.md` → Peer review section
+- **Last updated:** 2026-06-14
+
+- [x] Every claim has a falsifiable sentence, an evidence cell reference, and a robustness cut.
+- [x] At least one claim is a negative/rejected finding (Claim 3 — demographic layers don't re-order spatially).
+- [x] §4 lists at least three NOT-claims (six here).
+- [x] §5 names who is missing and what that means for the result.
+- [ ] Cross-team review bullets recorded in `docs/evaluation-log.md` _(pending block 03)_.
 
 ---
 
