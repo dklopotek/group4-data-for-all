@@ -1,18 +1,23 @@
-# Group 4 — Mycorrhizal Barcelona → Platanus Pollen-Allergen Priority
+# Group 4 — Platanus Pollen-Allergen Priority, Barcelona
 
-CRISP-DM seminar project (MaAI01 25-26). A batch geospatial pipeline that ranks
-Barcelona's 400 m grid cells to sequence the city's committed plane-tree (*Platanus*)
-removal so each cut relieves the most **pollen-allergen exposure**.
+**MaAI01 25–26 · Data for All · CRISP-DM seminar project**
+
+A batch geospatial pipeline that ranks Barcelona's 400 m grid cells to sequence the
+city's committed plane-tree (*Platanus*) removal so each cut relieves the most
+**pollen-allergen exposure** for the people who live there.
 
 We started on a *mycorrhizal-fungi* recovery thesis, **falsified it ourselves** at the
-Evaluation phase, and pivoted to the allergen question the same data could honestly
-answer. The documented falsification is the project's strongest result.
+Evaluation phase (three independent lines of evidence), and pivoted to the allergen
+question the same data could honestly answer. The documented falsification is the
+project's strongest result — a pre-registered hypothesis death is the clearest
+demonstration of the CRISP-DM iteration loop.
 
 ## Start here
 
-- **`outputs/reports/crispdm-phase-1-to-6-paper.md`** — the canonical narrative (all 6 CRISP-DM phases). Read this first.
-- **`REPO-MAP.md`** — what every directory is + the real pipeline flow.
+- **`outputs/presentation-final.html`** — 5-minute final-delivery presentation (open in browser). Press `T` to start the countdown timer, arrow keys to advance slides.
+- **`outputs/reports/crispdm-phase-1-to-6-paper.md`** — the canonical narrative (all 6 CRISP-DM phases, both cycles).
 - **`outputs/phase-6/maps/deployment_map.html`** — interactive priority map (section ↔ 400m toggle, street worklists).
+- **`REPO-MAP.md`** — what every directory is + the real pipeline flow.
 
 ## Run the pipeline
 

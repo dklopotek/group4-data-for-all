@@ -1,11 +1,17 @@
-# Handoff — Session 5/6: mycorrhizal thesis falsified, pivoted to Platanus allergen-priority (v1 + v3 equity)
+# Handoff — Session 6 (FINAL): full CRISP-DM cycle closed
 
-**Created:** 2026-06-05 by Claude Code session
+**Created:** 2026-06-05 · **Updated:** 2026-06-16 (final session)
 **Branch:** main
-**Last commit:** d4e8c2c — phase-6: model card -- record equity variant (deprivation) finding
+**Status:** COMPLETE — all 6 CRISP-DM phases closed; presentation + delivery package ready.
 
-## Goal
-Deliver a defensible CRISP-DM seminar project for Barcelona. The original "Mycorrhizal Barcelona" thesis was tested and falsified this session; we pivoted to a **Platanus pollen-allergen exposure priority** product (where to sequence the city's 2017-2037 plane-tree reduction so each removal relieves the most allergen exposure). Product is now considered DONE at v1 (efficiency) + v3 (equity). **Next session's job:** complete/formalize the CRISP-DM framework documentation so all six phases reflect the pivoted product and the evaluation we actually did.
+## Summary
+Full six-phase CRISP-DM cycle delivered. Mycorrhizal thesis falsified on three independent lines (Session 5), pivoted to Platanus pollen-allergen exposure priority (Cycle B). Product shipped as v1 (efficiency) + v3 (equity variant). Final delivery HTML presentation and updated README added this session.
+
+## Final deliverables
+- `outputs/presentation-final.html` — 5-minute tutor presentation (open in browser)
+- `outputs/reports/crispdm-phase-1-to-6-paper.md` — full canonical paper
+- `outputs/phase-6/maps/deployment_map.html` — interactive priority map
+- `outputs/phase-6/street_removal_actions.csv` — per-street worklist (top-60 sections)
 
 ## Current state
 - **GSD planning** initialized in `.planning/` (PROJECT.md, REQUIREMENTS.md, ROADMAP.md, config.json, STATE.md). Roadmap is framed as Session-5 = CRISP-DM Phase 5 Evaluation; the pivot product lives under `phase-6/` + `outputs/phase-6/`.

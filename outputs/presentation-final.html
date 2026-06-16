@@ -1,0 +1,676 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Group 4 — Data for All: Platanus Pollen-Allergen Priority, Barcelona</title>
+<style>
+:root {
+  --bg: #0c0f14;
+  --panel: #141920;
+  --panel2: #1a2030;
+  --ink: #e8edf4;
+  --sub: #a0aab8;
+  --dim: #606878;
+  --line: #252c38;
+  --grn: #3ecf6e;
+  --grn-bg: #0c2218;
+  --grn-bd: #1a5c38;
+  --red: #f0524c;
+  --red-bg: #200c0c;
+  --red-bd: #5c1a1a;
+  --amb: #f0b429;
+  --amb-bg: #201808;
+  --amb-bd: #5c3c08;
+  --blu: #4da6ff;
+  --blu-bg: #0a1830;
+  --pur: #c080ff;
+  --teal: #3ecfcf;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── layout ── */
+.deck { scroll-snap-type: y mandatory; overflow-y: scroll; height: 100vh; }
+.slide {
+  scroll-snap-align: start;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5vh 8vw 7vh;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+/* ── type scale ── */
+.kicker {
+  font-family: var(--mono);
+  font-size: .78rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 1rem;
+}
+h1 { font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1.05; letter-spacing: -.025em; font-weight: 800; margin-bottom: 1.2rem; }
+h2 { font-size: clamp(1.5rem, 3.5vw, 2.6rem); line-height: 1.1; letter-spacing: -.02em; font-weight: 750; margin-bottom: 1.1rem; }
+h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .4rem; }
+p  { font-size: clamp(.95rem, 1.4vw, 1.12rem); color: #bcc8d8; max-width: 64ch; line-height: 1.7; }
+.big { font-size: clamp(1rem, 1.6vw, 1.22rem); color: var(--ink); max-width: 72ch; }
+.mut { color: var(--sub); }
+.dim { color: var(--dim); font-size: .9rem; }
+strong { color: var(--ink); }
+em { font-style: normal; color: var(--teal); }
+
+/* ── nav dots ── */
+.nav {
+  position: fixed; right: 20px; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 10px; z-index: 100;
+}
+.nav a {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--line); border: 1px solid #3a4456; display: block; transition: .2s;
+}
+.nav a:hover, .nav a.on { background: var(--teal); transform: scale(1.3); }
+
+/* ── timer ── */
+#timer {
+  position: fixed; top: 18px; right: 22px;
+  font-family: var(--mono); font-size: .95rem; color: var(--dim);
+  background: var(--panel); border: 1px solid var(--line);
+  padding: .3rem .8rem; border-radius: 8px; cursor: pointer;
+  z-index: 200; transition: .2s; user-select: none;
+}
+#timer:hover { color: var(--ink); border-color: var(--teal); }
+#timer.running { color: var(--grn); }
+#timer.warn { color: var(--amb); }
+#timer.over { color: var(--red); }
+
+/* ── slide number ── */
+.snum {
+  position: absolute; bottom: 18px; left: 8vw;
+  font-family: var(--mono); font-size: .75rem; color: var(--dim);
+}
+
+/* ── components ── */
+.row { display: flex; gap: 1.6rem; flex-wrap: wrap; align-items: flex-start; margin-top: 1rem; }
+.col { flex: 1 1 280px; min-width: 240px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .9rem; margin-top: 1rem; }
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+  padding: 1.2rem 1.3rem;
+}
+.card.ok  { border-color: var(--grn-bd); background: var(--grn-bg); }
+.card.bad { border-color: var(--red-bd); background: var(--red-bg); }
+.card.amb { border-color: var(--amb-bd); background: var(--amb-bg); }
+.card.blu { border-color: #1a3a6c; background: var(--blu-bg); }
+
+.stat { font-family: var(--mono); font-size: 2.4rem; font-weight: 800; line-height: 1; }
+.stat.grn { color: var(--grn); }
+.stat.red { color: var(--red); }
+.stat.amb { color: var(--amb); }
+.stat.blu { color: var(--blu); }
+.stat-label { font-size: .82rem; color: var(--sub); margin-top: .3rem; letter-spacing: .03em; }
+
+.formula {
+  font-family: var(--mono);
+  font-size: clamp(1.2rem, 2.5vw, 2rem);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 1rem 1.4rem; display: inline-block; margin: .8rem 0;
+  line-height: 1.5;
+}
+.formula .src { color: var(--grn); font-weight: 800; }
+.formula .exp { color: var(--blu); font-weight: 800; }
+.formula .op  { color: var(--dim); }
+
+.pill {
+  display: inline-block; font-family: var(--mono); font-size: .72rem;
+  padding: .18rem .55rem; border-radius: 999px; border: 1px solid var(--line);
+  color: var(--sub); margin: .2rem .2rem 0 0;
+}
+.pill.ok  { color: var(--grn); border-color: var(--grn-bd); background: var(--grn-bg); }
+.pill.bad { color: var(--red); border-color: var(--red-bd); background: var(--red-bg); }
+.pill.amb { color: var(--amb); border-color: var(--amb-bd); background: var(--amb-bg); }
+
+.note {
+  border-left: 3px solid var(--teal); padding: .7rem 0 .7rem 1.1rem;
+  background: #0c1520; border-radius: 0 10px 10px 0; margin: .8rem 0;
+  font-size: clamp(.95rem, 1.4vw, 1.08rem); color: #bcc8d8;
+}
+.note strong { color: var(--teal); }
+
+ul.list { list-style: none; padding: 0; margin: .6rem 0; }
+ul.list li {
+  padding: .4rem 0; border-bottom: 1px dashed var(--line);
+  display: flex; gap: .7rem; align-items: flex-start;
+  font-size: clamp(.9rem, 1.3vw, 1.05rem); color: #bcc8d8;
+}
+ul.list li::before { content: "▹"; color: var(--teal); flex-shrink: 0; margin-top: .05rem; }
+ul.list li.x::before { content: "✗"; color: var(--red); }
+ul.list li.ok::before { content: "✓"; color: var(--grn); }
+
+/* ── act timeline ── */
+.acts { display: flex; gap: 0; margin: 1.2rem 0; }
+.act {
+  flex: 1; padding: 1rem 1.1rem; position: relative;
+  border: 1px solid var(--line); background: var(--panel);
+}
+.act:first-child { border-radius: 12px 0 0 12px; }
+.act:last-child  { border-radius: 0 12px 12px 0; }
+.act + .act { border-left: none; }
+.act-label { font-family: var(--mono); font-size: .7rem; text-transform: uppercase; letter-spacing: .15em; margin-bottom: .35rem; }
+.act h4 { font-size: 1.05rem; font-weight: 700; margin-bottom: .2rem; }
+.act p  { font-size: .88rem; line-height: 1.5; color: var(--sub); max-width: none; }
+.act.a { border-color: var(--pur); background: #14102a; }
+.act.b { border-color: var(--red-bd); background: var(--red-bg); }
+.act.c { border-color: var(--grn-bd); background: var(--grn-bg); }
+.act.a .act-label { color: var(--pur); }
+.act.b .act-label { color: var(--red); }
+.act.c .act-label { color: var(--grn); }
+
+/* ── table ── */
+table { border-collapse: collapse; font-size: .9rem; width: 100%; margin-top: .8rem; }
+th { text-align: left; font-family: var(--mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--sub); padding: .4rem .7rem; border-bottom: 1px solid var(--line); }
+td { padding: .4rem .7rem; border-bottom: 1px solid var(--line); color: #bcc8d8; }
+td.hi { color: var(--grn); font-weight: 700; font-family: var(--mono); }
+td.lo { color: var(--sub); font-family: var(--mono); }
+td.nd { color: var(--red); font-family: var(--mono); }
+tr:last-child td { border-bottom: none; }
+
+/* ── slide-specific ── */
+#s1 { background: radial-gradient(ellipse 80% 60% at 30% 40%, #0c1a30, var(--bg)); }
+#s1 h1 span.hi { color: var(--teal); }
+
+.phase-strip { display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0; }
+.ph {
+  padding: .35rem .85rem; border-radius: 8px; font-family: var(--mono);
+  font-size: .8rem; font-weight: 700; border: 1px solid;
+}
+.ph.done { color: var(--grn); border-color: var(--grn-bd); background: var(--grn-bg); }
+.ph.pivot { color: var(--teal); border-color: #1a5c5c; background: #0c2020; }
+
+/* ── map slides ── */
+.slide.map-slide { padding: 0; justify-content: stretch; }
+.map-frame {
+  width: 100%; flex: 1; border: none; display: block;
+  min-height: 0;
+}
+.map-bar {
+  background: var(--panel); border-bottom: 1px solid var(--line);
+  padding: .55rem 1.4rem; display: flex; gap: 1.2rem; align-items: center;
+  flex-shrink: 0;
+}
+.map-bar .kicker { margin: 0; }
+.map-bar a {
+  font-family: var(--mono); font-size: .78rem; color: var(--teal);
+  text-decoration: none; border: 1px solid var(--line); border-radius: 6px;
+  padding: .18rem .6rem;
+}
+.map-bar a:hover { border-color: var(--teal); }
+.map-note {
+  font-family: var(--mono); font-size: .73rem; color: var(--dim);
+  margin-left: auto;
+}
+.img-fig {
+  border-radius: 10px; border: 1px solid var(--line);
+  width: 100%; max-height: 320px; object-fit: cover; object-position: top;
+  display: block;
+}
+.fig-cap { font-size: .8rem; color: var(--dim); margin-top: .35rem; font-family: var(--mono); }
+</style>
+</head>
+<body>
+
+<div id="timer" title="Click to start/stop 5-min countdown">5:00</div>
+
+<nav class="nav" id="nav">
+  <a href="#s1" title="Title"></a>
+  <a href="#s2" title="The city's decision"></a>
+  <a href="#s3" title="Sessions 1–4: the build"></a>
+  <a href="#s4" title="Session 5: falsification"></a>
+  <a href="#s5" title="The pivot"></a>
+  <a href="#s6" title="Results"></a>
+  <a href="#s7" title="Live map — deployment priority"></a>
+  <a href="#s8" title="Live map — efficiency vs equity"></a>
+  <a href="#s9" title="Delivery + limits"></a>
+  <a href="#s10" title="Takeaway"></a>
+</nav>
+
+<main class="deck" id="deck">
+
+<!-- ═══════════════════════════════════════════  SLIDE 1 — Title -->
+<section class="slide" id="s1">
+  <div class="kicker">Group 4 · MaAI01 25–26 · Data for All</div>
+  <h1>
+    When your data<br>
+    <span class="hi">falsifies your thesis</span><br>
+    — and that's the result.
+  </h1>
+  <p class="big" style="margin-top:.4rem">
+    A full CRISP-DM cycle applied to Barcelona's urban trees:<br>
+    from a mycorrhizal priority map we killed ourselves,<br>
+    to a pollen-allergen sequencing tool the city can act on.
+  </p>
+  <div style="margin-top:1.4rem; display:flex; gap:.6rem; flex-wrap:wrap;">
+    <span class="pill ok">6 CRISP-DM phases closed</span>
+    <span class="pill ok">Pre-registered falsification</span>
+    <span class="pill ok">Shipped priority map + street worklist</span>
+    <span class="pill">Barcelona · 189,000 trees · 1.7M residents</span>
+  </div>
+  <div class="snum">1 / 10 — click timer to start countdown</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 2 — The city's decision -->
+<section class="slide" id="s2">
+  <div class="kicker">Phase 1 — Business Understanding</div>
+  <h2>Barcelona is already removing plane trees.<br>The only question is: in what order?</h2>
+  <div class="row">
+    <div class="col">
+      <div class="note">
+        <strong>The standing policy (Pla Director de l'Arbrat 2017–2037):</strong><br>
+        Cut planes from 27.45% → under 12% of all urban trees.<br>
+        43,722 specimens today. ~56% will be removed by 2037.<br>
+        Reason stated by the city: biodiversity + monoculture risk.
+      </div>
+      <p>Platanus is responsible for <strong>~46% of Barcelona's annual pollen index</strong>
+         (Gabarra et al. 2002). Removing a plane also relieves allergy burden —
+         but the city doesn't rank by that. We supply the missing sequencing criterion.</p>
+    </div>
+    <div class="col">
+      <div class="card blu">
+        <h3>Our decision target</h3>
+        <p style="color:#bcc8d8; margin:.4rem 0">
+          <em>In what spatial order should the city cut planes so that each removal
+          relieves the most pollen-allergen exposure for the people who live there?</em>
+        </p>
+        <p class="mut" style="margin-top:.7rem; font-size:.88rem">
+          User: capital-planning analyst at Espais Verds.<br>
+          Unit of action: census section → street-level worklist.
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="snum">2 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 3 — Sessions 1–4 build -->
+<section class="slide" id="s3">
+  <div class="kicker">Sessions 1–4 — Phases 1–4 (Cycle A)</div>
+  <h2>We built a mycorrhizal priority map.<br>The engineering was excellent.<br>The thesis wasn't.</h2>
+  <div class="row" style="align-items:stretch">
+    <div class="col">
+      <div class="card ok" style="margin-bottom:.8rem">
+        <div class="stat grn">R² 0.877</div>
+        <div class="stat-label">Linear model held-out test score — best in cohort</div>
+      </div>
+      <ul class="list" style="margin-top:.4rem">
+        <li class="ok">189,000–230,000 trees → 494-cell scored grid</li>
+        <li class="ok">Spatial-cluster train/eval/test split (no leakage)</li>
+        <li class="ok">Pre-registered test design before build</li>
+        <li class="ok">3 baselines + tuned linear model, all beat</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="card bad">
+        <h3 style="color:var(--red)">The structural flaw — invisible until Phase 5</h3>
+        <p>The model's target <code style="font-family:var(--mono);color:var(--amb)">composite_score_B</code>
+           was built from the same features used to predict it.</p>
+        <p style="margin-top:.6rem">We validated a <strong style="color:var(--red)">tautology</strong>.
+           The held-out R² measured normalization stability across space —
+           not anything about Barcelona's fungi.</p>
+      </div>
+    </div>
+  </div>
+  <div class="snum">3 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 4 — Falsification -->
+<section class="slide" id="s4">
+  <div class="kicker">Session 5 — Phase 5: Evaluation</div>
+  <h2>Three independent lines of evidence.<br>One verdict: <span style="color:var(--red)">stop the mycorrhizal claim.</span></h2>
+  <div class="cards" style="margin-top:.9rem">
+    <div class="card bad">
+      <h3 style="color:var(--red)">Line 1 — Internal redundancy</h3>
+      <div class="stat red" style="font-size:1.9rem">R² 0.91</div>
+      <div class="stat-label">composite explained by sealed surface alone</div>
+      <p style="margin-top:.6rem">Effective weight of ecological components:
+         s4_mismatch <strong>r = −0.015</strong>, PRPI <strong>r = +0.18</strong>.
+         Sealed surface: <strong>r = +0.95</strong>.
+         Our "mycorrhizal map" was a paved-surface map in disguise.</p>
+    </div>
+    <div class="card bad">
+      <h3 style="color:var(--red)">Line 2 — Pre-registered external test</h3>
+      <div class="stat red" style="font-size:1.9rem">p = 0.99</div>
+      <div class="stat-label">partial-F, biotic block vs GBIF occurrences</div>
+      <p style="margin-top:.6rem">1,024 independent fungal occurrences (GBIF).
+         Biotic/host layers added <strong>ΔadjR² = −0.02</strong>
+         beyond an abiotic null. Flat null. Design committed before result.</p>
+    </div>
+    <div class="card bad">
+      <h3 style="color:var(--red)">Line 3 — Literature (44 sources)</h3>
+      <div class="stat red" style="font-size:1.9rem">Weak lever</div>
+      <div class="stat-label">AM → EM host mismatch, peer-reviewed evidence</div>
+      <p style="margin-top:.6rem">Counter-evidence from comparable cities: plane-tree
+         fungal diversity <em>increased</em> with urbanization in Amsterdam —
+         the opposite of what our mechanism assumed.</p>
+    </div>
+  </div>
+  <div class="note" style="margin-top:1rem">
+    <strong>CRISP-DM verdict:</strong> stop / iterate. Not "relabel and ship." A defensible STOP is a result.
+  </div>
+  <div class="snum">4 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 5 — The pivot -->
+<section class="slide" id="s5">
+  <div class="kicker">The pivot — Cycle B, same data, honest question</div>
+  <h2>We kept what the data supports.<br>We dropped what it doesn't.</h2>
+
+  <div class="acts" style="margin-top:1rem">
+    <div class="act a">
+      <div class="act-label">Cycle A — Dead</div>
+      <h4>Mycorrhizal priority</h4>
+      <p>Rank cells for fungal network recovery. Falsified. Retained as a stated hypothesis for future work with measured soil data.</p>
+    </div>
+    <div class="act b">
+      <div class="act-label">Phase 5 — Falsification</div>
+      <h4>Three independent FAILs</h4>
+      <p>Internal R² 0.91 on sealed surface · external p = 0.99 · literature counter-evidence. Decision: STOP at ~75–80% confidence.</p>
+    </div>
+    <div class="act c">
+      <div class="act-label">Cycle B — Shipped</div>
+      <h4>Allergen-exposure priority</h4>
+      <p>Same tree inventory. New question: where to sequence the removal the city is already doing, for maximum pollen relief.</p>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top:1.2rem; align-items:center">
+    <div class="col">
+      <div class="formula">
+        priority = <span class="src">SOURCE</span> <span class="op">×</span> <span class="exp">EXPOSURE</span>
+      </div>
+      <ul class="list" style="margin-top:.4rem">
+        <li><strong style="color:var(--grn)">SOURCE</strong> = plane density × maturity score (min-max std)</li>
+        <li><strong style="color:var(--blu)">EXPOSURE</strong> = residential population, interpolated (min-max std)</li>
+        <li>Multiplicative — non-compensatory by design (fixes Cycle A's failure)</li>
+        <li>Feasibility = 1 − sealed fraction (annotation, never multiplied in)</li>
+      </ul>
+    </div>
+    <div class="col">
+      <div class="card ok">
+        <h3>Why multiplicative?</h3>
+        <p>A weighted sum (Cycle A) lets one high-variance component dominate regardless of declared weights.
+           A product is non-compensatory: a cell with no planes <em>or</em> no people cannot score high.
+           There are no hidden weights to mis-set.</p>
+      </div>
+    </div>
+  </div>
+  <div class="snum">5 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 6 — Results -->
+<section class="slide" id="s6">
+  <div class="kicker">Phase 5 (Cycle B) — Evaluation results</div>
+  <h2>Every pre-registered test passed.<br>Plus an honest equity win.</h2>
+  <div class="row">
+    <div class="col">
+      <table>
+        <thead>
+          <tr><th>Test</th><th>Criterion</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>T1 — re-orders vs naive density</td>
+            <td class="lo">J₁₅ &lt; 0.70</td>
+            <td class="hi">J₁₅ = 0.30 ✓</td>
+          </tr>
+          <tr>
+            <td>T2 — layers non-redundant</td>
+            <td class="lo">both material</td>
+            <td class="hi">corr(src, exp) = 0.30 ✓</td>
+          </tr>
+          <tr>
+            <td>T3 — exposure burden, top-15</td>
+            <td class="lo">beats density</td>
+            <td class="hi">+4.6 pp margin ✓</td>
+          </tr>
+          <tr>
+            <td>T4 — sensitivity (3 arms)</td>
+            <td class="lo">holds in ≥ 2</td>
+            <td class="hi">3/3 ✓</td>
+          </tr>
+          <tr>
+            <td>Pollen source validation</td>
+            <td class="lo">measured series</td>
+            <td class="nd">INFEASIBLE — proxy, stated</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <div class="card" style="margin-bottom:.8rem">
+        <h3>v3 — Equity variant (deprivation weight)</h3>
+        <p>Multiply by inverted income (poorest cell = 1).<br>
+           Decorrelated from both layers: r = −0.008, 0.17.</p>
+        <div style="margin-top:.7rem; display:flex; gap:1rem; flex-wrap:wrap">
+          <div>
+            <div class="stat grn" style="font-size:1.7rem">40% → 60%</div>
+            <div class="stat-label">deprived-tercile share, top-15</div>
+          </div>
+          <div>
+            <div class="stat amb" style="font-size:1.7rem">−0.5 pp</div>
+            <div class="stat-label">exposure relief sacrificed</div>
+          </div>
+        </div>
+        <p style="margin-top:.6rem">Near-free equity win: planner chooses efficiency vs equity
+           with the trade measured and explicit.</p>
+      </div>
+      <div class="card bad" style="padding:.9rem 1rem">
+        <h3 style="color:var(--amb)">Honest rejected layers</h3>
+        <span class="pill bad">Age-prevalence — Spearman 0.999 vs population, redundant</span>
+        <span class="pill bad">Sex — women 1.6× antihistamines, ratio spatially flat</span>
+        <span class="pill bad">Bike lanes — no cyclist-flow data, rejected at design</span>
+      </div>
+      <figure style="margin-top:.8rem">
+        <img src="sensitivity_comparison.png" alt="Sensitivity comparison chart" class="img-fig">
+        <figcaption class="fig-cap">Sensitivity: rank-order verdict holds across all 3 perturbation arms</figcaption>
+      </figure>
+    </div>
+  </div>
+  <div class="snum">6 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 7 — Live map: deployment -->
+<section class="slide map-slide" id="s7">
+  <div class="map-bar">
+    <div class="kicker" style="margin:0">Live map — Deployment priority</div>
+    <span style="color:var(--sub);font-size:.85rem">Interactive: toggle 400m cell / census-section grain, click cells for street worklist</span>
+    <a href="phase-6/maps/deployment_map.html" target="_blank">open full tab ↗</a>
+    <span class="map-note">7 / 10 — if blank in Chrome: open with Safari or run a local server</span>
+  </div>
+  <iframe
+    src="phase-6/maps/deployment_map.html"
+    class="map-frame"
+    title="Barcelona Platanus removal priority map"
+    loading="lazy"
+    sandbox="allow-scripts allow-same-origin"
+  ></iframe>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 8 — Live map: equity shift -->
+<section class="slide map-slide" id="s8">
+  <div class="map-bar">
+    <div class="kicker" style="margin:0">Live map — Efficiency vs Equity shift</div>
+    <span style="color:var(--sub);font-size:.85rem">Which cells move when deprivation weight is added? Teal = equity gains, orange = efficiency loses</span>
+    <a href="phase-6/maps/priority_equity_shift.html" target="_blank">open full tab ↗</a>
+    <span class="map-note">8 / 10</span>
+  </div>
+  <iframe
+    src="phase-6/maps/priority_equity_shift.html"
+    class="map-frame"
+    title="Equity shift map"
+    loading="lazy"
+    sandbox="allow-scripts allow-same-origin"
+  ></iframe>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 9 — Deployment + limits -->
+<section class="slide" id="s9">
+  <div class="kicker">Phase 6 — Deployment</div>
+  <h2>What we ship — and one honest<br>negative we found in our own output.</h2>
+  <div class="row">
+    <div class="col">
+      <ul class="list">
+        <li class="ok"><strong>Priority map (400 m cell grain)</strong> — v1 efficiency + v3 equity, interactive HTML with census-section toggle</li>
+        <li class="ok"><strong>Census-section ranking</strong> (1,068 sections, native grain, no interpolation) — the action-facing product</li>
+        <li class="ok"><strong>Street-level worklist</strong> — top-60 sections, 401 streets, 100% address coverage. Inventory + feasibility; no street priority score (ecological fallacy guardrail)</li>
+        <li class="ok"><strong>Model card + datasheet + monitoring plan</strong> — FAIR-compliant handoff package</li>
+      </ul>
+      <figure style="margin-top:.9rem">
+        <img src="grid_trees_map.png" alt="400m grid with tree data" class="img-fig" style="max-height:220px">
+        <figcaption class="fig-cap">400 m analysis grid — 494 cells, 189k+ plane trees joined from city inventory</figcaption>
+      </figure>
+    </div>
+    <div class="col">
+      <div class="card amb">
+        <h3 style="color:var(--amb)">The finding we measured in our own output: MAUP</h3>
+        <p>At <strong>section grain</strong>, one park section (Montjuïc: 594 mature planes, ~2,000 residents)
+           dominates. T1 re-order test <strong>fails</strong> (Spearman 0.97, J₁₅ = 0.58).
+           Rollup disagreement with cell product: Spearman 0.47.</p>
+        <p style="margin-top:.6rem">This is the Modifiable Areal Unit Problem — the answer
+           changes with the map's grain. We <em>measured</em> it rather than hid it,
+           and we ship both grains with the caveat explicit.</p>
+      </div>
+      <div class="phase-strip" style="margin-top:.9rem">
+        <span class="ph done">1 Business</span>
+        <span class="ph done">2 Data</span>
+        <span class="ph done">3 Prep</span>
+        <span class="ph done">4 Modeling</span>
+        <span class="ph done">5 Evaluation</span>
+        <span class="ph pivot">6 Deployment ✓</span>
+      </div>
+    </div>
+  </div>
+  <div class="snum">9 / 10</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 10 — Takeaway -->
+<section class="slide" id="s10">
+  <div class="kicker">Conclusion</div>
+  <h2>The strongest output is<br>the hypothesis we killed.</h2>
+  <div class="row">
+    <div class="col">
+      <p class="big">A pre-registered falsification documented in full — not softened, not
+         quietly swapped — is the clearest demonstration of what the Evaluation phase
+         is supposed to do.</p>
+      <div class="note" style="margin-top:1rem">
+        <strong>Five methodological contributions, no new algorithms:</strong><br>
+        Failure-as-result · Anti-tautology discipline · Nominal vs effective weights ·
+        Layer-audition honesty gate · Honest downgrade under missing validation data
+      </div>
+      <p style="margin-top:1rem">The shipped allergen-priority product beats the city's
+         implicit density rule by <strong>+4.6 pp</strong> at top-15, survives all
+         sensitivity tests, and offers a measured equity variant. Remaining gates are
+         organizational: stakeholder sign-off, independent reproduction.</p>
+    </div>
+    <div class="col">
+      <div class="cards" style="grid-template-columns:1fr 1fr">
+        <div class="card ok">
+          <div class="stat grn" style="font-size:1.5rem">+4.6 pp</div>
+          <div class="stat-label">exposure relief vs naive density rule, top-15</div>
+        </div>
+        <div class="card ok">
+          <div class="stat grn" style="font-size:1.5rem">3 / 3</div>
+          <div class="stat-label">sensitivity arms passed</div>
+        </div>
+        <div class="card ok">
+          <div class="stat grn" style="font-size:1.5rem">40→60%</div>
+          <div class="stat-label">deprived share, top-15 (equity variant)</div>
+        </div>
+        <div class="card bad">
+          <div class="stat red" style="font-size:1.5rem">p = 0.99</div>
+          <div class="stat-label">mycorrhizal external test — falsified, disclosed</div>
+        </div>
+      </div>
+      <p class="mut" style="margin-top:1rem; font-size:.88rem">
+        Full paper: <code style="font-family:var(--mono)">outputs/reports/crispdm-phase-1-to-6-paper.md</code><br>
+        Interactive map: <code style="font-family:var(--mono)">outputs/phase-6/maps/deployment_map.html</code>
+      </p>
+    </div>
+  </div>
+  <div class="snum">10 / 10</div>
+</section>
+
+</main>
+
+<script>
+// ── nav dot highlight ──
+const slides = [...document.querySelectorAll('.slide')];
+const dots   = [...document.querySelectorAll('.nav a')];
+const deck   = document.getElementById('deck');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const i = slides.indexOf(e.target);
+      dots.forEach((d, j) => d.classList.toggle('on', j === i));
+    }
+  });
+}, { root: deck, threshold: .5 });
+slides.forEach(s => obs.observe(s));
+
+// ── 5-min countdown timer ──
+const el  = document.getElementById('timer');
+let total = 300, running = false, raf = null, start = null;
+
+function fmt(s) {
+  const m = Math.floor(Math.abs(s) / 60), sec = Math.abs(s) % 60;
+  return (s < 0 ? '-' : '') + m + ':' + String(sec).padStart(2,'0');
+}
+function tick(ts) {
+  const elapsed = Math.floor((ts - start) / 1000);
+  const remain  = total - elapsed;
+  el.textContent = fmt(remain);
+  el.className = remain <= 0 ? 'over' : remain <= 60 ? 'warn' : 'running';
+  raf = requestAnimationFrame(tick);
+}
+el.addEventListener('click', () => {
+  if (!running) {
+    start   = performance.now() - (300 - total) * 1000;
+    running = true;
+    el.classList.add('running');
+    raf = requestAnimationFrame(tick);
+  } else {
+    running = false;
+    cancelAnimationFrame(raf);
+    el.className = '';
+  }
+});
+
+// ── keyboard nav ──
+document.addEventListener('keydown', e => {
+  const i = slides.findIndex(s => {
+    const r = s.getBoundingClientRect();
+    return r.top >= -10 && r.top < window.innerHeight / 2;
+  });
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    slides[Math.min(i + 1, slides.length - 1)]?.scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    slides[Math.max(i - 1, 0)]?.scrollIntoView({ behavior: 'smooth' });
+  } else if (e.key === 't') {
+    el.click();
+  }
+});
+</script>
+</body>
+</html>
