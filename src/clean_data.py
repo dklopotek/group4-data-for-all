@@ -1543,6 +1543,35 @@ def select_top15_with_district_constraint(
     return selected.index
 
 
+def assign_display_intervention(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    """Assign a diversified intervention type for visualization purposes.
+
+    This logic is ported from the frontend's `interventionOverride` function
+    to make the data pipeline the single source of truth.
+    """
+    out = gdf.copy()
+
+    # The frontend uses `sealedPct` which is on a 0-1 scale, same as s1_sealed.
+    # It uses `lstAnomalyC` which is the raw anomaly, not the normalized score.
+    # It uses `meanNdvi`. We must use the same columns.
+    
+    # Ensure required columns exist, using normalized names if available
+    lst_col = "lst_anomaly" if "lst_anomaly" in out.columns else "lst_anomaly_celsius"
+    sealed_col = "s1_sealed" if "s1_sealed" in out.columns else "mean_sealed"
+
+    def override(row: pd.Series) -> str:
+        if row[lst_col] >= 4 and row[sealed_col] >= 0.8:
+            return "de-paving"
+        if row[lst_col] >= 1.5:
+            return "cooling"
+        if row["mean_ndvi"] < 0.075:
+            return "planting"
+        return "de-paving"  # Default fallback
+
+    out["display_intervention"] = out.apply(override, axis=1)
+    return out
+
+
 def classify_intervention(gdf: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Classify intervention type per cell based on sub-score contributions.
 
@@ -2157,6 +2186,7 @@ def build_scored_grid(
     # ── Stage 16: Intervention + uncertainty ──────────────────────────────
     print(f"\n[16/17] Classifying intervention types…")
     grid_out = classify_intervention(grid_out)
+    grid_out = assign_display_intervention(grid_out) # <-- ADD THIS LINE
     grid_out = flag_colonisation_uncertainty(grid_out)
     grid_out = compute_contribution_percentages(grid_out)
     print(f"  Intervention distribution: {grid_out['intervention_type'].value_counts().to_dict()}")

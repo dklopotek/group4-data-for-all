@@ -234,39 +234,45 @@ tr:last-child td { border-bottom: none; }
 
 <nav class="nav" id="nav">
   <a href="#s1" title="Title"></a>
-  <a href="#s2" title="The city's decision"></a>
-  <a href="#s3" title="Sessions 1–4: the build"></a>
-  <a href="#s4" title="Session 5: falsification"></a>
-  <a href="#s5" title="The pivot"></a>
-  <a href="#s6" title="Results"></a>
-  <a href="#s7" title="Live map — deployment priority"></a>
-  <a href="#s8" title="Live map — efficiency vs equity"></a>
-  <a href="#s9" title="Delivery + limits"></a>
-  <a href="#s10" title="Takeaway"></a>
+  <a href="#s2" title="The Problem"></a>
+  <a href="#s3" title="Our Proposal"></a>
+  <a href="#s4" title="Cycle A: Initial Hypothesis"></a>
+  <a href="#s5" title="Data & Preparation (Cycle A)"></a>
+  <a href="#s6" title="Modeling (Cycle A)"></a>
+  <a href="#s7" title="Evaluation: The Structural Flaw"></a>
+  <a href="#s8" title="Evaluation: Falsification (1/2)"></a>
+  <a href="#s9" title="Evaluation: Falsification (2/2)"></a>
+  <a href="#s10" title="The Pivot"></a>
+  <a href="#s11" title="Cycle B Results"></a>
+  <a href="#s12" title="The Equity Variant"></a>
+  <a href="#s13" title="Map: Deployment Priority"></a>
+  <a href="#s14" title="Map: Efficiency vs. Equity"></a>
+  <a href="#s15" title="Conclusions"></a>
+  <a href="#s16" title="Project Introduction"></a>
+  <a href="#s17" title="Technical Core"></a>
+  <a href="#s18" title="The Interface"></a>
+  <a href="#s19" title="Strategic Plan"></a>
 </nav>
 
 <main class="deck" id="deck">
 
 <!-- ═══════════════════════════════════════════  SLIDE 1 — Title -->
 <section class="slide" id="s1">
-  <div class="kicker">Group 4 · MaAI01 25–26 · Data for All</div>
+  <div class="kicker">Grupo 4 · MaAI01 25–26 · Data for All</div>
   <h1>
-    When your data<br>
-    <span class="hi">falsifies your thesis</span><br>
-    — and that's the result.
+    From Ecological Challenge to<br>
+    <span class="hi">Public Health Solution</span>
   </h1>
   <p class="big" style="margin-top:.4rem">
-    A full CRISP-DM cycle applied to Barcelona's urban trees:<br>
-    from a mycorrhizal priority map we killed ourselves,<br>
-    to a pollen-allergen sequencing tool the city can act on.
+    A CRISP-DM cycle to transform a biodiversity challenge into an urban planning tool that improves air quality and residents' lives.
   </p>
   <div style="margin-top:1.4rem; display:flex; gap:.6rem; flex-wrap:wrap;">
-    <span class="pill ok">6 CRISP-DM phases closed</span>
+    <span class="pill ok">6 CRISP-DM phases completed</span>
     <span class="pill ok">Pre-registered falsification</span>
-    <span class="pill ok">Shipped priority map + street worklist</span>
+    <span class="pill ok">Priority map + work list delivered</span>
     <span class="pill">Barcelona · 189,000 trees · 1.7M residents</span>
   </div>
-  <div class="snum">1 / 10 — click timer to start countdown</div>
+  <div class="snum">1 / 19 — click the timer to start</div>
 </section>
 
 <!-- ═══════════════════════════════════════════  SLIDE 2 — The city's decision -->
@@ -276,330 +282,274 @@ tr:last-child td { border-bottom: none; }
   <div class="row">
     <div class="col">
       <div class="note">
-        <strong>The standing policy (Pla Director de l'Arbrat 2017–2037):</strong><br>
-        Cut planes from 27.45% → under 12% of all urban trees.<br>
+        <strong>Current policy (Pla Director de l'Arbrat 2017–2037):</strong><br>
+        Reduce plane trees from 27.45% to less than 12% of total urban trees.<br>
         43,722 specimens today. ~56% will be removed by 2037.<br>
-        Reason stated by the city: biodiversity + monoculture risk.
+        Reason stated by the city council: biodiversity and monoculture risk.
       </div>
-      <p>Platanus is responsible for <strong>~46% of Barcelona's annual pollen index</strong>
-         (Gabarra et al. 2002). Removing a plane also relieves allergy burden —
-         but the city doesn't rank by that. We supply the missing sequencing criterion.</p>
+      <p>The Platanus is responsible for <strong>~46% of Barcelona's annual pollen index</strong>
+         (Gabarra et al. 2002). Removing a plane tree also alleviates the allergenic burden,
+         but the city council does not sequence the felling with this criterion. We provide the missing criterion.</p>
     </div>
     <div class="col">
       <div class="card blu">
-        <h3>Our decision target</h3>
+        <h3>Our decision objective</h3>
         <p style="color:#bcc8d8; margin:.4rem 0">
-          <em>In what spatial order should the city cut planes so that each removal
-          relieves the most pollen-allergen exposure for the people who live there?</em>
+          <em>In what spatial order should the city council fell the plane trees so that each removal
+          alleviates the greatest possible pollen exposure for residents in the area?</em>
         </p>
         <p class="mut" style="margin-top:.7rem; font-size:.88rem">
-          User: capital-planning analyst at Espais Verds.<br>
-          Unit of action: census section → street-level worklist.
+          User: planning analyst at Parks and Gardens.<br>
+          Unit of action: census section → street-level work list.
         </p>
       </div>
     </div>
   </div>
-  <div class="snum">2 / 10</div>
+  <div class="snum">2 / 19</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 3 — Sessions 1–4 build -->
+<!-- ═══════════════════════════════════════════  SLIDE 3 — Our Proposal -->
 <section class="slide" id="s3">
-  <div class="kicker">Sessions 1–4 — Phases 1–4 (Cycle A)</div>
-  <h2>We built a mycorrhizal priority map.<br>The engineering was excellent.<br>The thesis wasn't.</h2>
-  <div class="row" style="align-items:stretch">
+  <div class="kicker">Methodology</div>
+  <h2>A data-driven approach for a public health decision.</h2>
+  <p class="big">We propose a model to create a priority ranking that combines the allergen <strong>source</strong> (where mature trees are) with <strong>exposure</strong> (where people live).</p>
+  <p>To do this, we follow the <strong>CRISP-DM</strong> framework, an industry standard for managing data science projects in a rigorous, iterative, and transparent way.</p>
+  <div class="phase-strip" style="margin-top:1.2rem">
+    <span class="ph done">1. Business</span>
+    <span class="ph done">2. Data</span>
+    <span class="ph done">3. Preparation</span>
+    <span class="ph done">4. Modeling</span>
+    <span class="ph done">5. Evaluation</span>
+    <span class="ph pivot">6. Deployment</span>
+  </div>
+  <div class="snum">3 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 4 — Cycle A: Initial Hypothesis -->
+<section class="slide" id="s4">
+  <div class="kicker">Cycle A — Business & Data Understanding</div>
+  <h2>The original idea: an "ecosystem health" map.</h2>
+  <p>Our first hypothesis was that we could prioritize areas for ecological intervention (not felling) based on the health of the soil's <strong>mycorrhizal networks</strong>, which connect tree roots.</p>
+  <div class="card blu" style="margin-top:1rem;">
+    <h3>Initial Thesis (Cycle A)</h3>
+    <p style="color:#bcc8d8; margin:.4rem 0">Tree species diversity and soil connectivity (unsealed surface) predict the health of the fungal network, which is key to tree resilience. We could create a score map to guide tree planting and improve this network.</p>
+  </div>
+  <p class="mut" style="margin-top:1rem;">This approach, while ecologically interesting, did not directly address the city council's most urgent need: sequencing the already planned felling of plane trees.</p>
+  <div class="snum">4 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 5 — Data & Prep (Cycle A) -->
+<section class="slide" id="s5">
+  <div class="kicker">Phases 2 & 3 — Data Understanding & Preparation</div>
+  <h2>Connecting trees to the ground.</h2>
+  <p>We integrated multiple open data sources from the Barcelona City Council and the Cadastre to build our analytical dataset.</p>
+  <div class="row">
     <div class="col">
-      <div class="card ok" style="margin-bottom:.8rem">
-        <div class="stat grn">R² 0.877</div>
-        <div class="stat-label">Linear model held-out test score — best in cohort</div>
-      </div>
-      <ul class="list" style="margin-top:.4rem">
-        <li class="ok">189,000–230,000 trees → 494-cell scored grid</li>
-        <li class="ok">Spatial-cluster train/eval/test split (no leakage)</li>
-        <li class="ok">Pre-registered test design before build</li>
-        <li class="ok">3 baselines + tuned linear model, all beat</li>
+      <ul class="list">
+        <li class="ok"><strong>Tree inventory:</strong> 189,000 geolocated trees with data on species, age (maturity), and condition.</li>
+        <li class="ok"><strong>Cadastral data:</strong> Sealed surface (pavement) and unsealed surface (permeable soil).</li>
+        <li class="ok"><strong>Demographic data:</strong> Residential population by census section.</li>
+        <li class="ok"><strong>Ecological data:</strong> Types of fungi (AM/EM) associated with each tree species.</li>
       </ul>
     </div>
     <div class="col">
+      <figure>
+        <img src="grid_trees_map.png" alt="400m grid with tree data" class="img-fig">
+        <figcaption class="fig-cap">We aggregated the data into a 400x400m grid (494 cells) to analyze spatial relationships.</figcaption>
+      </figure>
+    </div>
+  </div>
+  <div class="snum">5 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 6 — Modeling (Cycle A) -->
+<section class="slide" id="s6">
+  <div class="kicker">Phase 4 — Modeling (Cycle A)</div>
+  <h2>A promising model with a spectacular result.</h2>
+  <p>We built a linear model to predict our "mycorrhizal health score" from ecological and urban variables. The initial performance was exceptional.</p>
+  <div class="card ok" style="max-width:400px; margin-top:1rem;">
+    <div class="stat grn">R² 0.877</div>
+    <div class="stat-label">Score on the test set (hold-out), the best in the cohort.</div>
+  </div>
+  <p class="mut" style="margin-top:1rem;">The result seemed to validate our thesis with very high accuracy. The engineering team celebrated. The evaluation team, not so much.</p>
+  <div class="snum">6 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 7 — The Flaw -->
+<section class="slide map-slide" id="s7">
+  <div class="kicker">Phase 5 — Evaluation (Alert!)</div>
+  <h2>The model was a tautology.</h2>
+  <p>The problem was not in the code, but in the definition of the target. The variable we were trying to predict (<code style="font-family:var(--mono);color:var(--amb)">composite_score_B</code>) was a linear combination of the same variables we used as predictors.</p>
+  <div class="card bad" style="margin-top:1rem;">
+    <h3 style="color:var(--red)">We validated a circle.</h3>
+    <p>The model was not learning any real relationship about soil fungi. It was simply learning to reconstruct its own input. The R² of 0.877 only measured the stability of the data normalization, not a real insight.</p>
+  </div>
+  <div class="snum">7 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 8 — Falsification 1/2 -->
+<section class="slide map-slide" id="s8">
+  <div class="kicker">Phase 5 — Evaluation</div>
+  <h2>Three independent lines of evidence.</h2>
+  <p>To confirm our suspicions, we ran the falsification tests we had pre-registered before building the model.</p>
+  <div class="row">
+    <div class="col">
       <div class="card bad">
-        <h3 style="color:var(--red)">The structural flaw — invisible until Phase 5</h3>
-        <p>The model's target <code style="font-family:var(--mono);color:var(--amb)">composite_score_B</code>
-           was built from the same features used to predict it.</p>
-        <p style="margin-top:.6rem">We validated a <strong style="color:var(--red)">tautology</strong>.
-           The held-out R² measured normalization stability across space —
-           not anything about Barcelona's fungi.</p>
+        <h3 style="color:var(--red)">Line 1 — Internal Redundancy</h3>
+        <div class="stat red">R² 0.91</div>
+        <div class="stat-label">of the score explained only by sealed surface.</div>
+        <p style="margin-top:.6rem">91% of the variance of our "ecological index" was explained by a single abiotic variable. Biotic factors were irrelevant (r < 0.2). Our map was, in essence, a map of asphalt.</p>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card bad">
+        <h3 style="color:var(--red)">Line 2 — Pre-registered External Test</h3>
+        <div class="stat red">p = 0.99</div>
+        <div class="stat-label">Partial F-test vs. GBIF data.</div>
+        <p style="margin-top:.6rem">We used 1,024 fungi observations from GBIF as external ground truth. Our block of "biotic" variables added no predictive power over an abiotic null model (ΔadjR² = -0.02).</p>
       </div>
     </div>
   </div>
-  <div class="snum">3 / 10</div>
+  <div class="snum">8 / 19</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 4 — Falsification -->
-<section class="slide" id="s4">
-  <div class="kicker">Session 5 — Phase 5: Evaluation</div>
-  <h2>Three independent lines of evidence.<br>One verdict: <span style="color:var(--red)">stop the mycorrhizal claim.</span></h2>
-  <div class="cards" style="margin-top:.9rem">
-    <div class="card bad">
-      <h3 style="color:var(--red)">Line 1 — Internal redundancy</h3>
-      <div class="stat red" style="font-size:1.9rem">R² 0.91</div>
-      <div class="stat-label">composite explained by sealed surface alone</div>
-      <p style="margin-top:.6rem">Effective weight of ecological components:
-         s4_mismatch <strong>r = −0.015</strong>, PRPI <strong>r = +0.18</strong>.
-         Sealed surface: <strong>r = +0.95</strong>.
-         Our "mycorrhizal map" was a paved-surface map in disguise.</p>
-    </div>
-    <div class="card bad">
-      <h3 style="color:var(--red)">Line 2 — Pre-registered external test</h3>
-      <div class="stat red" style="font-size:1.9rem">p = 0.99</div>
-      <div class="stat-label">partial-F, biotic block vs GBIF occurrences</div>
-      <p style="margin-top:.6rem">1,024 independent fungal occurrences (GBIF).
-         Biotic/host layers added <strong>ΔadjR² = −0.02</strong>
-         beyond an abiotic null. Flat null. Design committed before result.</p>
-    </div>
-    <div class="card bad">
-      <h3 style="color:var(--red)">Line 3 — Literature (44 sources)</h3>
-      <div class="stat red" style="font-size:1.9rem">Weak lever</div>
-      <div class="stat-label">AM → EM host mismatch, peer-reviewed evidence</div>
-      <p style="margin-top:.6rem">Counter-evidence from comparable cities: plane-tree
-         fungal diversity <em>increased</em> with urbanization in Amsterdam —
-         the opposite of what our mechanism assumed.</p>
-    </div>
+<!-- ═══════════════════════════════════════════  SLIDE 9 — Falsification 2/2 -->
+<section class="slide" id="s9">
+  <div class="kicker">Phase 5 — Evaluation</div>
+  <h2>The final evidence and the right decision.</h2>
+  <div class="card bad" style="max-width:600px">
+    <h3 style="color:var(--red)">Line 3 — Literature Review (44 sources)</h3>
+    <div class="stat red" style="font-size:1.9rem">Weak evidence</div>
+    <div class="stat-label">AM → EM host mismatch, peer-reviewed evidence</div>
+    <p style="margin-top:.6rem">We found counter-evidence. In Amsterdam, the fungal diversity of plane trees <em>increased</em> with urbanization, the opposite of our hypothesis. The mechanism was, at the very least, questionable.</p>
   </div>
-  <div class="note" style="margin-top:1rem">
-    <strong>CRISP-DM verdict:</strong> stop / iterate. Not "relabel and ship." A defensible STOP is a result.
+  <div class="note" style="margin-top:1.2rem; max-width: 80ch;">
+    <strong>CRISP-DM Verdict: STOP.</strong> The evidence was conclusive. The mycorrhizal hypothesis was not supported by the available data. The correct decision was not to "re-label and deliver," but to stop the cycle and pivot. A defended and documented STOP is a successful outcome.
   </div>
-  <div class="snum">4 / 10</div>
+  <div class="snum">9 / 19</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 5 — The pivot -->
-<section class="slide" id="s5">
-  <div class="kicker">The pivot — Cycle B, same data, honest question</div>
-  <h2>We kept what the data supports.<br>We dropped what it doesn't.</h2>
-
-  <div class="acts" style="margin-top:1rem">
-    <div class="act a">
-      <div class="act-label">Cycle A — Dead</div>
-      <h4>Mycorrhizal priority</h4>
-      <p>Rank cells for fungal network recovery. Falsified. Retained as a stated hypothesis for future work with measured soil data.</p>
-    </div>
-    <div class="act b">
-      <div class="act-label">Phase 5 — Falsification</div>
-      <h4>Three independent FAILs</h4>
-      <p>Internal R² 0.91 on sealed surface · external p = 0.99 · literature counter-evidence. Decision: STOP at ~75–80% confidence.</p>
-    </div>
-    <div class="act c">
-      <div class="act-label">Cycle B — Shipped</div>
-      <h4>Allergen-exposure priority</h4>
-      <p>Same tree inventory. New question: where to sequence the removal the city is already doing, for maximum pollen relief.</p>
-    </div>
+<!-- ═══════════════════════════════════════════  SLIDE 10 — The Pivot -->
+<section class="slide" id="s10">
+  <div class="kicker">The Pivot — Cycle B, same data, honest question</div>
+  <h2>We kept what the data supports.<br>We discarded what it doesn't.</h2>
+  <div class="acts">
+    <div class="act a"><div class="act-label">Cycle A — Killed</div><h4>Mycorrhizal Priority</h4><p>Classify cells for fungal network recovery. Falsified. It remains as a hypothesis for future work with measured soil data.</p></div>
+    <div class="act b"><div class="act-label">Phase 5 — Falsification</div><h4>Three independent FAILURES</h4><p>Internal R² of 0.91 with sealed surface · External p-value of 0.99 · Counter-evidence in literature. Decision: STOP with ~75–80% confidence.</p></div>
+    <div class="act c"><div class="act-label">Cycle B — Delivered</div><h4>Allergen Exposure Priority</h4><p>Same tree inventory. New question: where to sequence the felling the city is already doing, for maximum pollen relief.</p></div>
   </div>
-
   <div class="row" style="margin-top:1.2rem; align-items:center">
     <div class="col">
-      <div class="formula">
-        priority = <span class="src">SOURCE</span> <span class="op">×</span> <span class="exp">EXPOSURE</span>
-      </div>
-      <ul class="list" style="margin-top:.4rem">
-        <li><strong style="color:var(--grn)">SOURCE</strong> = plane density × maturity score (min-max std)</li>
-        <li><strong style="color:var(--blu)">EXPOSURE</strong> = residential population, interpolated (min-max std)</li>
-        <li>Multiplicative — non-compensatory by design (fixes Cycle A's failure)</li>
-        <li>Feasibility = 1 − sealed fraction (annotation, never multiplied in)</li>
+      <div class="formula">priority = <span class="src">SOURCE</span> <span class="op">×</span> <span class="exp">EXPOSURE</span></div>
+      <ul class="list">
+        <li><strong style="color:var(--grn)">SOURCE</strong> = plane tree density × maturity score (std min-max)</li>
+        <li><strong style="color:var(--blu)">EXPOSURE</strong> = residential population, interpolated (std min-max)</li>
+        <li>Multiplicative — non-compensatory by design (corrects the flaw of Cycle A)</li>
       </ul>
     </div>
     <div class="col">
       <div class="card ok">
         <h3>Why multiplicative?</h3>
-        <p>A weighted sum (Cycle A) lets one high-variance component dominate regardless of declared weights.
-           A product is non-compensatory: a cell with no planes <em>or</em> no people cannot score high.
-           There are no hidden weights to mis-set.</p>
+        <p>A weighted sum (Cycle A) allows a high-variance component to dominate. A product is non-compensatory: a cell with no plane trees <em>or</em> no people cannot score high. There are no hidden weights to misconfigure.</p>
       </div>
     </div>
   </div>
-  <div class="snum">5 / 10</div>
+  <div class="snum">10 / 19</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 6 — Results -->
-<section class="slide" id="s6">
-  <div class="kicker">Phase 5 (Cycle B) — Evaluation results</div>
-  <h2>Every pre-registered test passed.<br>Plus an honest equity win.</h2>
+<!-- ═══════════════════════════════════════════  SLIDE 11 — Cycle B Results -->
+<section class="slide" id="s11">
+  <div class="kicker">Phase 5 (Cycle B) — Evaluation Results</div>
+  <h2>Every pre-registered test passed.</h2>
   <div class="row">
     <div class="col">
       <table>
-        <thead>
-          <tr><th>Test</th><th>Criterion</th><th>Result</th></tr>
-        </thead>
+        <thead><tr><th>Test</th><th>Criterion</th><th>Result</th></tr></thead>
         <tbody>
-          <tr>
-            <td>T1 — re-orders vs naive density</td>
-            <td class="lo">J₁₅ &lt; 0.70</td>
-            <td class="hi">J₁₅ = 0.30 ✓</td>
-          </tr>
-          <tr>
-            <td>T2 — layers non-redundant</td>
-            <td class="lo">both material</td>
-            <td class="hi">corr(src, exp) = 0.30 ✓</td>
-          </tr>
-          <tr>
-            <td>T3 — exposure burden, top-15</td>
-            <td class="lo">beats density</td>
-            <td class="hi">+4.6 pp margin ✓</td>
-          </tr>
-          <tr>
-            <td>T4 — sensitivity (3 arms)</td>
-            <td class="lo">holds in ≥ 2</td>
-            <td class="hi">3/3 ✓</td>
-          </tr>
-          <tr>
-            <td>Pollen source validation</td>
-            <td class="lo">measured series</td>
-            <td class="nd">INFEASIBLE — proxy, stated</td>
-          </tr>
+          <tr><td>T1 — Reorders vs. simple density</td><td class="lo">J₁₅ &lt; 0.70</td><td class="hi">J₁₅ = 0.30 ✓</td></tr>
+          <tr><td>T2 — Non-redundant layers</td><td class="lo">both material</td><td class="hi">corr(src, exp) = 0.30 ✓</td></tr>
+          <tr><td>T3 — Exposure load, top-15</td><td class="lo">beats density</td><td class="hi">+4.6 pp margin ✓</td></tr>
+          <tr><td>T4 — Sensitivity (3 arms)</td><td class="lo">holds in ≥ 2</td><td class="hi">3/3 ✓</td></tr>
+          <tr><td>Pollen source validation</td><td class="lo">measured series</td><td class="nd">INFEASIBLE — proxy, declared</td></tr>
         </tbody>
       </table>
+      <div class="card bad" style="padding:.9rem 1rem; margin-top:1rem;">
+        <h3 style="color:var(--amb)">Honestly rejected layers</h3>
+        <span class="pill bad">Age prevalence — Spearman 0.999 vs population, redundant</span>
+        <span class="pill bad">Sex — women 1.6× antihistamines, spatially flat ratio</span>
+        <span class="pill bad">Bike lanes — no cyclist flow data, rejected in design</span>
+      </div>
     </div>
     <div class="col">
-      <div class="card" style="margin-bottom:.8rem">
-        <h3>v3 — Equity variant (deprivation weight)</h3>
-        <p>Multiply by inverted income (poorest cell = 1).<br>
-           Decorrelated from both layers: r = −0.008, 0.17.</p>
-        <div style="margin-top:.7rem; display:flex; gap:1rem; flex-wrap:wrap">
-          <div>
-            <div class="stat grn" style="font-size:1.7rem">40% → 60%</div>
-            <div class="stat-label">deprived-tercile share, top-15</div>
-          </div>
-          <div>
-            <div class="stat amb" style="font-size:1.7rem">−0.5 pp</div>
-            <div class="stat-label">exposure relief sacrificed</div>
-          </div>
-        </div>
-        <p style="margin-top:.6rem">Near-free equity win: planner chooses efficiency vs equity
-           with the trade measured and explicit.</p>
-      </div>
-      <div class="card bad" style="padding:.9rem 1rem">
-        <h3 style="color:var(--amb)">Honest rejected layers</h3>
-        <span class="pill bad">Age-prevalence — Spearman 0.999 vs population, redundant</span>
-        <span class="pill bad">Sex — women 1.6× antihistamines, ratio spatially flat</span>
-        <span class="pill bad">Bike lanes — no cyclist-flow data, rejected at design</span>
-      </div>
-      <figure style="margin-top:.8rem">
+      <figure>
         <img src="sensitivity_comparison.png" alt="Sensitivity comparison chart" class="img-fig">
-        <figcaption class="fig-cap">Sensitivity: rank-order verdict holds across all 3 perturbation arms</figcaption>
+        <figcaption class="fig-cap">Sensitivity: the ranking's verdict holds across the 3 perturbation arms.</figcaption>
       </figure>
     </div>
   </div>
-  <div class="snum">6 / 10</div>
+  <div class="snum">11 / 19</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 7 — Live map: deployment -->
-<section class="slide map-slide" id="s7">
-  <div class="map-bar">
-    <div class="kicker" style="margin:0">Live map — Deployment priority</div>
-    <span style="color:var(--sub);font-size:.85rem">Interactive: toggle 400m cell / census-section grain, click cells for street worklist</span>
-    <a href="phase-6/maps/deployment_map.html" target="_blank">open full tab ↗</a>
-    <span class="map-note">7 / 10 — if blank in Chrome: open with Safari or run a local server</span>
+<!-- ═══════════════════════════════════════════  SLIDE 12 — Equity Variant -->
+<section class="slide" id="s12">
+  <div class="kicker">V3 — An honest win for equity</div>
+  <h2>Can we prioritize the most vulnerable communities?</h2>
+  <p>We created a model variant (v3) that multiplies the priority by a <strong>deprivation index</strong> (inverted income), giving more weight to areas with fewer resources. This new layer was uncorrelated with the other two (r = −0.008, 0.17), ensuring it provided new information.</p>
+  <div class="card" style="margin-top:1rem">
+    <h3>v3 — Equity Variant (deprivation-weighted)</h3>
+    <div class="row" style="gap:2rem; margin-top:1.2rem;">
+      <div class="col">
+        <div class="stat grn">40% → 60%</div>
+        <div class="stat-label">Share of the most deprived tercile in the top-15 priority</div>
+      </div>
+      <div class="col">
+        <div class="stat amb">−0.5 pp</div>
+        <div class="stat-label">Exposure relief sacrificed in exchange</div>
+      </div>
+    </div>
+    <p style="margin-top:1rem">An "almost-free equity win": the planner can choose between efficiency and equity with the opportunity cost measured and made explicit.</p>
   </div>
-  <iframe
-    src="phase-6/maps/deployment_map.html"
-    class="map-frame"
-    title="Barcelona Platanus removal priority map"
-    loading="lazy"
-    sandbox="allow-scripts allow-same-origin"
-  ></iframe>
+  <div class="snum">12 / 19</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 8 — Live map: equity shift -->
-<section class="slide map-slide" id="s8">
+<!-- ═══════════════════════════════════════════  SLIDE 13 — Live map: deployment -->
+<section class="slide map-slide" id="s13">
   <div class="map-bar">
-    <div class="kicker" style="margin:0">Live map — Efficiency vs Equity shift</div>
-    <span style="color:var(--sub);font-size:.85rem">Which cells move when deprivation weight is added? Teal = equity gains, orange = efficiency loses</span>
-    <a href="phase-6/maps/priority_equity_shift.html" target="_blank">open full tab ↗</a>
-    <span class="map-note">8 / 10</span>
+    <div class="kicker" style="margin:0">Interactive Map — Deployment Priority</div>
+    <span style="color:var(--sub);font-size:.85rem">Interactive: switch between 400m cells and census sections, click to see the street list.</span>
+    <a href="outputs/phase-6/maps/deployment_map.html" target="_blank">open in full tab ↗</a>
+    <span class="map-note">13 / 19 — if blank in Chrome: open with Safari or run a local server</span>
   </div>
-  <iframe
-    src="phase-6/maps/priority_equity_shift.html"
-    class="map-frame"
-    title="Equity shift map"
-    loading="lazy"
-    sandbox="allow-scripts allow-same-origin"
-  ></iframe>
+  <iframe src="phase-6/maps/deployment_map.html" class="map-frame" title="Mapa de prioridad de eliminación de Platanus en Barcelona" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 9 — Deployment + limits -->
-<section class="slide" id="s9">
-  <div class="kicker">Phase 6 — Deployment</div>
-  <h2>What we ship — and one honest<br>negative we found in our own output.</h2>
+<!-- ═══════════════════════════════════════════  SLIDE 14 — Live map: equity shift -->
+<section class="slide map-slide" id="s14">
+  <div class="map-bar">
+    <div class="kicker" style="margin:0">Interactive Map — Efficiency vs. Equity</div>
+    <span style="color:var(--sub);font-size:.85rem">Which cells change when adding the deprivation weight? Blue = equity gains, Orange = efficiency losses.</span>
+    <a href="outputs/phase-6/maps/priority_equity_shift.html" target="_blank">open in full tab ↗</a>
+    <span class="map-note">14 / 19</span>
+  </div>
+  <iframe src="phase-6/maps/priority_equity_shift.html" class="map-frame" title="Mapa de cambio por equidad" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 15 — Conclusion -->
+<section class="slide" id="s15">
+  <div class="kicker">Conclusion</div>
+  <h2>The strongest result is<br>the hypothesis we killed.</h2>
   <div class="row">
     <div class="col">
-      <ul class="list">
-        <li class="ok"><strong>Priority map (400 m cell grain)</strong> — v1 efficiency + v3 equity, interactive HTML with census-section toggle</li>
-        <li class="ok"><strong>Census-section ranking</strong> (1,068 sections, native grain, no interpolation) — the action-facing product</li>
-        <li class="ok"><strong>Street-level worklist</strong> — top-60 sections, 401 streets, 100% address coverage. Inventory + feasibility; no street priority score (ecological fallacy guardrail)</li>
-        <li class="ok"><strong>Model card + datasheet + monitoring plan</strong> — FAIR-compliant handoff package</li>
-      </ul>
-      <figure style="margin-top:.9rem">
-        <img src="grid_trees_map.png" alt="400m grid with tree data" class="img-fig" style="max-height:220px">
-        <figcaption class="fig-cap">400 m analysis grid — 494 cells, 189k+ plane trees joined from city inventory</figcaption>
-      </figure>
+      <p class="big">A fully documented, pre-registered falsification—without smoothing, without silent changes—is the clearest demonstration of the Evaluation phase's function.</p>
+      <div class="note" style="margin-top:1rem">
+        <strong>Five methodological contributions, without new algorithms:</strong><br>
+        Failure-as-an-outcome · Anti-tautology discipline · Nominal vs. effective weights · Honesty gate for layers · Honest downgrade on lack of validation data.
+      </div>
     </div>
     <div class="col">
       <div class="card amb">
-        <h3 style="color:var(--amb)">The finding we measured in our own output: MAUP</h3>
-        <p>At <strong>section grain</strong>, one park section (Montjuïc: 594 mature planes, ~2,000 residents)
-           dominates. T1 re-order test <strong>fails</strong> (Spearman 0.97, J₁₅ = 0.58).
-           Rollup disagreement with cell product: Spearman 0.47.</p>
-        <p style="margin-top:.6rem">This is the Modifiable Areal Unit Problem — the answer
-           changes with the map's grain. We <em>measured</em> it rather than hid it,
-           and we ship both grains with the caveat explicit.</p>
-      </div>
-      <div class="phase-strip" style="margin-top:.9rem">
-        <span class="ph done">1 Business</span>
-        <span class="ph done">2 Data</span>
-        <span class="ph done">3 Prep</span>
-        <span class="ph done">4 Modeling</span>
-        <span class="ph done">5 Evaluation</span>
-        <span class="ph pivot">6 Deployment ✓</span>
-      </div>
-    </div>
-  </div>
-  <div class="snum">9 / 10</div>
-</section>
-
-<!-- ═══════════════════════════════════════════  SLIDE 10 — Takeaway -->
-<section class="slide" id="s10">
-  <div class="kicker">Conclusion</div>
-  <h2>The strongest output is<br>the hypothesis we killed.</h2>
-  <div class="row">
-    <div class="col">
-      <p class="big">A pre-registered falsification documented in full — not softened, not
-         quietly swapped — is the clearest demonstration of what the Evaluation phase
-         is supposed to do.</p>
-      <div class="note" style="margin-top:1rem">
-        <strong>Five methodological contributions, no new algorithms:</strong><br>
-        Failure-as-result · Anti-tautology discipline · Nominal vs effective weights ·
-        Layer-audition honesty gate · Honest downgrade under missing validation data
-      </div>
-      <p style="margin-top:1rem">The shipped allergen-priority product beats the city's
-         implicit density rule by <strong>+4.6 pp</strong> at top-15, survives all
-         sensitivity tests, and offers a measured equity variant. Remaining gates are
-         organizational: stakeholder sign-off, independent reproduction.</p>
-    </div>
-    <div class="col">
-      <div class="cards" style="grid-template-columns:1fr 1fr">
-        <div class="card ok">
-          <div class="stat grn" style="font-size:1.5rem">+4.6 pp</div>
-          <div class="stat-label">exposure relief vs naive density rule, top-15</div>
-        </div>
-        <div class="card ok">
-          <div class="stat grn" style="font-size:1.5rem">3 / 3</div>
-          <div class="stat-label">sensitivity arms passed</div>
-        </div>
-        <div class="card ok">
-          <div class="stat grn" style="font-size:1.5rem">40→60%</div>
-          <div class="stat-label">deprived share, top-15 (equity variant)</div>
-        </div>
-        <div class="card bad">
-          <div class="stat red" style="font-size:1.5rem">p = 0.99</div>
-          <div class="stat-label">mycorrhizal external test — falsified, disclosed</div>
-        </div>
+        <h3 style="color:var(--amb)">Limitation: MAUP</h3>
+        <p>At the <strong>census section</strong> scale, a park section (Montjuïc: 594 mature plane trees, ~2,000 residents) dominates the ranking. The T1 test <strong>fails</strong> (Spearman 0.97). This is the Modifiable Areal Unit Problem. The answer changes with the map's granularity. We measured and declared it, delivering both granularities with the explicit warning.</p>
       </div>
       <p class="mut" style="margin-top:1rem; font-size:.88rem">
         Full paper: <code style="font-family:var(--mono)">outputs/reports/crispdm-phase-1-to-6-paper.md</code><br>
@@ -607,9 +557,118 @@ tr:last-child td { border-bottom: none; }
       </p>
     </div>
   </div>
-  <div class="snum">10 / 10</div>
+  <div class="snum">15 / 19</div>
 </section>
 
+<!-- ═══════════════════════════════════════════  SLIDE 16 — Project Intro -->
+<section class="slide" id="s16">
+  <div class="kicker">Section 1: Introduction</div>
+  <h2>Renewing Barcelona's Green Heart</h2>
+  <div class="row">
+    <div class="col">
+      <p class="big">Our cities are complex ecosystems. For decades, urban planning has favored efficiency, often creating green landscapes dominated by a few tree species. In Barcelona, the London plane tree (Platanus × acerifolia), though iconic, represents one such monoculture.</p>
+      <p>This reliance on a single species, however robust it may seem, creates a hidden ecological vulnerability. A less diverse urban forest is more susceptible to specific pests and diseases, and less adaptable to the growing challenges of climate change, such as droughts. Furthermore, a high concentration of pollen from a single source can significantly impact the quality of life and respiratory health of residents.</p>
+    </div>
+    <div class="col">
+      <p>Our project stems from a fundamental question: How can we transform this challenge into an opportunity?</p>
+      <p>We propose a planned and strategic transition. This is not about removing trees indiscriminately, but about initiating a cycle of urban renewal. Our tool serves as a compass guiding this process, helping the city evolve towards a more diverse, resilient, and healthy urban forest. By diversifying our green heritage, we not only strengthen the ecosystem against future crises but also create a more harmonious and healthier environment for all its inhabitants.</p>
+      <p><strong>This is a plan to cultivate Barcelona's future, one tree at a time.</strong></p>
+    </div>
+  </div>
+  <div class="snum">16 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 17 — Technical Core -->
+<section class="slide" id="s17">
+  <div class="kicker">Section 2: The Technical Core</div>
+  <h2>Data Intelligence for an Urban Ecosystem</h2>
+  <p>To build our compass, we have integrated and analyzed multiple layers of high-quality information, all from open and verifiable sources, ensuring a transparent and reproducible process.</p>
+  <div class="row">
+    <div class="col">
+      <h3>Our Data Sources:</h3>
+      <ul class="list">
+        <li><strong>Barcelona Tree Inventory (Open Data BCN, 2026):</strong> The complete census of the city's more than 188,000 trees, which tells us what species are present and where they are located.</li>
+        <li><strong>Demographic Data (National Institute of Statistics):</strong> Information on residential population density, to understand how many people live in each area.</li>
+        <li><strong>Socioeconomic Deprivation Index:</strong> An indicator that allows us to add a layer of equity to our recommendations, ensuring that benefits reach all neighborhoods.</li>
+        <li><strong>Scientific Databases (FungalRoot, VPA):</strong> Scientifically validated information on the ecological characteristics and allergenic potential of different tree species.</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>Our Core Logic:</h3>
+      <p>The heart of our tool is a composite indicator we created to identify priority intervention areas. The formula is simple yet powerful:</p>
+      <div class="formula" style="font-size: clamp(1rem, 2vw, 1.5rem);">Priority = <span class="src">Source Intensity</span> <span class="op">×</span> <span class="exp">Population Exposure</span></div>
+      <p>This approach allows us to go beyond simply acting where there are more trees. We prioritize areas where the tree renewal process will have the greatest positive impact on public health and well-being.</p>
+      <p class="mut">Furthermore, we have developed an equity variant of the index (v3), demonstrating that it is possible to direct efforts towards more socioeconomically vulnerable areas with minimal cost to the overall efficiency of the program. The entire process, from data loading to index generation, is encapsulated in a deterministic and auditable code pipeline.</p>
+    </div>
+  </div>
+  <div class="snum">17 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 18 — The Interface -->
+<section class="slide" id="s18">
+  <div class="kicker">Section 3: The Interface</div>
+  <h2>Navigating Barcelona's Green Future</h2>
+  <div class="row" style="align-items: center;">
+    <div class="col" style="flex: 1 1 400px;">
+        <p>This is the result of our work: an interactive map designed to be a decision-support tool for urban planners in Barcelona.</p>
+        <p>What does this tool allow you to do?</p>
+        <ul class="list">
+            <li><strong>Visualize Priority:</strong> The map uses an intuitive color code to show the census sections of the city where tree renewal intervention would generate the greatest public health benefit. Brighter areas indicate higher priority for initiating this diversification process.</li>
+            <li><strong>Explore Action Plans:</strong> By clicking on any section of the map, the tool displays detailed information, including a list of streets and the suggested number of trees for renewal. This translates a city-level strategy into concrete actions at the street level.</li>
+            <li><strong>Analyze with Rigor (MAUP):</strong> The interface allows switching the visualization between census section granularity and a uniform 400m grid. This functionality is not just a technical detail; it is a demonstration of analytical rigor. It allows planners to observe how the scale of analysis (known as the "Modifiable Areal Unit Problem" or MAUP) can influence results, fostering more robust and context-aware decisions.</li>
+        </ul>
+    </div>
+    <div class="col" style="flex: 1 1 500px; min-width: 400px;">
+        <iframe src="outputs/phase-6/maps/deployment_map.html" style="width:100%; height: 450px; border: 1px solid var(--line); border-radius: 10px;" title="Interactive Map for Green Renewal" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+  </div>
+  <p style="margin-top: 1rem;">This tool transforms complex data into a visual and actionable guide, facilitating more strategic, equitable, and citizen-well-being-oriented urban tree management.</p>
+  <div class="snum">18 / 19</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 19 — Strategic Plan -->
+<section class="slide" id="s19">
+  <div class="kicker">Section 4: Business Plan</div>
+  <h2>From Tool to Urban Strategy</h2>
+  <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch;">
+    <div class="card blu">
+      <h4 style="color:var(--blu)">1. The Opportunity: Health-Driven Urban Planning</h4>
+      <p style="font-size:.9rem; line-height:1.5; color: var(--sub)">
+        Barcelona's plan to remove ~25,000 plane trees by 2037 is a sunk cost. Our tool transforms this into a public health investment by targeting the primary source of city pollen (~46%), which affects over 25% of residents.
+      </p>
+      <p style="font-size:.8rem; line-height:1.5; color: var(--dim); margin-top:.5rem;">
+        <strong>Target Users:</strong> Urban Planners (Parcs i Jardins), Public Health Officials (ASPB), and Strategic Planners (Barcelona Regional).
+      </p>
+    </div>
+    <div class="card ok">
+      <h4 style="color:var(--grn)">2. The Product: A Decision-Support Engine</h4>
+      <p style="font-size:.9rem; line-height:1.5; color: var(--sub)">
+        We deliver an interactive map and prioritized worklist to guide tree felling.
+      </p>
+      <ul class="list" style="font-size:.85rem; margin-top:.4rem; padding-left:1rem;">
+        <li><strong>Maximize Health ROI:</strong> Focuses resources for the greatest reduction in pollen exposure per euro spent.</li>
+        <li><strong>Data-Driven Governance:</strong> Provides a transparent, auditable rationale for interventions.</li>
+        <li><strong>Equity Analysis (v3):</strong> A deprivation-weighted variant measures the trade-off between efficiency and social equity, enabling an "almost-free" win for vulnerable communities.</li>
+      </ul>
+    </div>
+    <div class="card amb">
+      <h4 style="color:var(--amb)">3. Go-to-Market & Adoption Strategy</h4>
+      <ul class="list" style="font-size:.85rem; margin-top:.4rem; padding-left:1rem;">
+        <li><strong>Pilot (0-12m):</strong> Integrate into the 2026-27 felling plan for a pilot district (e.g., Sant Martí). Validate impact via public health metrics and operational feedback.</li>
+        <li><strong>Rollout (12-24m):</strong> Become the standard sequencing tool for all city districts. Integrate outputs with the "Eixos Verds" project to guide replacement planting.</li>
+        <li><strong>Engagement:</strong> Launch a public-facing version of the map to increase citizen engagement and transparency.</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: var(--pur); background: #14102a;">
+      <h4 style="color:var(--pur)">4. Vision: Integrated Urban Forest Management</h4>
+      <ul class="list" style="font-size:.85rem; margin-top:.4rem; padding-left:1rem;">
+        <li><strong>Medium-Term (1-3y):</strong> Expand the model to other allergenic species (olive, cypress). Develop an API for integration with other city management systems. Pilot the tool in other European cities (Madrid, Paris).</li>
+        <li><strong>Long-Term (3-5y):</strong> Evolve into a comprehensive Urban Forest Management Platform for Barcelona, incorporating modules for climate adaptation (drought/heat resistance), pest control, and optimizing ecosystem services (carbon capture, cooling).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="snum">19 / 19</div>
+</section>
 </main>
 
 <script>
