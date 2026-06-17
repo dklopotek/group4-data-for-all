@@ -4,8 +4,8 @@
 
 **Group 4** — MaAI01 25-26, CRISP-DM seminar
 **Status:** Sessions 1–6 complete (Business Understanding through Deployment). Full CRISP-DM cycle closed; stakeholder sign-off and independent reproduction remain open organizational gates.
-**Version:** 2.0 · 2026-06-09
-**Canonical context document.** This paper is the authoritative narrative of the project to date; all phase artifacts referenced here live in the project repository (see Appendix B).
+**Version:** 2.1 · 2026-06-12
+**Canonical context document.** This paper is the authoritative narrative of the project to date; all phase artifacts referenced here live in the project repository (see Appendix B). Developments after the v2.0 freeze (XAC directional proxy check, the NO₂ potency lens, the in-app Vera data agent, and the maturity-proxy refinement) are recorded in the **Postscript** at the end; the body below is preserved as written for v2.0.
 
 ---
 
@@ -413,3 +413,37 @@ Wilkinson, M. D., Dumontier, M., Aalbersberg, I. J., et al. (2016). The FAIR Gui
 - **Phase 6 pre-registration + results:** `phase-6/section-street-design.md`; `outputs/phase-6/section_priority.{md,csv,json,parquet}`, `street_removal_actions.csv`, `street_removal_points.geojson`
 - **Handoff bundle:** `release/` (manifest, intended-use, limitations, monitoring plan, re-run/extend guides, retrospective, CITATION.cff)
 - **Visualization:** `scripts/visualize_allergen.py`, `scripts/build_deploy_map.py` → `outputs/phase-6/maps/*.html` (incl. interactive `deployment_map.html` and `plan-presentation.html`)
+- **Planner web app (post-v2.0):** `outputs/phase-6/app/planner.html` (single-file), data bundle `scripts/build_app_data.py` → `app/app_data.js`; enrichment `src/section_enrich.py`, NO₂ wiring via `data/processed/no2_april_climatology.csv`; proxy spot-check `outputs/phase-6/pollen_station_validation.md`; Rx calibration `outputs/phase-6/rx_calibration.md`
+
+---
+
+## Postscript (v2.1, 2026-06-12) — Developments after the canonical freeze
+
+Four changes landed after the v2.0 narrative was frozen on 2026-06-09. None overturns a headline result; one (the XAC check) lightly touches the project's central limitation and is reported with the same caution as everything above. The body of the paper is left as written; this postscript is the delta.
+
+### P.1 An external directional check on the pollen-source proxy (Limitation #1, softened — not closed)
+
+Limitation #1 throughout this paper is that the source layer is a literature-anchored emission proxy never validated against measured pollen, because no open machine-readable Barcelona *Platanus* series exists. That remains true. We did, however, run the one external check the public data allows: a spot-check against the official XAC aerobiology station (`outputs/phase-6/pollen_station_validation.md`). The station's 400 m cell holds 184 mature planes and sits at the **86th percentile** of our `source_raw` (top quartile of all cells, 83rd among cells with any planes); on the day of the check the live XAC ordinal level read *Platanus* = 1/4. A contrasting near-empty reference cell (0 planes) sits at the **16th percentile** with XAC = 0/4. The proxy and the instrument **agree directionally**.
+
+This is explicitly **not** a calibration. It is *n* = 1 in-city station; the public XAC API exposes only a 0–4 ordinal 7-day forecast, not the annual season integral (grains·day·m⁻³) a regression would need; spatial calibration across cells would require ≈10 stations and multi-year tree-inventory snapshots. The check answers only "is the station's area notable under our proxy?" (yes), not "is the proxy's city-wide rank order correct." Limitation #1 therefore stands, now annotated: *directionally consistent with the single available municipal instrument; full calibration still infeasible pending the historical series from aerobiologia@uab.cat.* The model card and the app's `validation_note` carry this wording verbatim.
+
+### P.2 The NO₂ potency lens (a gated, non-dominating optional objective)
+
+A new optional ranking lens multiplies exposure by a season-matched NO₂ surface: **potency = source × exposure × minmax(NO₂)**, using the BSC **CALIOPE-Urban** March–April NO₂ climatology (2019–2024). The mechanism is established in the aerobiology literature: NO₂ damages the pollen-grain membrane and increases allergen (e.g. Pla a 3) release per grain, so the same pollen load is more allergenic where chronic NO₂ is higher. Before wiring it in we ran a pre-registered collinearity/variance gate (commit `f7a4a39`): NO₂ correlates with the existing layers at only **0.22** (independent) and carries a **9%** variance share (non-dominating) — i.e. it passes the same layer-audition honesty gate (§7.3) that rejected age and sex, clearing both bars rather than re-skinning an existing layer. It ships as one selectable objective among seven, labelled ordinal and climatological (a season reframe, **not** a real-time forecast), never as the default.
+
+### P.3 "Vera" — an in-app, grounded data agent (supersedes the §8.5 paste-prompt generator)
+
+§8.5 described the LLM layer as a *deliverable generator*: the app assembled a formatter-only prompt that the planner pasted into their own external assistant, and "the app holds no model and no API key." That design has been superseded by **Vera**, an in-app chat agent, while preserving the same honesty contract. The relevant facts:
+
+- **Bring-your-own-key, browser-only.** Vera calls one of four providers the user configures — DeepSeek, Claude (Anthropic), OpenAI, or a local **Ollama** — with the key stored *only* in browser `localStorage` (`platans_aikey_<provider>`) and an optional gitignored `config.local.js`. No key is ever committed; the repository still ships no secret. (The earlier "no API key at all" claim is the one factual statement in §8.5 now out of date.)
+- **Grounded, not open-ended.** Each turn rebuilds a compact data context (city facts, a district rollup, all sections pipe-delimited, and the current plan) and prepends a system prompt that constrains Vera to *formatter, not analyst*: answer only from the dataset, name the grain and caveat, refuse street-level rankings (ecological fallacy), and never imply a health outcome (relief is a modeled proxy).
+- **Over-claim guard.** A regex gate flags any output containing un-negated banned phrases (e.g. *cure*, *reduces allergy*, *health benefit*, *street-level priority*) with an orange "may reach beyond the data — verify" stripe — an automated enforcement of the project's honesty line.
+- **Real artifacts.** Vera (and dedicated buttons) export a genuine `.xlsx` workbook (all sections, the current plan, metadata) and a `jsPDF` report (top-15 + plan tables, with any AI-drafted narrative explicitly stamped "verify against the tables").
+
+Vera is the right shape for an LLM layer over an uncertain base (§8.5's argument is unchanged): it translates the deterministic plan rather than opining over it. We still record that an interactive front-end exceeds the seminar's pipeline-only scope and is a presentation aid, not the deliverable.
+
+### P.4 Maturity proxy refined to the inventory size class
+
+The source layer's maturity term was upgraded from the cell-grain young-tree-share proxy (§6.3) to the inventory's categorical size class (`categoria_arbrat`: `EXEMPLAR`/`PRIMERA` = mature), aligning the cell model with the size-class definition the section/street layer already used (§8.1) and making maturity a single declared, sensitivity-tested assumption across both grains (commits `ea82f93`, `a53a2d3`). Limitation #6 (maturity is a coarse proxy — neither trunk diameter nor measured emission) is unchanged.
+
+**Net effect on the verdict.** None of P.1–P.4 alters a pre-registered T1–T4 result, the falsification of Cycle A, or the MAUP finding. P.1 adds a single directional corroboration to the central limitation without closing it; P.2 adds a gated optional lens; P.3 replaces the mechanism of the LLM layer while keeping its honesty contract; P.4 tightens a proxy definition. The reconciled verdict of §7.4 — analytically ship-ready, deployment-pending on stakeholder sign-off and independent reproduction — stands.
