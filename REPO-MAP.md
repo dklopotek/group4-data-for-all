@@ -60,6 +60,30 @@ outputs/phase-6/   allergen_priority_results + maps   <-- SHIPPED PRODUCT
 | `session-3/` | One session's briefing + task ownership | snapshot |
 | `assets/` | Course PDF | reference |
 
+## Phase 2 data-understanding artifacts (Rafik)
+
+Rafik's Phase 2 work lives in `phase-2/` and covers all data-understanding deliverables.
+See `phase-2/ingestion-log.md` for the SHA-256-stamped retrieval record of every raw file.
+
+| Sub-path | What it is |
+|---|---|
+| `phase-2/data-sheets/ajuntament-trees.md` | Full "Datasheets for Datasets" (Gebru et al. 2021) for the **primary** dataset — Barcelona municipal tree inventory (Arbrat Viari + Arbrat Zona) |
+| `phase-2/data-sheets/gbif-fungi.md` | Full datasheet for the **secondary** dataset — GBIF fungal occurrences (Catalonia / Barcelona, 2015–2024) |
+| `phase-2/schemas/ajuntament-trees.py` | Pandera schema validator for `data/arbrat-viari.csv` + `data/arbrat-zona.csv` |
+| `phase-2/schemas/fungalroot.py` | Pandera schema validator for `data/fungalroot.csv` |
+| `phase-2/schemas/gbif-fungi.py` | Pandera schema validator for `data/gbif-fungi.json` |
+| `phase-2/schemas/spatial-layers.yaml` | CRS + bounds + nodata contracts for rasters/vectors: Urban Atlas FlatGeobuf, Landsat LST GeoTIFFs, Sentinel-2 NDVI GeoTIFFs, BCN boundary GeoJSONs |
+| `phase-2/croissant/ajuntament-trees.jsonld` | Croissant ML JSON-LD metadata record — Ajuntament tree inventory |
+| `phase-2/croissant/fungalroot.jsonld` | Croissant ML JSON-LD — FungalRoot v2.0 |
+| `phase-2/croissant/gbif-fungi.jsonld` | Croissant ML JSON-LD — GBIF fungal occurrences |
+| `phase-2/croissant/landsat-lst.jsonld` | Croissant ML JSON-LD — Landsat 8/9 LST summer composite |
+| `phase-2/croissant/sentinel2-ndvi.jsonld` | Croissant ML JSON-LD — Sentinel-2 NDVI summer composite |
+| `phase-2/croissant/urban-atlas.jsonld` | Croissant ML JSON-LD — Copernicus Urban Atlas 2018 |
+| `phase-2/pollen-gaps/data-inventory.md` | Phase 2 extension (June 2026): data hunt for allergen-model gaps — per-tree size, pollarding regime, NO2 surface. CALIOPE-Urban NO2 adopted; others documented as open gaps. |
+| `phase-2/pollen-gaps/caliope-gate.md` | Pre-wiring gate for CALIOPE-Urban NO2 (Zenodo 16737066): collinearity (Pearson 0.22) + variance decomposition (9% of weighted-map variance) — verdict PASS, non-dominating ordinal potency lens |
+| `phase-2/pollen-gaps/data-sheets/caliope-urban-no2.md` | Full datasheet for CALIOPE-Urban NO2 |
+| `phase-2/ingestion-log.md` | SHA-256-stamped retrieval log for all 9 raw data files (Ajuntament trees, FungalRoot, GBIF, BCN boundaries, Urban Atlas, Landsat LST, Sentinel-2) |
+
 ## Known confusions (read before you trip on them)
 
 - **Two `scored_grid.geojson` files, both live, different toolchains:**

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mycorrhizal Barcelona — Data & Pipeline Index</title>
+<style>
+  :root {
+    --green: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #d8f3dc;
+    --amber: #e76f51;
+    --amber-pale: #fde8e0;
+    --blue: #2c6e8a;
+    --blue-pale: #dbeafe;
+    --purple: #6b46c1;
+    --purple-pale: #ede9fe;
+    --gray: #374151;
+    --gray-light: #6b7280;
+    --gray-pale: #f3f4f6;
+    --border: #e5e7eb;
+    --white: #ffffff;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafb; color: var(--gray); line-height: 1.6; }
+
+  /* HEADER */
+  header { background: var(--green); color: white; padding: 3rem 2rem 2.5rem; }
+  header .inner { max-width: 1100px; margin: 0 auto; }
+  header .badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.7rem; border-radius: 999px; margin-bottom: 1rem; }
+  header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.4rem; }
+  header p { font-size: 1rem; opacity: 0.85; max-width: 680px; }
+  header .meta { margin-top: 1.2rem; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  header .meta span { font-size: 0.8rem; opacity: 0.75; }
+  header .meta strong { opacity: 1; }
+
+  /* PIPELINE BANNER */
+  .pipeline { background: white; border-bottom: 1px solid var(--border); padding: 1.25rem 2rem; }
+  .pipeline .inner { max-width: 1100px; margin: 0 auto; }
+  .pipeline h2 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-light); margin-bottom: 0.9rem; }
+  .flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+  .flow-step { background: var(--gray-pale); border: 1px solid var(--border); border-radius: 6px; padding: 0.45rem 0.85rem; font-size: 0.8rem; font-weight: 500; white-space: nowrap; }
+  .flow-step.source { background: var(--green-pale); border-color: var(--green-light); color: var(--green); }
+  .flow-step.script { background: var(--blue-pale); border-color: #93c5fd; color: var(--blue); font-family: monospace; font-size: 0.78rem; }
+  .flow-step.output { background: var(--amber-pale); border-color: #fdba74; color: var(--amber); font-weight: 700; }
+  .flow-arrow { color: var(--gray-light); padding: 0 0.5rem; font-size: 1rem; }
+
+  /* MAIN CONTENT */
+  main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+  section { margin-bottom: 2.5rem; }
+  section > h2 { font-size: 1rem; font-weight: 700; color: var(--gray); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--green); display: flex; align-items: center; gap: 0.5rem; }
+  section > h2 .count { background: var(--green); color: white; font-size: 0.7rem; padding: 0.1rem 0.45rem; border-radius: 999px; }
+
+  /* JOURNEY TABLE */
+  .journey-table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.83rem; background: white; }
+  thead tr { background: var(--gray-pale); }
+  th { padding: 0.7rem 1rem; text-align: left; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-light); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+  .num { font-weight: 700; color: var(--gray-light); text-align: center; }
+  .tag { display: inline-block; font-size: 0.68rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 4px; white-space: nowrap; margin-bottom: 0.2rem; }
+  .tag.tabular  { background: var(--blue-pale); color: var(--blue); }
+  .tag.raster   { background: var(--purple-pale); color: var(--purple); }
+  .tag.vector   { background: var(--green-pale); color: var(--green); }
+  .tag.lookup   { background: #fef9c3; color: #92400e; }
+  .tag.airqual  { background: #fee2e2; color: #b91c1c; }
+  code { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.78rem; background: var(--gray-pale); padding: 0.1rem 0.35rem; border-radius: 3px; color: var(--gray); }
+  .clean-note { font-size: 0.77rem; color: var(--gray-light); }
+  .bug { color: var(--amber); font-weight: 700; }
+
+  /* SOURCE CARDS */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1rem; }
+  .card { background: white; border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); overflow: hidden; display: flex; flex-direction: column; }
+  .card-header { padding: 1rem 1.1rem 0.75rem; border-bottom: 1px solid var(--border); }
+  .card-header .card-num { font-size: 0.7rem; font-weight: 700; color: var(--gray-light); margin-bottom: 0.2rem; }
+  .card-header h3 { font-size: 0.92rem; font-weight: 700; margin-bottom: 0.35rem; }
+  .card-header .role { font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.55rem; border-radius: 999px; display: inline-block; }
+  .role.primary   { background: var(--green-pale); color: var(--green); }
+  .role.secondary { background: var(--blue-pale); color: var(--blue); }
+  .role.auxiliary { background: var(--gray-pale); color: var(--gray-light); }
+  .role.lookup    { background: #fef9c3; color: #92400e; }
+  .role.phase6    { background: #fee2e2; color: #b91c1c; }
+  .card-body { padding: 0.85rem 1.1rem; flex: 1; font-size: 0.82rem; display: flex; flex-direction: column; gap: 0.55rem; }
+  .card-row { display: flex; gap: 0.5rem; }
+  .card-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-light); min-width: 68px; padding-top: 0.05rem; }
+  .card-val { color: var(--gray); flex: 1; }
+  .card-footer { padding: 0.65rem 1.1rem; background: var(--gray-pale); border-top: 1px solid var(--border); display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .artifact-link { font-size: 0.72rem; font-weight: 600; color: var(--green); background: white; border: 1px solid var(--border); padding: 0.2rem 0.55rem; border-radius: 4px; text-decoration: none; }
+  .artifact-link:hover { background: var(--green-pale); border-color: var(--green-light); }
+
+  /* PHASE 2 ARTIFACTS */
+  .artifacts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; }
+  .artifact-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 0.85rem 1rem; font-size: 0.82rem; box-shadow: var(--shadow); }
+  .artifact-card .atype { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-light); margin-bottom: 0.3rem; }
+  .artifact-card h4 { font-size: 0.86rem; font-weight: 600; margin-bottom: 0.25rem; }
+  .artifact-card p { font-size: 0.78rem; color: var(--gray-light); }
+
+  /* CONVERGENCE BOX */
+  .convergence { background: var(--amber-pale); border: 1px solid #fdba74; border-radius: 10px; padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+  .convergence .icon { font-size: 1.6rem; }
+  .convergence p { font-size: 0.88rem; }
+  .convergence strong { font-size: 0.92rem; }
+
+  footer { text-align: center; padding: 2rem; font-size: 0.78rem; color: var(--gray-light); border-top: 1px solid var(--border); margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div class="badge">MaAI01 25-26 · CRISP-DM · Barcelona</div>
+    <h1>Mycorrhizal Barcelona — Data & Pipeline Index</h1>
+    <p>Geospatial pipeline ranking 400 m grid cells for urban pollen-allergen exposure reduction.
+       Originally designed for mycorrhizal barrier analysis; pivoted to allergen priority map after evaluation falsified the mycorrhizal thesis.</p>
+    <div class="meta">
+      <span><strong>Decision unit:</strong> 400 m × 400 m grid (Superilla / Eixos Verds)</span>
+      <span><strong>Output:</strong> outputs/phase-6/ — allergen priority map</span>
+      <span><strong>Phase 2 data work:</strong> Rafik</span>
+      <span><strong>Last updated:</strong> 2026-06-19</span>
+    </div>
+  </div>
+</header>
+
+<div class="pipeline">
+  <div class="inner">
+    <h2>Pipeline flow</h2>
+    <div class="flow">
+      <div class="flow-step source">8 raw sources</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step script">src/clean_data.py</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step output">data/processed/scored_grid.parquet</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step script">src/split_data.py</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step script">src/train_model.py</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step script">src/allergen_*.py</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step output">outputs/phase-6/ maps</div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- CONVERGENCE NOTE -->
+  <div class="convergence">
+    <div class="icon">🗂</div>
+    <p><strong>Single source of truth:</strong> all 8 raw sources are ingested, cleaned, and spatially aggregated by <code>src/clean_data.py</code> into <code>data/processed/scored_grid.parquet</code>. Every downstream model, map, and report reads from this file only. SHA-256 hashes for all raw files: <code>phase-2/ingestion-log.md</code>.</p>
+  </div>
+
+  <!-- DATA JOURNEY TABLE -->
+  <section>
+    <h2>Data journey at a glance <span class="count">8 sources</span></h2>
+    <div class="journey-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Source</th>
+            <th>Data type</th>
+            <th>Raw format</th>
+            <th>Output column(s)</th>
+            <th>Key cleaning step</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">1</td>
+            <td><strong>Ajuntament trees</strong></td>
+            <td><span class="tag tabular">Tabular</span><br><small>Municipal asset register</small></td>
+            <td>CSV · 43 MB + 14 MB · UTF-8</td>
+            <td><code>total_trees</code> <code>am_pct</code> <code>em_pct</code><br><code>platanus_count</code> <code>colonisation_uncertain</code></td>
+            <td class="clean-note">Normalise species → <code>genus species</code>; join FungalRoot; flag 24% unmatched as <code>myco_type='unknown'</code>; drop 36 irrelevant columns</td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td><strong>FungalRoot v2.0</strong></td>
+            <td><span class="tag lookup">Lookup</span><br><small>Species trait table</small></td>
+            <td>CSV · 379 KB</td>
+            <td><em>In-memory join only</em></td>
+            <td class="clean-note">Collapse 11 raw text categories → AM / EM / NM / unknown</td>
+          </tr>
+          <tr>
+            <td class="num">3</td>
+            <td><strong>GBIF fungi</strong></td>
+            <td><span class="tag tabular">Tabular</span><br><small>Point occurrences</small></td>
+            <td>JSON · 3 MB (BCN) + 9 MB (Catalonia)</td>
+            <td><code>gbif_obs</code></td>
+            <td class="clean-note">Filter coords + uncertainty ≤100 m; bin to presence/absence (no abundance weighting — observer-effort bias)</td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td><strong>BCN boundaries</strong></td>
+            <td><span class="tag vector">Vector</span><br><small>Admin polygons</small></td>
+            <td>GeoJSON · EPSG:4326</td>
+            <td>Grid clip extent + <code>districte</code> label</td>
+            <td class="clean-note">None required; reproject EPSG:4326 → EPSG:25831 in memory</td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td><strong>Urban Atlas 2018</strong></td>
+            <td><span class="tag raster">Raster</span><br><small>Sealed-surface fraction</small></td>
+            <td>FlatGeobuf · 206 MB · EPSG:3035 · 0–1</td>
+            <td><code>sealed_surface</code></td>
+            <td class="clean-note"><span class="bug">BUG-3 fix:</span> scale misread as 0–100; corrected to 0–1; reproject EPSG:3035 → EPSG:25831</td>
+          </tr>
+          <tr>
+            <td class="num">6</td>
+            <td><strong>Landsat 8/9 LST</strong></td>
+            <td><span class="tag raster">Raster</span><br><small>Land surface temp.</small></td>
+            <td>GeoTIFF · 3.1 MB · EPSG:32631 · °C</td>
+            <td><code>lst_mean</code></td>
+            <td class="clean-note">QA_PIXEL inspection deferred; reproject EPSG:32631 → EPSG:25831</td>
+          </tr>
+          <tr>
+            <td class="num">7</td>
+            <td><strong>Sentinel-2 NDVI</strong></td>
+            <td><span class="tag raster">Raster</span><br><small>Vegetation index</small></td>
+            <td>GeoTIFF · 33.5 MB · EPSG:32631 · −1 to 1</td>
+            <td><code>ndvi_mean</code></td>
+            <td class="clean-note">SCL cloud mask (classes 8, 9, 10 excluded) at compositing; reproject EPSG:32631 → EPSG:25831</td>
+          </tr>
+          <tr>
+            <td class="num">8</td>
+            <td><strong>CALIOPE-Urban NO2</strong></td>
+            <td><span class="tag airqual">Air quality</span><br><small>Model output</small></td>
+            <td>CSV · census-tract grain · µg/m³</td>
+            <td>Potency modifier on exposure score <em>(Phase 6 only)</em></td>
+            <td class="clean-note">Join <code>ID_census</code> last-5 = section <code>key</code>; use March–April mean (<code>Dataset2B</code>), not annual mean</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SOURCE CARDS -->
+  <section>
+    <h2>Sources — access & artifacts <span class="count">8</span></h2>
+    <div class="cards">
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">01</div>
+          <h3>Ajuntament BCN Tree Inventory</h3>
+          <span class="role primary">PRIMARY</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">Files</span><span class="card-val"><code>data/arbrat-viari.csv</code><br><code>data/arbrat-zona.csv</code></span></div>
+          <div class="card-row"><span class="card-label">Size</span><span class="card-val">~43 MB + ~14 MB · ~189k rows</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">CC-BY 4.0 — Open Data BCN</span></div>
+          <div class="card-row"><span class="card-label">Source</span><span class="card-val">opendata-ajuntament.barcelona.cat</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/data-sheets/ajuntament-trees.md">Datasheet</a>
+          <a class="artifact-link" href="../phase-2/schemas/ajuntament-trees.py">Schema</a>
+          <a class="artifact-link" href="../phase-2/croissant/ajuntament-trees.jsonld">Croissant</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">02</div>
+          <h3>FungalRoot v2.0</h3>
+          <span class="role lookup">LOOKUP TABLE</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">File</span><span class="card-val"><code>data/fungalroot.csv</code></span></div>
+          <div class="card-row"><span class="card-label">Size</span><span class="card-val">379 KB · 14,919 rows · 14,870 species</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">Open — New Phytologist (doi:10.1111/nph.18207)</span></div>
+          <div class="card-row"><span class="card-label">Source</span><span class="card-val">Zenodo / journal supplementary</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/schemas/fungalroot.py">Schema</a>
+          <a class="artifact-link" href="../phase-2/croissant/fungalroot.jsonld">Croissant</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">03</div>
+          <h3>GBIF Fungal Occurrences</h3>
+          <span class="role secondary">SECONDARY</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">Files</span><span class="card-val"><code>data/gbif-fungi.json</code><br><code>data/gbif-fungi-all.json</code></span></div>
+          <div class="card-row"><span class="card-label">Size</span><span class="card-val">3 MB (BCN) + 9 MB (Catalonia)</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">CC0 / CC-BY per record — cite download DOI</span></div>
+          <div class="card-row"><span class="card-label">Source</span><span class="card-val">api.gbif.org REST API</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/data-sheets/gbif-fungi.md">Datasheet</a>
+          <a class="artifact-link" href="../phase-2/schemas/gbif-fungi.py">Schema</a>
+          <a class="artifact-link" href="../phase-2/croissant/gbif-fungi.jsonld">Croissant</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">04</div>
+          <h3>BCN Administrative Boundaries</h3>
+          <span class="role auxiliary">AUXILIARY</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">Files</span><span class="card-val"><code>data/bcn-boundary.geojson</code><br><code>data/bcn-districts.geojson</code></span></div>
+          <div class="card-row"><span class="card-label">Size</span><span class="card-val">168 KB + 580 KB · EPSG:4326</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">CC-BY — Open Data BCN</span></div>
+          <div class="card-row"><span class="card-label">Source</span><span class="card-val">Open Data BCN portal (GeoJSON exports)</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/schemas/spatial-layers.yaml">Schema (YAML)</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">05</div>
+          <h3>Copernicus Urban Atlas 2018</h3>
+          <span class="role auxiliary">AUXILIARY</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">File</span><span class="card-val"><code>data/urban-atlas/...fgb</code></span></div>
+          <div class="card-row"><span class="card-label">Size</span><span class="card-val">206 MB · FlatGeobuf · EPSG:3035</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">Free for any use (Copernicus)</span></div>
+          <div class="card-row"><span class="card-label">Source</span><span class="card-val">land.copernicus.eu (registration required)</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/schemas/spatial-layers.yaml">Schema (YAML)</a>
+          <a class="artifact-link" href="../phase-2/croissant/urban-atlas.jsonld">Croissant</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">06</div>
+          <h3>Landsat 8/9 LST</h3>
+          <span class="role auxiliary">AUXILIARY</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">Files</span><span class="card-val"><code>data/landsat/lst_summer2023_celsius.tif</code> + 2 others</span></div>
+          <div class="card-row"><span class="card-label">Size</span><span class="card-val">3.1 MB total · GeoTIFF · EPSG:32631</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">USGS — public domain</span></div>
+          <div class="card-row"><span class="card-label">Source</span><span class="card-val">USGS Earth Explorer · path 198 / row 031</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/schemas/spatial-layers.yaml">Schema (YAML)</a>
+          <a class="artifact-link" href="../phase-2/croissant/landsat-lst.jsonld">Croissant</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">07</div>
+          <h3>Sentinel-2 L2A NDVI</h3>
+          <span class="role auxiliary">AUXILIARY</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">Files</span><span class="card-val"><code>data/sentinel2/ndvi_summer2023.tif</code> + 3 others</span></div>
+          <div class="card-row"><span class="card-label">Size</span><span class="card-val">33.5 MB total · GeoTIFF · EPSG:32631</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">Free, no restrictions (Copernicus)</span></div>
+          <div class="card-row"><span class="card-label">Source</span><span class="card-val">Copernicus Data Space · tile T31TDF</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/schemas/spatial-layers.yaml">Schema (YAML)</a>
+          <a class="artifact-link" href="../phase-2/croissant/sentinel2-ndvi.jsonld">Croissant</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-num">08</div>
+          <h3>CALIOPE-Urban NO2</h3>
+          <span class="role phase6">PHASE 6 — NEW</span>
+        </div>
+        <div class="card-body">
+          <div class="card-row"><span class="card-label">File</span><span class="card-val"><code>data/caliope-no2.csv</code></span></div>
+          <div class="card-row"><span class="card-label">Grain</span><span class="card-val">1,068 BCN census tracts · annual mean NO2 µg/m³</span></div>
+          <div class="card-row"><span class="card-label">License</span><span class="card-val">CC-BY 4.0 · Zenodo 16737066 (BSC)</span></div>
+          <div class="card-row"><span class="card-label">Gate</span><span class="card-val">Collinearity 0.22 · 9% variance share → PASS</span></div>
+        </div>
+        <div class="card-footer">
+          <a class="artifact-link" href="../phase-2/pollen-gaps/data-sheets/caliope-urban-no2.md">Datasheet</a>
+          <a class="artifact-link" href="../phase-2/pollen-gaps/caliope-gate.md">Gate analysis</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHASE 2 ARTIFACTS -->
+  <section>
+    <h2>Phase 2 artifacts (Rafik) <span class="count">16 files</span></h2>
+    <div class="artifacts-grid">
+      <div class="artifact-card">
+        <div class="atype">Datasheets (Gebru et al. 2021)</div>
+        <h4>ajuntament-trees.md</h4>
+        <p>Full datasheet — primary dataset. Motivation, composition, collection, preprocessing, uses, limits.</p>
+      </div>
+      <div class="artifact-card">
+        <div class="atype">Datasheets (Gebru et al. 2021)</div>
+        <h4>gbif-fungi.md</h4>
+        <p>Full datasheet — secondary dataset. AM-blindness, observer-effort bias, peri-urban reference patch rationale.</p>
+      </div>
+      <div class="artifact-card">
+        <div class="atype">Schema — Pandera (Python)</div>
+        <h4>ajuntament-trees.py</h4>
+        <p>Column-level validator for <code>arbrat-viari.csv</code> + <code>arbrat-zona.csv</code>.</p>
+      </div>
+      <div class="artifact-card">
+        <div class="atype">Schema — Pandera (Python)</div>
+        <h4>fungalroot.py + gbif-fungi.py</h4>
+        <p>Validators for the lookup CSV and GBIF JSON response format.</p>
+      </div>
+      <div class="artifact-card">
+        <div class="atype">Schema — YAML (Frictionless-style)</div>
+        <h4>spatial-layers.yaml</h4>
+        <p>CRS + bounds + nodata contracts for Urban Atlas, Landsat, Sentinel-2, BCN boundaries.</p>
+      </div>
+      <div class="artifact-card">
+        <div class="atype">Croissant ML — JSON-LD</div>
+        <h4>6 metadata records</h4>
+        <p>Machine-readable FAIR dataset passports for Ajuntament trees, FungalRoot, GBIF, Landsat, Sentinel-2, Urban Atlas. Compatible with Google Dataset Search, Hugging Face, Kaggle.</p>
+      </div>
+      <div class="artifact-card">
+        <div class="atype">Ingestion log</div>
+        <h4>ingestion-log.md</h4>
+        <p>SHA-256-stamped retrieval record for all 9 raw data files. Dates, URLs, file sizes, error notes.</p>
+      </div>
+      <div class="artifact-card">
+        <div class="atype">Pollen-gaps extension (June 2026)</div>
+        <h4>caliope-gate.md + data-inventory.md</h4>
+        <p>Pre-wiring gate for CALIOPE-Urban NO2 (Pearson 0.22, 9% variance share — PASS) + data hunt documenting the allergen-model gaps: no open per-tree DBH or pollarding data exists.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTPUT MAPS -->
+  <section>
+    <h2>Rendered outputs — open in browser</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-header"><h3>Priority Zones Map</h3><span class="role primary">SHIPPED PRODUCT</span></div>
+        <div class="card-body"><div class="card-row"><span class="card-label">File</span><span class="card-val"><code>outputs/priority_zones.html</code></span></div><div class="card-row"><span class="card-label">Content</span><span class="card-val">Top-15 priority zones for plane-tree removal sequencing</span></div></div>
+        <div class="card-footer"><a class="artifact-link" href="priority_zones.html">Open map</a></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Full Priority Map</h3><span class="role secondary">GRID VIEW</span></div>
+        <div class="card-body"><div class="card-row"><span class="card-label">File</span><span class="card-val"><code>outputs/priority_map.html</code></span></div><div class="card-row"><span class="card-label">Content</span><span class="card-val">Full 400 m grid with composite priority scores</span></div></div>
+        <div class="card-footer"><a class="artifact-link" href="priority_map.html">Open map</a></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Deployment Map</h3><span class="role auxiliary">PHASE 6</span></div>
+        <div class="card-body"><div class="card-row"><span class="card-label">File</span><span class="card-val"><code>outputs/phase-6/maps/deployment_map.html</code></span></div><div class="card-row"><span class="card-label">Content</span><span class="card-val">Allergen-weighted intervention sequencing map</span></div></div>
+        <div class="card-footer"><a class="artifact-link" href="phase-6/maps/deployment_map.html">Open map</a></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Equity vs Efficiency</h3><span class="role auxiliary">PHASE 6</span></div>
+        <div class="card-body"><div class="card-row"><span class="card-label">Files</span><span class="card-val"><code>priority_v1_efficiency.html</code><br><code>priority_v3_equity.html</code></span></div><div class="card-row"><span class="card-label">Content</span><span class="card-val">Side-by-side scenario comparison</span></div></div>
+        <div class="card-footer">
+          <a class="artifact-link" href="phase-6/maps/priority_v1_efficiency.html">Efficiency</a>
+          <a class="artifact-link" href="phase-6/maps/priority_v3_equity.html">Equity</a>
+          <a class="artifact-link" href="phase-6/maps/priority_equity_shift.html">Shift</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Mycorrhizal Barcelona · MaAI01 25-26 · CRISP-DM seminar project · Group 4
+</footer>
+
+</body>
+</html>

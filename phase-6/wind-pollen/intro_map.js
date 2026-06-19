@@ -33,6 +33,32 @@ const STEPS = [
   },
   {
     chip:   'OPEN DATA LAYER 02',
+    title:  'Sealed\nSurface',
+    body:   'Copernicus Urban Atlas 2018 maps the fraction of impervious surface at 10 m resolution across the entire city.\n\nDark red cells are more than 80% sealed — concrete, asphalt, rooftops. No soil means no mycorrhizal network, and more heat. This single layer drives the strongest sub-score in the priority model.',
+    source: 'Source: Copernicus Land Monitoring Service · Urban Atlas 2018 · Barcelona FUA · EPSG:3035 → 25831 · Free for any use',
+    camera: { center: [2.1700, 41.3888], zoom: 12.8, pitch: 0, bearing: 0 },
+    callout: [
+      { stat: '206 MB',  label: 'FlatGeobuf source file (Rafik, Phase 2)' },
+      { stat: '10 m',    label: 'native raster resolution — 40× finer than 400 m grid' },
+      { stat: 'BUG-3',   label: 'scale misread as 0–100; corrected to 0–1 in Phase 3' },
+    ],
+    layerKey: 'sealed',
+  },
+  {
+    chip:   'OPEN DATA LAYER 03',
+    title:  'Vegetation\nCover',
+    body:   'Sentinel-2 L2A summer 2023 composite (tile T31TDF) — NDVI computed from bands B04 and B08 at 10 m resolution.\n\nGreen cells have dense canopy. The darkest cells — low NDVI, high sealed surface — are exactly where trees matter most and mycorrhizal network recovery is hardest.',
+    source: 'Source: ESA Copernicus Data Space · Sentinel-2 L2A · tile T31TDF · bands B04+B08 · SCL cloud mask applied · 33.5 MB GeoTIFF',
+    camera: { center: [2.1700, 41.3888], zoom: 12.8, pitch: 0, bearing: 0 },
+    callout: [
+      { stat: '10 m',    label: 'native NDVI resolution — 40× finer than decision unit' },
+      { stat: '5 days',  label: 'Sentinel-2A+B revisit — summer 2023 composite ≥3 scenes' },
+      { stat: '14/14',   label: 'rubric score — highest-rated source in Phase 2 inventory' },
+    ],
+    layerKey: 'ndvi',
+  },
+  {
+    chip:   'OPEN DATA LAYER 04',
     title:  'Urban Morphology',
     body:   'Building footprints and heights from OpenStreetMap reveal the structure of the city.\n\nThe Eixample\'s 113m blocks create street canyons that control where wind — and pollen — can travel.',
     source: 'Source: OpenStreetMap contributors · Overpass API · ODbL',
@@ -423,6 +449,56 @@ function singleTreeLayer(trees) {
   ];
 }
 
+function sealedSurfaceLayer(cells) {
+  return [new PolygonLayer({
+    id:           'sealed-fill',
+    data:         cells,
+    getPolygon:   d => d.geometry.coordinates[0],
+    extruded:     false,
+    getFillColor: d => {
+      const v = d.properties.sealed_surface ?? 0;
+      if (v < 0.02) return [10, 10, 30, 0];
+      // white → orange → red ramp
+      const t = Math.min(1, v);
+      return [
+        (80 + t * 175) | 0,
+        (30 - t * 20)  | 0,
+        (20)            | 0,
+        (40 + t * 200) | 0,
+      ];
+    },
+    getLineColor:       [255, 255, 255, 12],
+    getLineWidth:       0.5,
+    lineWidthUnits:     'pixels',
+    pickable:           false,
+  })];
+}
+
+function ndviLayer(cells) {
+  return [new PolygonLayer({
+    id:           'ndvi-fill',
+    data:         cells,
+    getPolygon:   d => d.geometry.coordinates[0],
+    extruded:     false,
+    getFillColor: d => {
+      const v = d.properties.ndvi_mean ?? -1;
+      if (v < -0.05) return [10, 10, 30, 0];
+      // grey → lime green ramp (−0.05 → 0.6)
+      const t = Math.min(1, Math.max(0, (v + 0.05) / 0.65));
+      return [
+        (20  + (1-t) * 60)  | 0,
+        (60  + t * 180)     | 0,
+        (20  + (1-t) * 30)  | 0,
+        (50  + t * 190)     | 0,
+      ];
+    },
+    getLineColor:       [255, 255, 255, 12],
+    getLineWidth:       0.5,
+    lineWidthUnits:     'pixels',
+    pickable:           false,
+  })];
+}
+
 function priorityGridLayer(cells) {
   return [
     // All 494 cells — filled by source priority
@@ -473,7 +549,9 @@ function priorityGridLayer(cells) {
 // ── Accent colors per chip label ──────────────────────────────────────────────
 const CHIP_COLORS = {
   'OPEN DATA LAYER 01': '#3ddd6a',
-  'OPEN DATA LAYER 02': '#7b9fff',
+  'OPEN DATA LAYER 02': '#ff6b6b',
+  'OPEN DATA LAYER 03': '#52e07c',
+  'OPEN DATA LAYER 04': '#7b9fff',
   'CFD SIMULATION':     '#22ccff',
   'A GRAIN\'S PATH':    '#22ccff',
   'DISPERSION MODEL':   '#c8ff28',
@@ -569,6 +647,12 @@ async function applyStep(n) {
     } else if (s.layerKey === 'trees') {
       const all = await loadAllTrees(); setLoading(true, 80);
       layers = [allTreesLayer(all)];
+    } else if (s.layerKey === 'sealed') {
+      const cells = await loadPriorityGrid(); setLoading(true, 80);
+      layers = sealedSurfaceLayer(cells);
+    } else if (s.layerKey === 'ndvi') {
+      const cells = await loadPriorityGrid(); setLoading(true, 80);
+      layers = ndviLayer(cells);
     } else if (s.layerKey === 'buildings') {
       const [trees, bldgs] = await Promise.all([loadTrees(), loadBuildings()]); setLoading(true, 80);
       layers = buildingLayer(bldgs, true, trees);
