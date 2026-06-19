@@ -339,6 +339,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
 <nav class="nav" id="nav">
   <a href="#s1" title="Title"></a>
   <a href="#s2" title="The city's decision"></a>
+  <a href="#s3" title="Most contested tree"></a>
   <a href="#s4" title="Cycle-A hypothesis"></a>
   <a href="#s5" title="Data scored"></a>
   <a href="#s6" title="Layers to grid"></a>
@@ -375,7 +376,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
       <span class="pill">Barcelona · 43,722 plane trees · 1.7M residents</span>
     </div>
   </div>
-  <div class="snum">1 / 16 — click the timer to start</div>
+  <div class="snum">1 / 17 — click the timer to start</div>
 </section>
 
 <!-- ═══════════════════════════════════════════  SLIDE 2 — The city's decision -->
@@ -414,12 +415,78 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
           Unit of action: census section → street-level work list.
         </p>
       </div>
+      <figure class="framefig" style="margin-top:.9rem">
+        <img src="img/bcn-passeig-gracia.jpg" alt="Plane trees and modernista benches lining Passeig de Gràcia, Barcelona" class="figimg" style="aspect-ratio:21 / 9;">
+        <figcaption class="fig-cap">Plane trees on Passeig de Gràcia. Photo: Pere López, CC BY-SA 3.0 (Wikimedia Commons).</figcaption>
+      </figure>
     </div>
   </div>
-  <div class="snum">2 / 16</div>
+  <div class="snum">2 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 3 (s4) — Cycle A: Initial Hypothesis -->
+<!-- ═══════════════════════════════════════════  SLIDE 3 (s3) — Barcelona's most contested tree (REAL VOICES) -->
+<section class="slide" id="s3">
+  <div class="kicker">In the press · public salience</div>
+  <h2 style="margin-bottom:.5rem">Barcelona's most contested tree.</h2>
+  <p class="subline" style="margin-bottom:.2rem">Named in the press, by city officials, and in formal resident complaints. Our project rides a debate that is already public.</p>
+
+  <div class="row" style="margin-top:.5rem; align-items:flex-start">
+    <div class="col" style="flex:1 1 540px;">
+
+      <!-- Pull-quote 1: XAC pollen (the allergen our project models) -->
+      <div class="card" style="margin-bottom:.55rem; padding:.75rem .95rem">
+        <p style="font-size:1rem; color:var(--ink); line-height:1.4; margin:0">
+          &laquo;Nivells <strong>excepcionals</strong> de pol&middot;len de plàtan d'ombra a tot Barcelona.&raquo;
+        </p>
+        <p style="font-size:.83rem; color:var(--sub); margin:.3rem 0 0">
+          EN: &ldquo;exceptional levels of plane-tree <strong>pollen</strong> across the whole city.&rdquo;
+        </p>
+        <p style="font-family:var(--mono); font-size:.72rem; color:var(--teal); margin:.4rem 0 0">
+          Xarxa Aerobiològica de Catalunya (XAC) &middot; Regió7, 23 Apr 2026 &middot; V. Raffio
+        </p>
+      </div>
+
+      <!-- Pull-quote 2: Joan Guitart, official -->
+      <div class="card" style="margin-bottom:.55rem; padding:.75rem .95rem">
+        <p style="font-size:1rem; color:var(--ink); line-height:1.4; margin:0">
+          In the Cerdà-plan Eixample &ldquo;<strong>només s'hi produïen plàtans</strong>&rdquo;, but the species &ldquo;<strong>ara no és tan òptim com ho era anys enrere degut al canvi climàtic</strong>&rdquo;.
+        </p>
+        <p style="font-size:.83rem; color:var(--sub); margin:.3rem 0 0">
+          EN: only plane trees were grown; the species is no longer as optimal as years ago, because of climate change.
+        </p>
+        <p style="font-family:var(--mono); font-size:.72rem; color:var(--teal); margin:.4rem 0 0">
+          Joan Guitart, cap d'Àrea de Gestió de l'Arbrat de Barcelona &middot; Tot Barcelona / Europa Press
+        </p>
+      </div>
+
+      <div class="chips">
+        <span class="chip bad">Press: &ldquo;l'arbre més odiat&rdquo; — the most hated tree (El Periódico, 5 May 2026)</span>
+        <span class="chip amb">Ombudsman: &ldquo;al·lèrgia greu al pol·len dels plàtans&rdquo; (Sindicatura de Greuges, 2025)</span>
+      </div>
+      <div class="note" style="margin-top:.55rem; max-width:none; padding:.5rem 0 .5rem 1.1rem">
+        <strong>Read carefully:</strong> the spring <strong>pollen</strong> (Mar–Apr) is the allergen we model. It is distinct from the visible late-April <em>fruit-fibre</em> &ldquo;rain&rdquo;.
+      </div>
+    </div>
+
+    <div class="col" style="flex:1 1 280px;">
+      <figure class="framefig">
+        <img src="img/platanus-closeup.jpg" alt="A catalogued Barcelona plane tree with the city's green municipal plate reading Platanus x hispanica, Plàtan d'ombra, catalog ID 0129-10-97" class="figimg">
+        <figcaption class="fig-cap">A real catalogued specimen: the plate reads <em>Platanus x hispanica</em> · <em>Plàtan d'ombra</em>, Ajuntament ID 0129-10-97. Photo: Herodotptlomeu, CC BY-SA 4.0 (Wikimedia Commons).</figcaption>
+      </figure>
+      <p class="chcap" style="margin-top:.35rem">Every tree we rank is an individually catalogued municipal asset. This is the inventory our pipeline ingests.</p>
+    </div>
+  </div>
+
+  <div class="cites" style="margin-top:.6rem">
+    <span class="cite">XAC / Regió7, 23 Apr 2026 (V. Raffio): &ldquo;nivells excepcionals&rdquo; de pol·len</span>
+    <span class="cite">Tot Barcelona / Europa Press: Joan Guitart, Gestió de l'Arbrat</span>
+    <span class="cite">El Periódico / Diari de Girona, 5 May 2026: 24,000+ plataners, &ldquo;l'arbre més odiat&rdquo;</span>
+    <span class="cite">Sindicatura de Greuges de Barcelona, Sept 2025</span>
+  </div>
+  <div class="snum">3 / 17</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 4 (s4) — Cycle A: Initial Hypothesis -->
 <section class="slide hero" id="s4">
   <img src="img/mycorrhizal-network.png" alt="Mycorrhizal fungal network in soil" class="hero-img">
   <div class="hero-scrim"></div>
@@ -464,10 +531,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
       <span class="pill bad">Spoiler: the data killed it &rarr;</span>
     </div>
   </div>
-  <div class="snum">3 / 16</div>
+  <div class="snum">4 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 4 (s5) — Data scored (Cycle A) -->
+<!-- ═══════════════════════════════════════════  SLIDE 5 (s5) — Data scored (Cycle A) -->
 <section class="slide" id="s5">
   <div class="kicker">Phase 2 — Data Understanding</div>
   <h2>Every source scored before use.</h2>
@@ -563,10 +630,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Soudzilovskaia et al. 2020, FungalRoot v2.0</span>
     <span class="cite">Copernicus CLMS · ESA Sentinel-2 · USGS Landsat</span>
   </div>
-  <div class="snum">4 / 16</div>
+  <div class="snum">5 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 5 (s6) — Layers to grid -->
+<!-- ═══════════════════════════════════════════  SLIDE 6 (s6) — Layers to grid -->
 <section class="slide" id="s6">
   <div class="kicker">Phase 3 — Data Preparation</div>
   <h2>From raw layers to one scored grid.</h2>
@@ -629,10 +696,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
       </figure>
     </div>
   </div>
-  <div class="snum">5 / 16</div>
+  <div class="snum">6 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 6 (s7) — The spectacular result -->
+<!-- ═══════════════════════════════════════════  SLIDE 7 (s7) — The spectacular result -->
 <section class="slide" id="s7">
   <div class="kicker">Phase 4 — Modeling</div>
   <h2>A spectacular result. The craft was not the problem.</h2>
@@ -666,10 +733,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="chip">Domain heuristic 0.18</span>
     <span class="chip ok">Linear model 0.877</span>
   </div>
-  <div class="snum">6 / 16</div>
+  <div class="snum">7 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 7 (s8) — The tautology -->
+<!-- ═══════════════════════════════════════════  SLIDE 8 (s8) — The tautology -->
 <section class="slide" id="s8">
   <div class="kicker">Phase 5 — Evaluation · the structural flaw</div>
   <h2>The model reconstructed its own ingredients.</h2>
@@ -727,10 +794,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
       </div>
     </div>
   </div>
-  <div class="snum">7 / 16</div>
+  <div class="snum">8 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 8 (s9) — Three lines failed -->
+<!-- ═══════════════════════════════════════════  SLIDE 9 (s9) — Three lines failed -->
 <section class="slide" id="s9">
   <div class="kicker">Phase 5 — Evaluation · falsification</div>
   <h2>Three independent lines, all failed.</h2>
@@ -804,10 +871,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Berlin null: ~86% of AM richness = sealed/greenness axis</span>
     <span class="cite">Pre-registered: phase-5/external-validation-design.md</span>
   </div>
-  <div class="snum">8 / 16</div>
+  <div class="snum">9 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 9 (s10) — The Pivot -->
+<!-- ═══════════════════════════════════════════  SLIDE 10 (s10) — The Pivot -->
 <section class="slide" id="s10">
   <div class="kicker">The Pivot — Cycle B, same data, honest question</div>
   <h2 style="margin-bottom:.7rem">We kept what the data supports.</h2>
@@ -819,8 +886,8 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
   <div class="row" style="margin-top:.8rem; align-items:center">
     <div class="col" style="flex:1 1 320px;">
       <figure class="framefig">
-        <video src="img/platanus-pollen.mp4" autoplay muted loop playsinline class="figimg"></video>
-        <figcaption class="fig-cap">Platanus pollen, mid-March to April.</figcaption>
+        <img src="img/bcn-granvia-planes.jpg" alt="Plane trees lining Gran Via, Barcelona" class="figimg">
+        <figcaption class="fig-cap">Plane trees lining the Gran Via, Barcelona. Photo: Pere López, CC BY-SA 3.0 (Wikimedia Commons).</figcaption>
       </figure>
     </div>
     <div class="col" style="flex:1 1 200px; text-align:center;">
@@ -849,10 +916,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Maya-Manzano et al. 2017, Urban For. &amp; Urban Green.</span>
     <span class="cite">Pla Director de l'Arbrat 2017–2037</span>
   </div>
-  <div class="snum">9 / 16</div>
+  <div class="snum">10 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 10 (s10b) — Aerobiology validation (NEW) -->
+<!-- ═══════════════════════════════════════════  SLIDE 11 (s10b) — Aerobiology validation (NEW) -->
 <section class="slide" id="s10b">
   <div class="kicker">Phase 5 (Cycle B) — Aerobiology validation</div>
   <h2>Thirty-two years of pollen confirm the source.</h2>
@@ -929,10 +996,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Gabarra, Belmonte &amp; Canela 2002, Aerobiologia: Platanus ~46% annual index</span>
     <span class="cite">Maya-Manzano et al. 2017, Urban For. &amp; Urban Green.: ~50 grains/m&#179; threshold</span>
   </div>
-  <div class="snum">10 / 16</div>
+  <div class="snum">11 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 11 — Cycle B Results -->
+<!-- ═══════════════════════════════════════════  SLIDE 12 (s11) — Cycle B Results -->
 <section class="slide" id="s11">
   <div class="kicker">Phase 5 (Cycle B) — Evaluation Results</div>
   <h2>Every pre-registered test passed.</h2>
@@ -998,10 +1065,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Pre-registered: phase-5/test-design.md (T1&ndash;T4)</span>
     <span class="cite">T3 burden capture: +4.6 pp over density-only, top-15</span>
   </div>
-  <div class="snum">11 / 16</div>
+  <div class="snum">12 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 12 (s12b) — Phase-6 deployment (NEW) -->
+<!-- ═══════════════════════════════════════════  SLIDE 13 (s12b) — Phase-6 deployment (NEW) -->
 <section class="slide" id="s12b">
   <div class="kicker">Phase 6 — Deployment</div>
   <h2>Recomputed where people actually live.</h2>
@@ -1057,10 +1124,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">phase-6/street_removal_actions.csv &middot; 1,068 sections, 0 unmatched</span>
     <span class="cite">MAUP measured in our own output, not hidden</span>
   </div>
-  <div class="snum">12 / 16</div>
+  <div class="snum">13 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 13 (s12) — Equity Variant -->
+<!-- ═══════════════════════════════════════════  SLIDE 14 (s12) — Equity Variant -->
 <section class="slide" id="s12">
   <div class="kicker">V3 — An honest win for equity</div>
   <h2>An equity variant, trade-off measured.</h2>
@@ -1106,16 +1173,16 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Deprivation r &minus;0.008, 0.17 vs source/exposure &middot; phase-5 equity artifact</span>
     <span class="cite">Cost &minus;0.5 pp exposure relief; deprived-tercile share 40% &rarr; 60%</span>
   </div>
-  <div class="snum">13 / 16</div>
+  <div class="snum">14 / 17</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 14 (s13) — Live map: deployment -->
+<!-- ═══════════════════════════════════════════  SLIDE 15 (s13) — Live map: deployment -->
 <section class="slide map-slide" id="s13">
   <div class="map-bar">
     <div class="kicker" style="margin:0">Interactive Map — Deployment Priority</div>
     <span style="color:var(--sub);font-size:.85rem">Interactive: switch between 400m cells and census sections, click to see the street list.</span>
     <a href="phase-6/maps/deployment_map.html" target="_blank">open in full tab ↗</a>
-    <span class="map-note">14 / 16 — if blank in Chrome: open with Safari or run a local server</span>
+    <span class="map-note">15 / 17 — if blank in Chrome: open with Safari or run a local server</span>
   </div>
   <iframe src="phase-6/maps/deployment_map.html" class="map-frame" title="Mapa de prioridad de eliminación de Platanus en Barcelona" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
 </section>
@@ -1126,7 +1193,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <div class="kicker" style="margin:0">Interactive Map — Efficiency vs. Equity</div>
     <span style="color:var(--sub);font-size:.85rem">Which cells change when adding the deprivation weight? Blue = equity gains, Orange = efficiency losses.</span>
     <a href="phase-6/maps/priority_equity_shift.html" target="_blank">open in full tab ↗</a>
-    <span class="map-note">15 / 16</span>
+    <span class="map-note">16 / 17</span>
   </div>
   <iframe src="phase-6/maps/priority_equity_shift.html" class="map-frame" title="Mapa de cambio por equidad" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
 </section>
@@ -1163,7 +1230,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
       <span class="cite">Pla Director de l'Arbrat 2017&ndash;2037</span>
     </div>
   </div>
-  <div class="snum">16 / 16</div>
+  <div class="snum">17 / 17</div>
 </section>
 </main>
 
