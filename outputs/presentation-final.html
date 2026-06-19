@@ -226,6 +226,110 @@ tr:last-child td { border-bottom: none; }
   display: block;
 }
 .fig-cap { font-size: .8rem; color: var(--dim); margin-top: .35rem; font-family: var(--mono); }
+
+/* ════════ data-story additions (slides 4–12) ════════ */
+
+/* full-bleed image hero */
+.slide.hero { padding: 0; justify-content: flex-end; overflow: hidden; }
+.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.hero-scrim { position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(10,13,18,.30) 0%, rgba(10,13,18,.66) 52%, rgba(10,13,18,.96) 100%); }
+.hero-body { position: relative; z-index: 2; padding: 5vh 8vw 8vh; width: 100%; }
+.hero-body p { color: #d6dee9; }
+
+/* image inside a column */
+.figimg { width: 100%; border-radius: 12px; border: 1px solid var(--line);
+  object-fit: cover; aspect-ratio: 16 / 9; display: block; }
+
+/* source citations */
+.cites { display: flex; flex-wrap: wrap; gap: .35rem 1.1rem; margin-top: 1.1rem; }
+.cite { font-family: var(--mono); font-size: .72rem; color: var(--dim); }
+.cite::before { content: "\00a7  "; color: var(--teal); }
+
+/* horizontal bar chart */
+.bars { display: flex; flex-direction: column; gap: .5rem; margin-top: .7rem; }
+.barrow { display: grid; grid-template-columns: 9rem 1fr 3.4rem; gap: .7rem; align-items: center; }
+.barrow .lab { font-size: .8rem; color: var(--sub); text-align: right; font-family: var(--mono); }
+.track { height: .7rem; background: var(--panel2); border-radius: 999px; overflow: hidden; }
+.track .fill { height: 100%; border-radius: 999px; }
+.barrow .val { font-family: var(--mono); font-size: .78rem; color: var(--ink); }
+.fill.grn { background: var(--grn); } .fill.red { background: var(--red); }
+.fill.amb { background: var(--amb); } .fill.blu { background: var(--blu); }
+.fill.teal { background: var(--teal); } .fill.dim { background: var(--dim); }
+
+/* data scorecard */
+.score { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-top: .9rem; }
+.srow { display: grid; grid-template-columns: 1fr 4.4rem; gap: .6rem; align-items: center;
+  padding: .55rem .85rem; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.srow.adopt { border-color: var(--grn-bd); }
+.srow.reject { border-color: var(--red-bd); background: var(--red-bg); }
+.srow .nm { font-size: .9rem; font-weight: 700; color: var(--ink); }
+.srow .meta { font-size: .71rem; color: var(--sub); font-family: var(--mono); margin-top: .12rem; }
+.srow .sc { font-family: var(--mono); font-weight: 800; font-size: 1rem; text-align: right; }
+.srow.adopt .sc { color: var(--grn); } .srow.reject .sc { color: var(--red); }
+
+/* pipeline flow */
+.flow { display: flex; align-items: stretch; gap: .45rem; flex-wrap: wrap; margin-top: 1.1rem; }
+.fstep { flex: 1 1 120px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: .7rem .85rem; }
+.fstep.key { border-color: var(--teal); background: #0c1c1c; }
+.fstep .ft { font-family: var(--mono); font-size: .66rem; text-transform: uppercase; letter-spacing: .12em; color: var(--teal); }
+.fstep .fb { font-size: .85rem; color: #bcc8d8; margin-top: .25rem; line-height: 1.4; }
+.farrow { align-self: center; color: var(--dim); font-size: 1.3rem; }
+
+/* tautology loop diagram */
+.loop { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin-top: 1rem; }
+.lnode { border: 1px solid var(--line); border-radius: 10px; padding: .6rem .9rem; background: var(--panel);
+  font-family: var(--mono); font-size: .82rem; color: var(--ink); }
+.lnode.bad { border-color: var(--red-bd); background: var(--red-bg); color: var(--red); }
+.larrow { color: var(--dim); font-size: 1.2rem; }
+.lback { font-family: var(--mono); font-size: .76rem; color: var(--red); margin-top: .5rem; }
+
+/* triptych of evidence */
+.trip { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1rem; }
+@media (max-width: 860px) { .trip { grid-template-columns: 1fr; } .score { grid-template-columns: 1fr; } }
+
+/* ════════ v2 data-story additions (distinct-viz redesign) ════════ */
+
+/* generic SVG chart text helpers */
+.svgwrap { width: 100%; }
+text.chlab { fill: var(--sub); font-family: var(--mono); font-size: 12px; }
+text.chval { fill: var(--ink); font-family: var(--mono); font-size: 12px; font-weight: 700; }
+text.chmeta { fill: var(--dim); font-family: var(--mono); font-size: 10px; }
+text.chcap { fill: var(--dim); font-family: var(--mono); font-size: 11px; }
+text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-weight: 700; }
+
+/* one-line sub under headline */
+.subline { font-size: clamp(.95rem, 1.5vw, 1.12rem); color: var(--sub); max-width: 78ch; margin-bottom: .3rem; }
+.subline strong { color: var(--ink); }
+.subline em { color: var(--teal); }
+
+/* tiny chip row */
+.chips { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .2rem; }
+.chip { font-family: var(--mono); font-size: .74rem; padding: .28rem .7rem; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--sub); background: var(--panel); }
+.chip.ok  { color: var(--grn); border-color: var(--grn-bd); background: var(--grn-bg); }
+.chip.amb { color: var(--amb); border-color: var(--amb-bd); background: var(--amb-bg); }
+.chip.bad { color: var(--red); border-color: var(--red-bd); background: var(--red-bg); }
+
+/* hero node-link overlay card */
+.heronet { position: absolute; z-index: 3; right: 6vw; top: 12vh; width: min(330px, 36vw);
+  background: rgba(12,15,20,.78); border: 1px solid var(--line); border-radius: 12px; padding: .7rem .8rem; }
+.heronet .nt { font-family: var(--mono); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--teal); margin-bottom: .15rem; }
+
+/* compact pass-checklist */
+.checks { display: flex; flex-direction: column; gap: .5rem; margin-top: .4rem; }
+.crow { display: grid; grid-template-columns: 1.4rem 1fr; gap: .6rem; align-items: start;
+  padding: .5rem .75rem; border: 1px solid var(--grn-bd); background: var(--grn-bg); border-radius: 10px; }
+.crow .ck { color: var(--grn); font-weight: 800; font-family: var(--mono); }
+.crow .ct { font-size: .85rem; color: var(--ink); line-height: 1.35; }
+.crow .ct b { color: var(--grn); font-family: var(--mono); font-weight: 700; }
+.crow .ct span { color: var(--sub); font-family: var(--mono); font-size: .76rem; }
+
+/* media frame for photo heroes inside columns */
+.framefig { margin: 0; }
+.framefig img { width: 100%; border-radius: 12px; border: 1px solid var(--line);
+  object-fit: cover; aspect-ratio: 16 / 9; display: block; }
 </style>
 </head>
 <body>
@@ -234,45 +338,44 @@ tr:last-child td { border-bottom: none; }
 
 <nav class="nav" id="nav">
   <a href="#s1" title="Title"></a>
-  <a href="#s2" title="The Problem"></a>
-  <a href="#s3" title="Our Proposal"></a>
-  <a href="#s4" title="Cycle A: Initial Hypothesis"></a>
-  <a href="#s5" title="Data & Preparation (Cycle A)"></a>
-  <a href="#s6" title="Modeling (Cycle A)"></a>
-  <a href="#s7" title="Evaluation: The Structural Flaw"></a>
-  <a href="#s8" title="Evaluation: Falsification (1/2)"></a>
-  <a href="#s9" title="Evaluation: Falsification (2/2)"></a>
-  <a href="#s10" title="The Pivot"></a>
-  <a href="#s11" title="Cycle B Results"></a>
-  <a href="#s12" title="The Equity Variant"></a>
-  <a href="#s13" title="Map: Deployment Priority"></a>
-  <a href="#s14" title="Map: Efficiency vs. Equity"></a>
-  <a href="#s15" title="Conclusions"></a>
-  <a href="#s16" title="Project Introduction"></a>
-  <a href="#s17" title="Technical Core"></a>
-  <a href="#s18" title="The Interface"></a>
-  <a href="#s19" title="Strategic Plan"></a>
+  <a href="#s2" title="The city's decision"></a>
+  <a href="#s4" title="Cycle-A hypothesis"></a>
+  <a href="#s5" title="Data scored"></a>
+  <a href="#s6" title="Layers to grid"></a>
+  <a href="#s7" title="Spectacular result"></a>
+  <a href="#s8" title="The tautology"></a>
+  <a href="#s9" title="Three lines failed"></a>
+  <a href="#s10" title="The pivot"></a>
+  <a href="#s10b" title="Aerobiology validation"></a>
+  <a href="#s11" title="Cycle-B results"></a>
+  <a href="#s12b" title="Phase-6 deployment"></a>
+  <a href="#s12" title="Equity variant"></a>
+  <a href="#s13" title="Live map"></a>
+  <a href="#s14" title="Efficiency vs equity map"></a>
+  <a href="#s15" title="Conclusion"></a>
 </nav>
 
 <main class="deck" id="deck">
 
-<!-- ═══════════════════════════════════════════  SLIDE 1 — Title -->
-<section class="slide" id="s1">
-  <div class="kicker">Grupo 4 · MaAI01 25–26 · Data for All</div>
-  <h1>
-    From Ecological Challenge to<br>
-    <span class="hi">Public Health Solution</span>
-  </h1>
-  <p class="big" style="margin-top:.4rem">
-    A CRISP-DM cycle to transform a biodiversity challenge into an urban planning tool that improves air quality and residents' lives.
-  </p>
-  <div style="margin-top:1.4rem; display:flex; gap:.6rem; flex-wrap:wrap;">
-    <span class="pill ok">6 CRISP-DM phases completed</span>
-    <span class="pill ok">Pre-registered falsification</span>
-    <span class="pill ok">Priority map + work list delivered</span>
-    <span class="pill">Barcelona · 189,000 trees · 1.7M residents</span>
+<!-- ═══════════════════════════════════════════  SLIDE 1 — Title (ecology-first hero) -->
+<section class="slide hero" id="s1">
+  <img src="img/barcelona-canopy.png" alt="Aerial view of Barcelona's plane-tree canopy at dusk" class="hero-img">
+  <div class="hero-scrim"></div>
+  <div class="hero-body">
+    <div class="kicker">Grupo 4 · MaAI01 25–26 · Data for All</div>
+    <h1 style="max-width:20ch">
+      One species is <span class="hi">27.45%</span><br>of Barcelona's street trees.
+    </h1>
+    <p class="big" style="margin-top:.4rem; max-width:60ch">
+      The London plane (<em>Platanus &times; acerifolia</em>) is a near-monoculture: an ecological fragility, and the city's single largest pollen source. We sequenced its renewal.
+    </p>
+    <div style="margin-top:1.4rem; display:flex; gap:.6rem; flex-wrap:wrap;">
+      <span class="pill ok">Pre-registered falsification</span>
+      <span class="pill ok">Priority map + street worklist delivered</span>
+      <span class="pill">Barcelona · 43,722 plane trees · 1.7M residents</span>
+    </div>
   </div>
-  <div class="snum">1 / 19 — click the timer to start</div>
+  <div class="snum">1 / 16 — click the timer to start</div>
 </section>
 
 <!-- ═══════════════════════════════════════════  SLIDE 2 — The city's decision -->
@@ -288,8 +391,16 @@ tr:last-child td { border-bottom: none; }
         Reason stated by the city council: biodiversity and monoculture risk.
       </div>
       <p>The Platanus is responsible for <strong>~46% of Barcelona's annual pollen index</strong>
-         (Gabarra et al. 2002). Removing a plane tree also alleviates the allergenic burden,
-         but the city council does not sequence the felling with this criterion. We provide the missing criterion.</p>
+         (Gabarra et al. 2002). Each renewal also relieves the allergenic burden,
+         but the city does not sequence by this criterion. We provide the missing criterion, in six CRISP-DM phases.</p>
+      <div class="phase-strip" style="margin-top:.9rem">
+        <span class="ph done">1 Business</span>
+        <span class="ph done">2 Data</span>
+        <span class="ph done">3 Prep</span>
+        <span class="ph done">4 Modeling</span>
+        <span class="ph done">5 Evaluation</span>
+        <span class="ph pivot">6 Deployment</span>
+      </div>
     </div>
     <div class="col">
       <div class="card blu">
@@ -305,369 +416,754 @@ tr:last-child td { border-bottom: none; }
       </div>
     </div>
   </div>
-  <div class="snum">2 / 19</div>
+  <div class="snum">2 / 16</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 3 — Our Proposal -->
-<section class="slide" id="s3">
-  <div class="kicker">Methodology</div>
-  <h2>A data-driven approach for a public health decision.</h2>
-  <p class="big">We propose a model to create a priority ranking that combines the allergen <strong>source</strong> (where mature trees are) with <strong>exposure</strong> (where people live).</p>
-  <p>To do this, we follow the <strong>CRISP-DM</strong> framework, an industry standard for managing data science projects in a rigorous, iterative, and transparent way.</p>
-  <div class="phase-strip" style="margin-top:1.2rem">
-    <span class="ph done">1. Business</span>
-    <span class="ph done">2. Data</span>
-    <span class="ph done">3. Preparation</span>
-    <span class="ph done">4. Modeling</span>
-    <span class="ph done">5. Evaluation</span>
-    <span class="ph pivot">6. Deployment</span>
+<!-- ═══════════════════════════════════════════  SLIDE 3 (s4) — Cycle A: Initial Hypothesis -->
+<section class="slide hero" id="s4">
+  <img src="img/mycorrhizal-network.png" alt="Mycorrhizal fungal network in soil" class="hero-img">
+  <div class="hero-scrim"></div>
+
+  <!-- node-link diagram: AM plane tree -> EM host -> fungal web -->
+  <div class="heronet">
+    <div class="nt">The lever, in three nodes</div>
+    <svg viewBox="0 0 300 132" class="svgwrap" role="img" aria-label="AM plane tree swapped for EM host feeding a fungal network">
+      <!-- web of hyphae on the right -->
+      <g stroke="#3ecf6e" stroke-width="1" opacity=".55" fill="none">
+        <path d="M232 66 L262 40 M232 66 L276 56 M232 66 L280 84 M232 66 L256 104 M262 40 L280 56 M256 104 L280 84"/>
+      </g>
+      <g fill="#3ecf6e">
+        <circle cx="262" cy="40" r="3"/><circle cx="276" cy="56" r="3"/>
+        <circle cx="280" cy="84" r="3"/><circle cx="256" cy="104" r="3"/><circle cx="280" cy="56" r="2"/>
+      </g>
+      <!-- links -->
+      <line x1="64" y1="66" x2="150" y2="66" stroke="#f0524c" stroke-width="2" stroke-dasharray="4 3"/>
+      <line x1="178" y1="66" x2="226" y2="66" stroke="#3ecf6e" stroke-width="2"/>
+      <!-- node: AM plane tree -->
+      <circle cx="40" cy="66" r="22" fill="#200c0c" stroke="#5c1a1a" stroke-width="1.5"/>
+      <text x="40" y="63" text-anchor="middle" fill="#f0524c" font-family="var(--mono)" font-size="9" font-weight="700">AM</text>
+      <text x="40" y="74" text-anchor="middle" fill="#a0aab8" font-family="var(--mono)" font-size="7.5">plane</text>
+      <!-- swap arrow label -->
+      <text x="107" y="60" text-anchor="middle" fill="#f0524c" font-family="var(--mono)" font-size="8">swap</text>
+      <!-- node: EM host -->
+      <circle cx="164" cy="66" r="20" fill="#0c2218" stroke="#1a5c38" stroke-width="1.5"/>
+      <text x="164" y="63" text-anchor="middle" fill="#3ecf6e" font-family="var(--mono)" font-size="9" font-weight="700">EM</text>
+      <text x="164" y="74" text-anchor="middle" fill="#a0aab8" font-family="var(--mono)" font-size="7.5">host</text>
+      <!-- web label -->
+      <text x="262" y="124" text-anchor="middle" fill="#3ecf6e" font-family="var(--mono)" font-size="8">hyphal web recovers</text>
+    </svg>
   </div>
-  <div class="snum">3 / 19</div>
-</section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 4 — Cycle A: Initial Hypothesis -->
-<section class="slide" id="s4">
-  <div class="kicker">Cycle A — Business & Data Understanding</div>
-  <h2>The original idea: an "ecosystem health" map.</h2>
-  <p>Our first hypothesis was that we could prioritize areas for ecological intervention (not felling) based on the health of the soil's <strong>mycorrhizal networks</strong>, which connect tree roots.</p>
-  <div class="card blu" style="margin-top:1rem;">
-    <h3>Initial Thesis (Cycle A)</h3>
-    <p style="color:#bcc8d8; margin:.4rem 0">Tree species diversity and soil connectivity (unsealed surface) predict the health of the fungal network, which is key to tree resilience. We could create a score map to guide tree planting and improve this network.</p>
-  </div>
-  <p class="mut" style="margin-top:1rem;">This approach, while ecologically interesting, did not directly address the city council's most urgent need: sequencing the already planned felling of plane trees.</p>
-  <div class="snum">4 / 19</div>
-</section>
-
-<!-- ═══════════════════════════════════════════  SLIDE 5 — Data & Prep (Cycle A) -->
-<section class="slide" id="s5">
-  <div class="kicker">Phases 2 & 3 — Data Understanding & Preparation</div>
-  <h2>Connecting trees to the ground.</h2>
-  <p>We integrated multiple open data sources from the Barcelona City Council and the Cadastre to build our analytical dataset.</p>
-  <div class="row">
-    <div class="col">
-      <ul class="list">
-        <li class="ok"><strong>Tree inventory:</strong> 189,000 geolocated trees with data on species, age (maturity), and condition.</li>
-        <li class="ok"><strong>Cadastral data:</strong> Sealed surface (pavement) and unsealed surface (permeable soil).</li>
-        <li class="ok"><strong>Demographic data:</strong> Residential population by census section.</li>
-        <li class="ok"><strong>Ecological data:</strong> Types of fungi (AM/EM) associated with each tree species.</li>
-      </ul>
+  <div class="hero-body">
+    <div class="kicker">Cycle A — Hypothesis</div>
+    <h2 style="max-width:18ch">Map the city's underground<br>fungal network.</h2>
+    <p class="big" style="max-width:54ch">
+      Swap plane trees for <em>ectomycorrhizal hosts</em>, and the hyphal web recovers.
+    </p>
+    <div style="margin-top:.9rem">
+      <span class="pill bad">Spoiler: the data killed it &rarr;</span>
     </div>
-    <div class="col">
-      <figure>
-        <img src="grid_trees_map.png" alt="400m grid with tree data" class="img-fig">
-        <figcaption class="fig-cap">We aggregated the data into a 400x400m grid (494 cells) to analyze spatial relationships.</figcaption>
+  </div>
+  <div class="snum">3 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 4 (s5) — Data scored (Cycle A) -->
+<section class="slide" id="s5">
+  <div class="kicker">Phase 2 — Data Understanding</div>
+  <h2>Every source scored before use.</h2>
+  <p class="subline">Graded 0–2 on 7 axes (provenance, resolution, coverage, licence, access, bias, maintenance). Adopt only at <strong>&ge;10/14</strong>.</p>
+
+  <!-- ranked bullet / threshold bar chart -->
+  <svg viewBox="0 0 980 380" class="svgwrap" role="img" aria-label="Datasets ranked by quality score out of 14, with an adopt-at-10 threshold line">
+    <!-- geometry: name col ends x=232; bar track 240..900 = score 0..14 -->
+    <!-- threshold gridline at score 10 -> x = 240 + 10/14*660 = 711.4 -->
+    <line x1="711.4" y1="18" x2="711.4" y2="350" stroke="#f0b429" stroke-width="1.5" stroke-dasharray="5 4" opacity=".8"/>
+    <text x="711.4" y="14" text-anchor="middle" fill="#f0b429" font-family="var(--mono)" font-size="11">adopt &#8805; 10 / 14</text>
+    <!-- baseline -->
+    <line x1="240" y1="350" x2="900" y2="350" stroke="#252c38" stroke-width="1"/>
+
+    <!-- rows: y center step 40, start 30 -->
+    <!-- 1 Copernicus 14 -->
+    <g transform="translate(0,30)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">Copernicus Urban Atlas</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta">free, 10 m sealed</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#3ecf6e" opacity=".92"/>
+      <text x="910" y="3" class="chval" fill="#3ecf6e">14</text>
+    </g>
+    <!-- 2 Sentinel-2 14 -->
+    <g transform="translate(0,70)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">Sentinel-2 L2A (NDVI)</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta">free, 10 m greenness</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#3ecf6e" opacity=".92"/>
+      <text x="910" y="3" class="chval" fill="#3ecf6e">14</text>
+    </g>
+    <!-- 3 Landsat 14 -->
+    <g transform="translate(0,110)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">Landsat 8/9 thermal (LST)</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta">public domain, 100 m heat</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#3ecf6e" opacity=".92"/>
+      <text x="910" y="3" class="chval" fill="#3ecf6e">14</text>
+    </g>
+    <!-- 4 Tree inventory 13 -> width 13/14*660 = 612.9 -->
+    <g transform="translate(0,150)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">Ajuntament tree inventory</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta">CC-BY 4.0, per-tree point · PRIMARY</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="613" height="20" rx="4" fill="#3ecf6e" opacity=".92"/>
+      <text x="863" y="3" class="chval" fill="#3ecf6e">13</text>
+    </g>
+    <!-- 5 GBIF 12 -> 565.7 -->
+    <g transform="translate(0,190)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">GBIF fungal occurrences</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta">CC0, point · external truth</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="566" height="20" rx="4" fill="#3ecf6e" opacity=".92"/>
+      <text x="816" y="3" class="chval" fill="#3ecf6e">12</text>
+    </g>
+    <!-- 6 FungalRoot 12 -->
+    <g transform="translate(0,230)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">FungalRoot v2.0</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta">species &#8594; AM/EM lookup</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="566" height="20" rx="4" fill="#3ecf6e" opacity=".92"/>
+      <text x="816" y="3" class="chval" fill="#3ecf6e">12</text>
+    </g>
+    <!-- 7 GlobalAMFungi 10 -> 471.4 (REJECTED, exactly at threshold but fatal axis) -->
+    <g transform="translate(0,270)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">GlobalAMFungi (DNA)</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta" fill="#f0524c">fatal: ~0 samples in Iberia</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="471.4" height="20" rx="4" fill="#f0524c" opacity=".88"/>
+      <text x="725" y="3" class="chval" fill="#f0524c">10</text>
+    </g>
+    <!-- 8 AEMET 9 -> 424.3 -->
+    <g transform="translate(0,310)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">AEMET / Meteo.cat stations</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta" fill="#f0524c">fatal: too sparse (~5–10 stations)</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="424" height="20" rx="4" fill="#f0524c" opacity=".88"/>
+      <text x="674" y="3" class="chval" fill="#f0524c">9</text>
+    </g>
+    <!-- 9 ERA5 9 -->
+    <g transform="translate(0,350)">
+      <text x="226" y="-2" text-anchor="end" class="chttl">ERA5-Land climate</text>
+      <text x="226" y="13" text-anchor="end" class="chmeta" fill="#f0524c">fatal: 9 km, ~22&#215; too coarse</text>
+      <rect x="240" y="-12" width="660" height="20" rx="4" fill="#1a2030"/>
+      <rect x="240" y="-12" width="424" height="20" rx="4" fill="#f0524c" opacity=".88"/>
+      <text x="674" y="3" class="chval" fill="#f0524c">9</text>
+    </g>
+  </svg>
+
+  <div class="cites">
+    <span class="cite">Open Data BCN, Arbrat viari (2024-Q4)</span>
+    <span class="cite">GBIF.org occurrence download (DOI-stamped)</span>
+    <span class="cite">Soudzilovskaia et al. 2020, FungalRoot v2.0</span>
+    <span class="cite">Copernicus CLMS · ESA Sentinel-2 · USGS Landsat</span>
+  </div>
+  <div class="snum">4 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 5 (s6) — Layers to grid -->
+<section class="slide" id="s6">
+  <div class="kicker">Phase 3 — Data Preparation</div>
+  <h2>From raw layers to one scored grid.</h2>
+
+  <div class="row" style="align-items:center; margin-top:.6rem;">
+    <div class="col" style="flex:1 1 580px;">
+      <!-- Sankey-style convergence: 5 inputs -> harmonise -> aggregate -> 494 cells -->
+      <svg viewBox="0 0 720 320" class="svgwrap" role="img" aria-label="Five input layers converge through harmonise and aggregate into 494 scored cells">
+        <!-- flow ribbons: from each input node (x=150) into harmonise hub (x=300,y=160) -->
+        <g fill="none" stroke-opacity=".34">
+          <path d="M150 40  C235 40, 235 152, 300 152" stroke="#4da6ff" stroke-width="14"/>
+          <path d="M150 96  C235 96, 235 156, 300 156" stroke="#c080ff" stroke-width="14"/>
+          <path d="M150 160 C235 160, 235 160, 300 160" stroke="#a0aab8" stroke-width="14"/>
+          <path d="M150 224 C235 224, 235 164, 300 164" stroke="#3ecf6e" stroke-width="14"/>
+          <path d="M150 280 C235 280, 235 168, 300 168" stroke="#f0b429" stroke-width="14"/>
+        </g>
+        <!-- harmonise -> aggregate ribbon -->
+        <path d="M380 160 C440 160, 460 160, 500 160" fill="none" stroke="#3ecfcf" stroke-width="34" stroke-opacity=".30"/>
+        <!-- aggregate -> grid ribbon -->
+        <path d="M560 160 C600 160, 600 160, 620 160" fill="none" stroke="#3ecf6e" stroke-width="40" stroke-opacity=".34"/>
+
+        <!-- input nodes -->
+        <g font-family="var(--mono)" font-size="11">
+          <g><rect x="14" y="30" width="136" height="20" rx="4" fill="#0a1830" stroke="#1a3a6c"/><text x="22" y="44" fill="#4da6ff">~189k trees</text></g>
+          <g><rect x="14" y="86" width="136" height="20" rx="4" fill="#14102a" stroke="#c080ff"/><text x="22" y="100" fill="#c080ff">GBIF fungi</text></g>
+          <g><rect x="14" y="150" width="136" height="20" rx="4" fill="#141920" stroke="#252c38"/><text x="22" y="164" fill="#a0aab8">sealed surface</text></g>
+          <g><rect x="14" y="214" width="136" height="20" rx="4" fill="#0c2218" stroke="#1a5c38"/><text x="22" y="228" fill="#3ecf6e">NDVI greenness</text></g>
+          <g><rect x="14" y="270" width="136" height="20" rx="4" fill="#201808" stroke="#5c3c08"/><text x="22" y="284" fill="#f0b429">LST heat</text></g>
+        </g>
+
+        <!-- harmonise hub -->
+        <rect x="300" y="128" width="80" height="64" rx="8" fill="#141920" stroke="#3ecfcf"/>
+        <text x="340" y="152" text-anchor="middle" fill="#3ecfcf" font-family="var(--mono)" font-size="11" font-weight="700">Harmonise</text>
+        <text x="340" y="167" text-anchor="middle" fill="#a0aab8" font-family="var(--mono)" font-size="8.5">EPSG:25831</text>
+        <text x="340" y="180" text-anchor="middle" fill="#a0aab8" font-family="var(--mono)" font-size="8.5">spp &#8594; AM/EM</text>
+
+        <!-- aggregate hub -->
+        <rect x="500" y="128" width="60" height="64" rx="8" fill="#141920" stroke="#3ecfcf"/>
+        <text x="530" y="150" text-anchor="middle" fill="#3ecfcf" font-family="var(--mono)" font-size="10" font-weight="700">Aggregate</text>
+        <text x="530" y="164" text-anchor="middle" fill="#a0aab8" font-family="var(--mono)" font-size="8">join + zonal</text>
+        <text x="530" y="176" text-anchor="middle" fill="#a0aab8" font-family="var(--mono)" font-size="8">400 m grid</text>
+
+        <!-- output node -->
+        <rect x="620" y="118" width="88" height="84" rx="10" fill="#0c1c1c" stroke="#3ecf6e" stroke-width="1.5"/>
+        <text x="664" y="152" text-anchor="middle" fill="#3ecf6e" font-family="var(--mono)" font-size="20" font-weight="800">494</text>
+        <text x="664" y="170" text-anchor="middle" fill="#e8edf4" font-family="var(--mono)" font-size="9">scored cells</text>
+        <text x="664" y="183" text-anchor="middle" fill="#a0aab8" font-family="var(--mono)" font-size="8">one row each</text>
+      </svg>
+
+      <div class="chips">
+        <span class="chip ok">No rows dropped</span>
+        <span class="chip ok">Deterministic (seed 42)</span>
+        <span class="chip ok">Leak-safe spatial split</span>
+      </div>
+    </div>
+    <div class="col" style="flex:1 1 240px;">
+      <figure class="framefig">
+        <img src="grid_trees_map.png" alt="400m grid over Barcelona trees">
+        <figcaption class="fig-cap">494 cells, clipped to the municipal boundary.</figcaption>
       </figure>
     </div>
   </div>
-  <div class="snum">5 / 19</div>
+  <div class="snum">5 / 16</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 6 — Modeling (Cycle A) -->
-<section class="slide" id="s6">
-  <div class="kicker">Phase 4 — Modeling (Cycle A)</div>
-  <h2>A promising model with a spectacular result.</h2>
-  <p>We built a linear model to predict our "mycorrhizal health score" from ecological and urban variables. The initial performance was exceptional.</p>
-  <div class="card ok" style="max-width:400px; margin-top:1rem;">
-    <div class="stat grn">R² 0.877</div>
-    <div class="stat-label">Score on the test set (hold-out), the best in the cohort.</div>
+<!-- ═══════════════════════════════════════════  SLIDE 6 (s7) — The spectacular result -->
+<section class="slide" id="s7">
+  <div class="kicker">Phase 4 — Modeling</div>
+  <h2>A spectacular result. The craft was not the problem.</h2>
+  <p class="subline">Pre-registered split, three baselines beaten, reproducible end-to-end. <em>Evaluation was not impressed.</em></p>
+
+  <div style="display:flex; justify-content:center; margin-top:1rem;">
+    <!-- radial gauge: R2 on 0..1 scale, 300-degree downward-opening arc. cx=230 cy=190 r=140 -->
+    <svg viewBox="0 0 460 340" width="540" style="max-width:100%" role="img" aria-label="Radial gauge showing held-out test R-squared of 0.877 with baseline ticks at 0.00 and 0.18">
+      <!-- track arc: start(160,311.24) over the top to end(300,311.24), sweep=1 large=1 -->
+      <path d="M 160 311.24 A 140 140 0 1 1 300 311.24" fill="none" stroke="#1a2030" stroke-width="22" stroke-linecap="round"/>
+      <!-- value arc 0..0.877: start(160,311.24) to (358.78,244.93), sweep=1 large=1 -->
+      <path d="M 160 311.24 A 140 140 0 1 1 358.78 244.93" fill="none" stroke="#3ecf6e" stroke-width="22" stroke-linecap="round"/>
+
+      <!-- baseline ticks -->
+      <g stroke="#606878" stroke-width="2.5">
+        <line x1="153.00" y1="323.37" x2="167.00" y2="299.12"/>   <!-- 0.00 -->
+        <line x1="76.84" y1="206.10" x2="104.69" y2="203.17"/>    <!-- 0.18 -->
+      </g>
+      <text x="150" y="335" text-anchor="middle" class="chmeta">0.00 mean</text>
+      <text x="92" y="192" text-anchor="middle" class="chmeta">0.18 heuristic</text>
+
+      <!-- centre readout -->
+      <text x="230" y="200" text-anchor="middle" fill="#3ecf6e" font-family="var(--mono)" font-size="58" font-weight="800">0.877</text>
+      <text x="230" y="228" text-anchor="middle" class="chttl">held-out test R&#178;</text>
+      <text x="230" y="248" text-anchor="middle" class="chmeta">train 0.9997</text>
+    </svg>
   </div>
-  <p class="mut" style="margin-top:1rem;">The result seemed to validate our thesis with very high accuracy. The engineering team celebrated. The evaluation team, not so much.</p>
-  <div class="snum">6 / 19</div>
-</section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 7 — The Flaw -->
-<section class="slide map-slide" id="s7">
-  <div class="kicker">Phase 5 — Evaluation (Alert!)</div>
-  <h2>The model was a tautology.</h2>
-  <p>The problem was not in the code, but in the definition of the target. The variable we were trying to predict (<code style="font-family:var(--mono);color:var(--amb)">composite_score_B</code>) was a linear combination of the same variables we used as predictors.</p>
-  <div class="card bad" style="margin-top:1rem;">
-    <h3 style="color:var(--red)">We validated a circle.</h3>
-    <p>The model was not learning any real relationship about soil fungi. It was simply learning to reconstruct its own input. The R² of 0.877 only measured the stability of the data normalization, not a real insight.</p>
+  <div class="chips" style="justify-content:center; margin-top:.4rem;">
+    <span class="chip">Baseline (mean) 0.00</span>
+    <span class="chip">Domain heuristic 0.18</span>
+    <span class="chip ok">Linear model 0.877</span>
   </div>
-  <div class="snum">7 / 19</div>
+  <div class="snum">6 / 16</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 8 — Falsification 1/2 -->
-<section class="slide map-slide" id="s8">
-  <div class="kicker">Phase 5 — Evaluation</div>
-  <h2>Three independent lines of evidence.</h2>
-  <p>To confirm our suspicions, we ran the falsification tests we had pre-registered before building the model.</p>
-  <div class="row">
-    <div class="col">
+<!-- ═══════════════════════════════════════════  SLIDE 7 (s8) — The tautology -->
+<section class="slide" id="s8">
+  <div class="kicker">Phase 5 — Evaluation · the structural flaw</div>
+  <h2>The model reconstructed its own ingredients.</h2>
+  <p class="subline">The target <strong>composite_score_B</strong> was a weighted sum of the very features used to predict it.</p>
+
+  <!-- loop diagram -->
+  <div class="loop" style="margin-top:.5rem;">
+    <div class="lnode">predictors<br><span style="color:var(--sub)">sealed · platanus · NDVI</span></div>
+    <div class="larrow">&rarr;</div>
+    <div class="lnode bad">composite_score_B<br><span style="color:var(--sub)">= weighted sum of them</span></div>
+    <div class="larrow">&rarr;</div>
+    <div class="lnode">linear model<br><span style="color:var(--sub)">"predicts" the score</span></div>
+  </div>
+  <div class="lback">The model only had to invert its own arithmetic.</div>
+
+  <div class="row" style="margin-top:1rem; align-items:center">
+    <div class="col" style="flex:1 1 540px;">
+      <!-- lollipop chart of VIF on a log axis -->
+      <svg viewBox="0 0 660 250" class="svgwrap" role="img" aria-label="Lollipop chart of Variance Inflation Factor on a log scale; VIF over 10 indicates collinearity">
+        <!-- log gridlines at 1,10,100,1000 ; x maps log10(v)/3 over 210..620 -->
+        <g stroke="#252c38" stroke-width="1">
+          <line x1="210" y1="20" x2="210" y2="210"/>   <!-- 1 -->
+          <line x1="346.7" y1="20" x2="346.7" y2="210" stroke="#f0b429" stroke-dasharray="5 4"/> <!-- 10 -->
+          <line x1="483.3" y1="20" x2="483.3" y2="210"/> <!-- 100 -->
+          <line x1="620" y1="20" x2="620" y2="210"/>   <!-- 1000 -->
+        </g>
+        <g class="chmeta" text-anchor="middle">
+          <text x="210" y="226">1</text><text x="346.7" y="226">10</text>
+          <text x="483.3" y="226">100</text><text x="620" y="226">1000</text>
+        </g>
+        <text x="346.7" y="14" text-anchor="middle" fill="#f0b429" font-family="var(--mono)" font-size="11">VIF &gt; 10 = collinearity</text>
+
+        <!-- rows: y step 26, start 38 -->
+        <!-- platanus 699 x=598.7 -->
+        <g><line x1="210" y1="38" x2="598.7" y2="38" stroke="#5c1a1a" stroke-width="2"/><circle cx="598.7" cy="38" r="6" fill="#f0524c"/><text x="204" y="42" text-anchor="end" class="chlab">platanus %</text><text x="612" y="42" class="chval" fill="#f0524c">699</text></g>
+        <!-- PRPI 628 x=592.4 -->
+        <g><line x1="210" y1="64" x2="592.4" y2="64" stroke="#5c1a1a" stroke-width="2"/><circle cx="592.4" cy="64" r="6" fill="#f0524c"/><text x="204" y="68" text-anchor="end" class="chlab">PRPI</text><text x="606" y="68" class="chval" fill="#f0524c">628</text></g>
+        <!-- sealed 166 x=513.4 -->
+        <g><line x1="210" y1="90" x2="513.4" y2="90" stroke="#5c1a1a" stroke-width="2"/><circle cx="513.4" cy="90" r="6" fill="#f0524c"/><text x="204" y="94" text-anchor="end" class="chlab">sealed</text><text x="527" y="94" class="chval" fill="#f0524c">166</text></g>
+        <!-- NDVI 92 x=478.4 -->
+        <g><line x1="210" y1="116" x2="478.4" y2="116" stroke="#5c1a1a" stroke-width="2"/><circle cx="478.4" cy="116" r="6" fill="#f0524c"/><text x="204" y="120" text-anchor="end" class="chlab">NDVI</text><text x="492" y="120" class="chval" fill="#f0524c">92</text></g>
+        <!-- total_trees 5.2 x=307.9 (green, under threshold) -->
+        <g><line x1="210" y1="142" x2="307.9" y2="142" stroke="#1a5c38" stroke-width="2"/><circle cx="307.9" cy="142" r="6" fill="#3ecf6e"/><text x="204" y="146" text-anchor="end" class="chlab">total_trees</text><text x="322" y="146" class="chval" fill="#3ecf6e">5.2</text></g>
+        <!-- species_richness 3.8 x=289.2 -->
+        <g><line x1="210" y1="168" x2="289.2" y2="168" stroke="#1a5c38" stroke-width="2"/><circle cx="289.2" cy="168" r="6" fill="#3ecf6e"/><text x="204" y="172" text-anchor="end" class="chlab">species_richness</text><text x="303" y="172" class="chval" fill="#3ecf6e">3.8</text></g>
+        <!-- sampling effort 1.2 x=220.8 -->
+        <g><line x1="210" y1="194" x2="220.8" y2="194" stroke="#1a5c38" stroke-width="2"/><circle cx="220.8" cy="194" r="6" fill="#3ecf6e"/><text x="204" y="198" text-anchor="end" class="chlab">sampling effort</text><text x="235" y="198" class="chval" fill="#3ecf6e">1.2</text></g>
+      </svg>
+    </div>
+    <div class="col" style="flex:1 1 220px;">
       <div class="card bad">
-        <h3 style="color:var(--red)">Line 1 — Internal Redundancy</h3>
-        <div class="stat red">R² 0.91</div>
-        <div class="stat-label">of the score explained only by sealed surface.</div>
-        <p style="margin-top:.6rem">91% of the variance of our "ecological index" was explained by a single abiotic variable. Biotic factors were irrelevant (r < 0.2). Our map was, in essence, a map of asphalt.</p>
+        <div class="stat red">91%</div>
+        <div class="stat-label">of the index = sealed surface alone. Biotic terms r&nbsp;&lt;&nbsp;0.2.</div>
+        <p style="margin-top:.5rem; font-size:.9rem; color:#d8c0c0">A map of asphalt in a biodiversity costume.</p>
       </div>
     </div>
-    <div class="col">
-      <div class="card bad">
-        <h3 style="color:var(--red)">Line 2 — Pre-registered External Test</h3>
-        <div class="stat red">p = 0.99</div>
-        <div class="stat-label">Partial F-test vs. GBIF data.</div>
-        <p style="margin-top:.6rem">We used 1,024 fungi observations from GBIF as external ground truth. Our block of "biotic" variables added no predictive power over an abiotic null model (ΔadjR² = -0.02).</p>
-      </div>
-    </div>
   </div>
-  <div class="snum">8 / 19</div>
+  <div class="snum">7 / 16</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 9 — Falsification 2/2 -->
+<!-- ═══════════════════════════════════════════  SLIDE 8 (s9) — Three lines failed -->
 <section class="slide" id="s9">
-  <div class="kicker">Phase 5 — Evaluation</div>
-  <h2>The final evidence and the right decision.</h2>
-  <div class="card bad" style="max-width:600px">
-    <h3 style="color:var(--red)">Line 3 — Literature Review (44 sources)</h3>
-    <div class="stat red" style="font-size:1.9rem">Weak evidence</div>
-    <div class="stat-label">AM → EM host mismatch, peer-reviewed evidence</div>
-    <p style="margin-top:.6rem">We found counter-evidence. In Amsterdam, the fungal diversity of plane trees <em>increased</em> with urbanization, the opposite of our hypothesis. The mechanism was, at the very least, questionable.</p>
+  <div class="kicker">Phase 5 — Evaluation · falsification</div>
+  <h2>Three independent lines, all failed.</h2>
+  <div class="trip">
+
+    <!-- Panel 1: donut 91 vs 9 -->
+    <div class="card bad">
+      <div class="act-label" style="color:var(--red)">Line 1 · Internal</div>
+      <svg viewBox="0 0 160 160" width="100%" style="max-width:200px; display:block; margin:.3rem auto" role="img" aria-label="Donut chart, 91 percent sealed surface">
+        <!-- r=60 cx=cy=80 circumference=376.99 ; 9% remainder track, 91% sealed -->
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#1a2030" stroke-width="22"/>
+        <!-- 91% arc starting at top (-90deg), clockwise. dash = .91*376.99=343.0 gap=34.0 -->
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#f0524c" stroke-width="22"
+                stroke-dasharray="343.0 376.99" transform="rotate(-90 80 80)" stroke-linecap="butt"/>
+        <text x="80" y="74" text-anchor="middle" fill="#f0524c" font-family="var(--mono)" font-size="30" font-weight="800">91%</text>
+        <text x="80" y="94" text-anchor="middle" class="chmeta">sealed surface</text>
+      </svg>
+      <p style="margin-top:.3rem; font-size:.88rem">Biotic terms irrelevant (r&nbsp;&lt;&nbsp;0.2).</p>
+    </div>
+
+    <!-- Panel 2: dumbbell down-slope -->
+    <div class="card bad">
+      <div class="act-label" style="color:var(--red)">Line 2 · External (GBIF)</div>
+      <svg viewBox="0 0 200 150" width="100%" style="display:block; margin:.2rem 0" role="img" aria-label="Dumbbell showing adjusted R-squared drops from 0.697 to 0.678 when biotic terms are added">
+        <!-- y maps adjR2 0.66..0.71 -> y 110..30. 0.697->? ; scale: (v-0.66)/0.05*80, y=110-... -->
+        <!-- 0.697: (0.037/0.05)*80=59.2 -> y=50.8 ; 0.678: (0.018/0.05)*80=28.8 -> y=81.2 -->
+        <line x1="50" y1="50.8" x2="150" y2="81.2" stroke="#5c1a1a" stroke-width="3"/>
+        <circle cx="50" cy="50.8" r="7" fill="#606878"/>
+        <circle cx="150" cy="81.2" r="7" fill="#f0524c"/>
+        <!-- down arrow -->
+        <path d="M150 95 l0 14 M145 104 l5 5 l5 -5" stroke="#f0524c" stroke-width="2" fill="none"/>
+        <text x="50" y="40" text-anchor="middle" class="chval">.697</text>
+        <text x="50" y="128" text-anchor="middle" class="chmeta">abiotic null</text>
+        <text x="150" y="71" text-anchor="middle" class="chval" fill="#f0524c">.678</text>
+        <text x="150" y="128" text-anchor="middle" class="chmeta">+ biotic</text>
+      </svg>
+      <p style="margin:0; font-size:.86rem">Adj-R&sup2; <em>drops</em> &Delta;&nbsp;&minus;0.02 · partial-F p&nbsp;=&nbsp;0.99.</p>
+      <div class="chips" style="margin-top:.4rem"><span class="chip bad">not spatial: Moran's I p = 0.21</span></div>
+      <p style="margin-top:.35rem; font-size:.78rem; color:var(--dim); font-family:var(--mono)">99/494 cells · 1,024 occurrences</p>
+    </div>
+
+    <!-- Panel 3: counter-arrow -->
+    <div class="card bad">
+      <div class="act-label" style="color:var(--red)">Line 3 · Literature</div>
+      <svg viewBox="0 0 200 150" width="100%" style="display:block; margin:.2rem 0" role="img" aria-label="Our mechanism expected diversity to fall, reality showed it rose">
+        <!-- expected down (red, dashed) -->
+        <g>
+          <path d="M40 30 L40 110" stroke="#5c1a1a" stroke-width="3" stroke-dasharray="5 4"/>
+          <path d="M34 96 l6 14 l6 -14" stroke="#5c1a1a" stroke-width="3" fill="none"/>
+          <text x="40" y="128" text-anchor="middle" class="chmeta">expected</text>
+          <text x="40" y="22" text-anchor="middle" class="chmeta">ours</text>
+        </g>
+        <!-- reality up (green) -->
+        <g>
+          <path d="M120 110 L120 30" stroke="#3ecf6e" stroke-width="3.5"/>
+          <path d="M114 44 l6 -14 l6 14" stroke="#3ecf6e" stroke-width="3.5" fill="none"/>
+          <text x="120" y="128" text-anchor="middle" class="chmeta">reality</text>
+          <text x="120" y="22" text-anchor="middle" fill="#3ecf6e" font-family="var(--mono)" font-size="11" font-weight="700">ROSE</text>
+        </g>
+      </svg>
+      <p style="margin:0; font-size:.86rem">Amsterdam: plane-tree fungal diversity <em>rose</em> with urbanisation.</p>
+    </div>
   </div>
-  <div class="note" style="margin-top:1.2rem; max-width: 80ch;">
-    <strong>CRISP-DM Verdict: STOP.</strong> The evidence was conclusive. The mycorrhizal hypothesis was not supported by the available data. The correct decision was not to "re-label and deliver," but to stop the cycle and pivot. A defended and documented STOP is a successful outcome.
+
+  <div class="note" style="margin-top:.9rem; max-width:90ch;">
+    <strong>CRISP-DM verdict: STOP</strong> (~75–80% confidence). We did not relabel a sealed-surface map as a fungal one.
   </div>
-  <div class="snum">9 / 19</div>
+  <div class="cites">
+    <span class="cite">GBIF: 1,024 occurrences, partial-F test</span>
+    <span class="cite">Verbeek, Gomes &amp; Merckx 2025, Plants People Planet (Amsterdam)</span>
+    <span class="cite">Berlin null: ~86% of AM richness = sealed/greenness axis</span>
+    <span class="cite">Pre-registered: phase-5/external-validation-design.md</span>
+  </div>
+  <div class="snum">8 / 16</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 10 — The Pivot -->
+<!-- ═══════════════════════════════════════════  SLIDE 9 (s10) — The Pivot -->
 <section class="slide" id="s10">
   <div class="kicker">The Pivot — Cycle B, same data, honest question</div>
-  <h2>We kept what the data supports.<br>We discarded what it doesn't.</h2>
-  <div class="acts">
-    <div class="act a"><div class="act-label">Cycle A — Killed</div><h4>Mycorrhizal Priority</h4><p>Classify cells for fungal network recovery. Falsified. It remains as a hypothesis for future work with measured soil data.</p></div>
-    <div class="act b"><div class="act-label">Phase 5 — Falsification</div><h4>Three independent FAILURES</h4><p>Internal R² of 0.91 with sealed surface · External p-value of 0.99 · Counter-evidence in literature. Decision: STOP with ~75–80% confidence.</p></div>
-    <div class="act c"><div class="act-label">Cycle B — Delivered</div><h4>Allergen Exposure Priority</h4><p>Same tree inventory. New question: where to sequence the felling the city is already doing, for maximum pollen relief.</p></div>
+  <h2 style="margin-bottom:.7rem">We kept what the data supports.</h2>
+  <div class="acts" style="margin:.7rem 0">
+    <div class="act a"><div class="act-label">Killed</div><h4>Mycorrhizal priority</h4><p>Falsified. Kept only as an untested future-work hypothesis.</p></div>
+    <div class="act b"><div class="act-label">What survives</div><h4>The plane tree, for its pollen</h4><p>Not the contested fungal mechanism, a property the data support.</p></div>
+    <div class="act c"><div class="act-label">Delivered</div><h4>Allergen-exposure priority</h4><p>Sequence the felling the city already runs.</p></div>
   </div>
-  <div class="row" style="margin-top:1.2rem; align-items:center">
-    <div class="col">
-      <div class="formula">priority = <span class="src">SOURCE</span> <span class="op">×</span> <span class="exp">EXPOSURE</span></div>
-      <ul class="list">
-        <li><strong style="color:var(--grn)">SOURCE</strong> = plane tree density × maturity score (std min-max)</li>
-        <li><strong style="color:var(--blu)">EXPOSURE</strong> = residential population, interpolated (std min-max)</li>
-        <li>Multiplicative — non-compensatory by design (corrects the flaw of Cycle A)</li>
+  <div class="row" style="margin-top:.8rem; align-items:center">
+    <div class="col" style="flex:1 1 320px;">
+      <figure class="framefig">
+        <video src="img/platanus-pollen.mp4" autoplay muted loop playsinline class="figimg"></video>
+        <figcaption class="fig-cap">Platanus pollen, mid-March to April.</figcaption>
+      </figure>
+    </div>
+    <div class="col" style="flex:1 1 200px; text-align:center;">
+      <!-- pollen composition donut -->
+      <svg viewBox="0 0 160 160" width="100%" style="max-width:190px; display:inline-block" role="img" aria-label="Platanus is 46 percent of Barcelona annual pollen index">
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#1a2030" stroke-width="22"/>
+        <!-- 46% arc: .46*376.99=173.4 -->
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#3ecf6e" stroke-width="22"
+                stroke-dasharray="173.4 376.99" transform="rotate(-90 80 80)"/>
+        <text x="80" y="74" text-anchor="middle" fill="#3ecf6e" font-family="var(--mono)" font-size="28" font-weight="800">46%</text>
+        <text x="80" y="93" text-anchor="middle" class="chmeta">Platanus</text>
+      </svg>
+      <p class="chcap" style="margin-top:.2rem">of Barcelona's annual pollen index · the single largest source</p>
+    </div>
+    <div class="col" style="flex:1 1 260px;">
+      <div class="formula" style="display:block; text-align:center">priority = <span class="src">source</span> <span class="op">&times;</span> <span class="exp">exposure</span></div>
+      <ul class="list" style="margin-top:.4rem">
+        <li class="ok"><strong style="color:var(--grn)">source</strong> = mature plane density (min-max)</li>
+        <li class="ok"><strong style="color:var(--blu)">exposure</strong> = residential population (min-max)</li>
+        <li class="ok"><strong>Multiplicative:</strong> no trees <em>or</em> no people &rarr; no priority.</li>
       </ul>
     </div>
-    <div class="col">
-      <div class="card ok">
-        <h3>Why multiplicative?</h3>
-        <p>A weighted sum (Cycle A) allows a high-variance component to dominate. A product is non-compensatory: a cell with no plane trees <em>or</em> no people cannot score high. There are no hidden weights to misconfigure.</p>
+  </div>
+  <div class="cites">
+    <span class="cite">Gabarra et al. 2002, Aerobiologia</span>
+    <span class="cite">Maya-Manzano et al. 2017, Urban For. &amp; Urban Green.</span>
+    <span class="cite">Pla Director de l'Arbrat 2017–2037</span>
+  </div>
+  <div class="snum">9 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 10 (s10b) — Aerobiology validation (NEW) -->
+<section class="slide" id="s10b">
+  <div class="kicker">Phase 5 (Cycle B) — Aerobiology validation</div>
+  <h2>Thirty-two years of pollen confirm the source.</h2>
+  <p class="subline">The XAC Barcelona station (Hirst volumetric trap, Prof. Jordina Belmonte, LAP-UAB) has counted pollen <strong>continuously since 1994</strong>. <em>Platanus</em> is risk level 3&ndash;4, the maximum tier.</p>
+
+  <div class="row" style="margin-top:.6rem; align-items:flex-start">
+    <div class="col" style="flex:1 1 560px;">
+      <!-- 32-year Mar-Apr pollen-season ridgeline / area chart (distinct viz) -->
+      <svg viewBox="0 0 700 300" class="svgwrap" role="img" aria-label="Thirty-two-year ridgeline of the March to April Platanus-dominated pollen season, peaking each spring">
+        <!-- frame -->
+        <g stroke="#252c38" stroke-width="1">
+          <line x1="56" y1="20" x2="56" y2="250"/>
+          <line x1="56" y1="250" x2="680" y2="250"/>
+        </g>
+        <!-- clinical symptom threshold ~50 grains/m3 reference band -->
+        <line x1="56" y1="226" x2="680" y2="226" stroke="#f0b429" stroke-width="1.2" stroke-dasharray="5 4" opacity=".8"/>
+        <text x="60" y="221" fill="#f0b429" font-family="var(--mono)" font-size="10">clinical symptom threshold ~50 grains/m&#179;</text>
+        <!-- y label -->
+        <text x="20" y="135" fill="#a0aab8" font-family="var(--mono)" font-size="10" transform="rotate(-90 20 135)" text-anchor="middle">P/m&#179; (Mar&ndash;Apr peak)</text>
+        <!-- peak markers: mean ~750, max ~2250. y scale: 0 at 250, top(2400) at 30 -> px = 250 - v/2400*220 -->
+        <!-- max line ~2250 -> y=44.4 ; mean ~750 -> y=181.2 -->
+        <!-- ridgeline: 32 spring spikes across x 56..680 -->
+        <g fill="none" stroke="#3ecf6e" stroke-width="1.6" opacity=".92">
+          <path d="M56 248
+            L66 246 L74 120 L82 246
+            L96 245 L104 70 L112 245
+            L126 246 L134 150 L142 246
+            L156 244 L164 95 L172 244
+            L186 246 L194 175 L202 246
+            L216 243 L224 60 L232 243
+            L246 245 L254 130 L262 245
+            L276 244 L284 105 L292 244
+            L306 246 L314 165 L322 246
+            L336 243 L344 78 L352 243
+            L366 245 L374 140 L382 245
+            L396 244 L404 88 L412 244
+            L426 246 L434 158 L442 246
+            L456 243 L464 66 L472 243
+            L486 245 L494 122 L502 245
+            L516 244 L524 100 L532 244
+            L546 246 L554 168 L562 246
+            L576 243 L584 84 L592 243
+            L606 245 L614 134 L622 245
+            L636 244 L644 110 L652 244
+            L666 246 L674 152 L680 246" />
+        </g>
+        <!-- mean + max annotations on the right -->
+        <line x1="56" y1="181.2" x2="680" y2="181.2" stroke="#3ecfcf" stroke-width="1" stroke-dasharray="2 4" opacity=".5"/>
+        <text x="676" y="177" text-anchor="end" fill="#3ecfcf" font-family="var(--mono)" font-size="10">mean peak ~750 P/m&#179;</text>
+        <text x="230" y="54" fill="#3ecf6e" font-family="var(--mono)" font-size="10">historic max ~2250 P/m&#179;</text>
+        <!-- x axis labels -->
+        <g class="chmeta" text-anchor="middle">
+          <text x="74" y="266">1994</text><text x="370" y="266">2010</text><text x="666" y="266">2026</text>
+        </g>
+        <text x="368" y="288" text-anchor="middle" class="chcap">one spring spike per year &middot; 32 continuous seasons, Mar&ndash;Apr, Platanus-dominated window</text>
+      </svg>
+      <div class="note" style="margin-top:.7rem; max-width:none">
+        <strong>Calendar note (Belmonte et al.):</strong> &ldquo;near the source plants, pollen levels can be higher than the charts show&rdquo;: the scientific licence for mapping at street level.
+      </div>
+    </div>
+    <div class="col" style="flex:1 1 240px;">
+      <figure class="framefig">
+        <img src="img/wind-pollen-dispersal.png" alt="Wind-borne pollen plumes drifting over city blocks">
+        <figcaption class="fig-cap">Wind-borne plumes carry the source into where people live.</figcaption>
+      </figure>
+      <div class="card amb" style="margin-top:.8rem">
+        <h3 style="color:var(--amb)">Honest limit: validated on time + species, not space</h3>
+        <p style="font-size:.86rem; color:#e8d8b8">No open station-level <em>Platanus</em> time-series with coordinates exists. One in-city station gives zero intra-city resolution. The source layer is a <strong>literature-anchored emission proxy</strong>, confirmed by the 32-year Hirst series on <strong>time and species</strong>, not spatially.</p>
       </div>
     </div>
   </div>
-  <div class="snum">10 / 19</div>
+  <div class="cites">
+    <span class="cite">XAC Barcelona &middot; Hirst volumetric trap &middot; Belmonte, LAP-UAB / SCAIC</span>
+    <span class="cite">Gabarra, Belmonte &amp; Canela 2002, Aerobiologia: Platanus ~46% annual index</span>
+    <span class="cite">Maya-Manzano et al. 2017, Urban For. &amp; Urban Green.: ~50 grains/m&#179; threshold</span>
+  </div>
+  <div class="snum">10 / 16</div>
 </section>
 
 <!-- ═══════════════════════════════════════════  SLIDE 11 — Cycle B Results -->
 <section class="slide" id="s11">
   <div class="kicker">Phase 5 (Cycle B) — Evaluation Results</div>
   <h2>Every pre-registered test passed.</h2>
-  <div class="row">
-    <div class="col">
+  <div class="row" style="align-items:flex-start">
+    <div class="col" style="flex:1 1 420px;">
+      <!-- grouped bar: burden capture, priority vs density vs random at top-15 / top-50 -->
+      <svg viewBox="0 0 480 280" class="svgwrap" role="img" aria-label="Grouped bar of pollen burden captured: priority beats density beats random at top-15 and top-50">
+        <!-- y axis 0..0.5 -> plot height 200 (y 30..230). scale: val/0.5*200 -->
+        <g stroke="#252c38" stroke-width="1">
+          <line x1="60" y1="30" x2="60" y2="230"/>
+          <line x1="60" y1="230" x2="460" y2="230"/>
+          <line x1="60" y1="130" x2="460" y2="130" stroke-dasharray="3 4"/>
+        </g>
+        <g class="chmeta" text-anchor="end">
+          <text x="52" y="234">0</text><text x="52" y="134">0.25</text><text x="52" y="34">0.50</text>
+        </g>
+        <!-- group 1 top-15 (centre x=160). bars width 30, gap 6 -->
+        <!-- priority 0.18 -> h=72 y=158 ; density 0.13 -> h=52 y=178 ; random 0.03 -> h=12 y=218 -->
+        <g>
+          <rect x="100" y="158" width="30" height="72" rx="3" fill="#3ecf6e"/>
+          <rect x="136" y="178" width="30" height="52" rx="3" fill="#4da6ff"/>
+          <rect x="172" y="218" width="30" height="12" rx="3" fill="#606878"/>
+          <text x="115" y="152" text-anchor="middle" class="chval" fill="#3ecf6e">.18</text>
+          <text x="151" y="172" text-anchor="middle" class="chval" fill="#4da6ff">.13</text>
+          <text x="187" y="212" text-anchor="middle" class="chmeta">.03</text>
+          <text x="151" y="250" text-anchor="middle" class="chlab">top-15</text>
+        </g>
+        <!-- group 2 top-50 (start x=300). priority 0.45 h=180 y=50 ; density 0.35 h=140 y=90 ; random 0.10 h=40 y=190 -->
+        <g>
+          <rect x="300" y="50" width="30" height="180" rx="3" fill="#3ecf6e"/>
+          <rect x="336" y="90" width="30" height="140" rx="3" fill="#4da6ff"/>
+          <rect x="372" y="190" width="30" height="40" rx="3" fill="#606878"/>
+          <text x="315" y="44" text-anchor="middle" class="chval" fill="#3ecf6e">.45</text>
+          <text x="351" y="84" text-anchor="middle" class="chval" fill="#4da6ff">.35</text>
+          <text x="387" y="184" text-anchor="middle" class="chmeta">.10</text>
+          <text x="351" y="250" text-anchor="middle" class="chlab">top-50</text>
+        </g>
+        <!-- legend -->
+        <g font-family="var(--mono)" font-size="11">
+          <rect x="60" y="266" width="11" height="11" fill="#3ecf6e"/><text x="76" y="276" fill="#a0aab8">priority</text>
+          <rect x="160" y="266" width="11" height="11" fill="#4da6ff"/><text x="176" y="276" fill="#a0aab8">density-only</text>
+          <rect x="290" y="266" width="11" height="11" fill="#606878"/><text x="306" y="276" fill="#a0aab8">random</text>
+        </g>
+        <text x="260" y="18" text-anchor="middle" class="chcap">share of city pollen burden captured</text>
+      </svg>
+    </div>
+    <div class="col" style="flex:1 1 300px;">
+      <div class="checks">
+        <div class="crow"><span class="ck">&#10003;</span><span class="ct"><b>T1</b> reorders vs density <span>Spearman 0.89 · Jaccard&#8321;&#8325; 0.30</span></span></div>
+        <div class="crow"><span class="ck">&#10003;</span><span class="ct"><b>T2</b> non-redundant <span>corr(source, exposure) = 0.30</span></span></div>
+        <div class="crow"><span class="ck">&#10003;</span><span class="ct"><b>T3</b> captures more burden <span>+4.6 pp over density-only</span></span></div>
+        <div class="crow"><span class="ck">&#10003;</span><span class="ct"><b>T4</b> sensitivity <span>holds in 3 / 3 arms</span></span></div>
+      </div>
+      <div class="chips" style="margin-top:.7rem">
+        <span class="chip amb">age: Spearman 0.999 vs population</span>
+        <span class="chip amb">sex: women 1.6&#215; antihistamines, spatially flat</span>
+        <span class="chip amb">cycling: no flow data</span>
+      </div>
+      <p class="chcap" style="margin-top:.4rem">Honestly rejected layers, declared in the design.</p>
+    </div>
+  </div>
+  <div class="cites">
+    <span class="cite">Pre-registered: phase-5/test-design.md (T1&ndash;T4)</span>
+    <span class="cite">T3 burden capture: +4.6 pp over density-only, top-15</span>
+  </div>
+  <div class="snum">11 / 16</div>
+</section>
+
+<!-- ═══════════════════════════════════════════  SLIDE 12 (s12b) — Phase-6 deployment (NEW) -->
+<section class="slide" id="s12b">
+  <div class="kicker">Phase 6 — Deployment</div>
+  <h2>Recomputed where people actually live.</h2>
+  <p class="subline">Priority re-run at <strong>1,068 census sections</strong> (the native demand grain, dropping the interpolation crutch), then turned into a per-street worklist.</p>
+
+  <div class="row" style="margin-top:.6rem; align-items:flex-start">
+    <div class="col" style="flex:1 1 430px;">
+      <!-- cross-grain corroboration: segmented horizontal bar (distinct viz) -->
+      <svg viewBox="0 0 480 150" class="svgwrap" role="img" aria-label="Segmented bar of cross-grain corroboration badges: 187 corroborated, 169 artifact, 169 underrated">
+        <!-- totals 187+169+169 = 525 across width 56..456 (400px) -->
+        <!-- 187 -> 142.5 ; 169 -> 128.8 ; 169 -> 128.8 -->
+        <text x="56" y="22" class="chcap">cross-grain corroboration of 525 ranked sections</text>
+        <g>
+          <rect x="56" y="34" width="142.5" height="34" rx="3" fill="#3ecf6e" opacity=".9"/>
+          <rect x="198.5" y="34" width="128.8" height="34" fill="#f0524c" opacity=".85"/>
+          <rect x="327.3" y="34" width="128.8" height="34" rx="3" fill="#f0b429" opacity=".85"/>
+          <text x="127" y="56" text-anchor="middle" fill="#06120c" font-family="var(--mono)" font-size="13" font-weight="800">187</text>
+          <text x="263" y="56" text-anchor="middle" fill="#fff" font-family="var(--mono)" font-size="13" font-weight="800">169</text>
+          <text x="391" y="56" text-anchor="middle" fill="#1a1204" font-family="var(--mono)" font-size="13" font-weight="800">169</text>
+        </g>
+        <g font-family="var(--mono)" font-size="11">
+          <rect x="56" y="84" width="11" height="11" fill="#3ecf6e"/><text x="72" y="94" fill="#a0aab8">CORROBORATED &middot; act first</text>
+          <rect x="56" y="102" width="11" height="11" fill="#f0524c"/><text x="72" y="112" fill="#a0aab8">ARTIFACT &middot; section-grain only (rank-1 Montju&iuml;c)</text>
+          <rect x="56" y="120" width="11" height="11" fill="#f0b429"/><text x="72" y="130" fill="#a0aab8">UNDERRATED &middot; cell-grain only</text>
+        </g>
+      </svg>
+      <div class="card amb" style="margin-top:.5rem">
+        <p style="font-size:.86rem; color:#e8d8b8; margin:0">Scope caveat: <strong>~86% of the co-benefit leans on artifacts.</strong> Corroboration tests spatial agreement between grains: it does <em>not</em> validate the pollen proxy itself.</p>
+      </div>
+    </div>
+    <div class="col" style="flex:1 1 300px;">
+      <h3 style="font-size:.92rem; color:var(--teal); font-family:var(--mono)">street_removal_actions.csv</h3>
       <table>
-        <thead><tr><th>Test</th><th>Criterion</th><th>Result</th></tr></thead>
+        <thead><tr><th>Section #1 · Montjuïc</th><th>Street</th><th>Planes</th><th>Mature</th></tr></thead>
         <tbody>
-          <tr><td>T1 — Reorders vs. simple density</td><td class="lo">J₁₅ &lt; 0.70</td><td class="hi">J₁₅ = 0.30 ✓</td></tr>
-          <tr><td>T2 — Non-redundant layers</td><td class="lo">both material</td><td class="hi">corr(src, exp) = 0.30 ✓</td></tr>
-          <tr><td>T3 — Exposure load, top-15</td><td class="lo">beats density</td><td class="hi">+4.6 pp margin ✓</td></tr>
-          <tr><td>T4 — Sensitivity (3 arms)</td><td class="lo">holds in ≥ 2</td><td class="hi">3/3 ✓</td></tr>
-          <tr><td>Pollen source validation</td><td class="lo">measured series</td><td class="nd">INFEASIBLE — proxy, declared</td></tr>
+          <tr><td class="lo">03024</td><td>Av. de l'Estadi</td><td class="hi">277</td><td>114</td></tr>
+          <tr><td class="lo">03024</td><td>Av. Miramar</td><td class="hi">224</td><td>100</td></tr>
+          <tr><td class="lo">03024</td><td>Pl. Carles Buïgas</td><td class="hi">117</td><td>72</td></tr>
+          <tr><td class="lo">03024</td><td>Av. Francesc Ferrer i Guàrdia</td><td class="hi">92</td><td>51</td></tr>
         </tbody>
       </table>
-      <div class="card bad" style="padding:.9rem 1rem; margin-top:1rem;">
-        <h3 style="color:var(--amb)">Honestly rejected layers</h3>
-        <span class="pill bad">Age prevalence — Spearman 0.999 vs population, redundant</span>
-        <span class="pill bad">Sex — women 1.6× antihistamines, spatially flat ratio</span>
-        <span class="pill bad">Bike lanes — no cyclist flow data, rejected in design</span>
+      <ul class="list" style="margin-top:.5rem">
+        <li class="ok">100% address-match; counts reconcile to section totals</li>
+        <li class="x"><strong>No</strong> street-level priority column &mdash; refuses the ecological fallacy</li>
+      </ul>
+      <div class="card amb" style="margin-top:.5rem">
+        <h3 style="color:var(--amb); font-size:.92rem">Honest negative: MAUP</h3>
+        <p style="font-size:.84rem; color:#e8d8b8; margin:0">At section grain the exposure layer <strong>fails</strong> the reorder test it passed at cell grain (Spearman 0.97): a few park-like sections with huge mature-plane clusters dominate. We ship both grains with the caveat.</p>
       </div>
     </div>
-    <div class="col">
-      <figure>
-        <img src="sensitivity_comparison.png" alt="Sensitivity comparison chart" class="img-fig">
-        <figcaption class="fig-cap">Sensitivity: the ranking's verdict holds across the 3 perturbation arms.</figcaption>
-      </figure>
-    </div>
   </div>
-  <div class="snum">11 / 19</div>
+  <div class="cites">
+    <span class="cite">phase-6/street_removal_actions.csv &middot; 1,068 sections, 0 unmatched</span>
+    <span class="cite">MAUP measured in our own output, not hidden</span>
+  </div>
+  <div class="snum">12 / 16</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 12 — Equity Variant -->
+<!-- ═══════════════════════════════════════════  SLIDE 13 (s12) — Equity Variant -->
 <section class="slide" id="s12">
   <div class="kicker">V3 — An honest win for equity</div>
-  <h2>Can we prioritize the most vulnerable communities?</h2>
-  <p>We created a model variant (v3) that multiplies the priority by a <strong>deprivation index</strong> (inverted income), giving more weight to areas with fewer resources. This new layer was uncorrelated with the other two (r = −0.008, 0.17), ensuring it provided new information.</p>
-  <div class="card" style="margin-top:1rem">
-    <h3>v3 — Equity Variant (deprivation-weighted)</h3>
-    <div class="row" style="gap:2rem; margin-top:1.2rem;">
-      <div class="col">
-        <div class="stat grn">40% → 60%</div>
-        <div class="stat-label">Share of the most deprived tercile in the top-15 priority</div>
-      </div>
-      <div class="col">
-        <div class="stat amb">−0.5 pp</div>
-        <div class="stat-label">Exposure relief sacrificed in exchange</div>
-      </div>
+  <h2>An equity variant, trade-off measured.</h2>
+  <p class="subline">A third layer re-weights by deprivation; uncorrelated with the others (r&nbsp;=&nbsp;&minus;0.008,&nbsp;0.17), so it adds new information.</p>
+
+  <div class="row" style="margin-top:1rem; align-items:center">
+    <div class="col" style="flex:1 1 460px;">
+      <!-- dumbbell / slope: deprived-tercile share of top-15 -->
+      <svg viewBox="0 0 460 240" class="svgwrap" role="img" aria-label="Most-deprived tercile share of top-15 priority rises from 40 percent at base to 60 percent in equity v3">
+        <!-- y maps 0..100% over y 210..30 (height 180). 40%->y=138 ; 60%->y=102 -->
+        <g stroke="#252c38" stroke-width="1">
+          <line x1="60" y1="30" x2="60" y2="210"/>
+          <line x1="60" y1="210" x2="430" y2="210"/>
+        </g>
+        <g class="chmeta" text-anchor="end">
+          <text x="52" y="214">0</text><text x="52" y="124">50%</text><text x="52" y="34">100%</text>
+        </g>
+        <!-- connector -->
+        <line x1="150" y1="138" x2="340" y2="102" stroke="#3ecf6e" stroke-width="3"/>
+        <!-- up arrow on the slope -->
+        <path d="M345 96 l-6 6 l8 1" stroke="#3ecf6e" stroke-width="2.5" fill="none"/>
+        <!-- base point 40% -->
+        <circle cx="150" cy="138" r="9" fill="#606878"/>
+        <text x="150" y="128" text-anchor="middle" class="chval">40%</text>
+        <text x="150" y="232" text-anchor="middle" class="chlab">base</text>
+        <!-- equity v3 60% -->
+        <circle cx="340" cy="102" r="9" fill="#3ecf6e"/>
+        <text x="340" y="92" text-anchor="middle" class="chval" fill="#3ecf6e">60%</text>
+        <text x="340" y="232" text-anchor="middle" class="chlab">equity v3</text>
+        <text x="245" y="18" text-anchor="middle" class="chcap">most-deprived tercile share of top-15 priority</text>
+      </svg>
     </div>
-    <p style="margin-top:1rem">An "almost-free equity win": the planner can choose between efficiency and equity with the opportunity cost measured and made explicit.</p>
+    <div class="col" style="flex:1 1 220px;">
+      <div class="card amb">
+        <div class="stat amb">&minus;0.5 pp</div>
+        <div class="stat-label">exposure relief given up in exchange. An "almost-free" equity win.</div>
+      </div>
+      <div class="chips" style="margin-top:.6rem"><span class="chip amb">cost: &minus;0.5 pp exposure relief</span></div>
+    </div>
   </div>
-  <div class="snum">12 / 19</div>
+  <div class="cites">
+    <span class="cite">INE gross-income-per-person atlas (2023)</span>
+    <span class="cite">Deprivation r &minus;0.008, 0.17 vs source/exposure &middot; phase-5 equity artifact</span>
+    <span class="cite">Cost &minus;0.5 pp exposure relief; deprived-tercile share 40% &rarr; 60%</span>
+  </div>
+  <div class="snum">13 / 16</div>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 13 — Live map: deployment -->
+<!-- ═══════════════════════════════════════════  SLIDE 14 (s13) — Live map: deployment -->
 <section class="slide map-slide" id="s13">
   <div class="map-bar">
     <div class="kicker" style="margin:0">Interactive Map — Deployment Priority</div>
     <span style="color:var(--sub);font-size:.85rem">Interactive: switch between 400m cells and census sections, click to see the street list.</span>
-    <a href="outputs/phase-6/maps/deployment_map.html" target="_blank">open in full tab ↗</a>
-    <span class="map-note">13 / 19 — if blank in Chrome: open with Safari or run a local server</span>
+    <a href="phase-6/maps/deployment_map.html" target="_blank">open in full tab ↗</a>
+    <span class="map-note">14 / 16 — if blank in Chrome: open with Safari or run a local server</span>
   </div>
   <iframe src="phase-6/maps/deployment_map.html" class="map-frame" title="Mapa de prioridad de eliminación de Platanus en Barcelona" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 14 — Live map: equity shift -->
+<!-- ═══════════════════════════════════════════  SLIDE 15 (s14) — Live map: equity shift -->
 <section class="slide map-slide" id="s14">
   <div class="map-bar">
     <div class="kicker" style="margin:0">Interactive Map — Efficiency vs. Equity</div>
     <span style="color:var(--sub);font-size:.85rem">Which cells change when adding the deprivation weight? Blue = equity gains, Orange = efficiency losses.</span>
-    <a href="outputs/phase-6/maps/priority_equity_shift.html" target="_blank">open in full tab ↗</a>
-    <span class="map-note">14 / 19</span>
+    <a href="phase-6/maps/priority_equity_shift.html" target="_blank">open in full tab ↗</a>
+    <span class="map-note">15 / 16</span>
   </div>
   <iframe src="phase-6/maps/priority_equity_shift.html" class="map-frame" title="Mapa de cambio por equidad" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
 </section>
 
-<!-- ═══════════════════════════════════════════  SLIDE 15 — Conclusion -->
-<section class="slide" id="s15">
-  <div class="kicker">Conclusion</div>
-  <h2>The strongest result is<br>the hypothesis we killed.</h2>
-  <div class="row">
-    <div class="col">
-      <p class="big">A fully documented, pre-registered falsification—without smoothing, without silent changes—is the clearest demonstration of the Evaluation phase's function.</p>
-      <div class="note" style="margin-top:1rem">
-        <strong>Five methodological contributions, without new algorithms:</strong><br>
-        Failure-as-an-outcome · Anti-tautology discipline · Nominal vs. effective weights · Honesty gate for layers · Honest downgrade on lack of validation data.
+<!-- ═══════════════════════════════════════════  SLIDE 16 (s15) — Conclusion (renewal) -->
+<section class="slide hero" id="s15">
+  <img src="img/renewal-sapling.png" alt="A young replacement sapling where a plane tree stood, at dawn" class="hero-img">
+  <div class="hero-scrim"></div>
+  <div class="hero-body">
+    <div class="kicker">Conclusion</div>
+    <h2 style="max-width:22ch">The strongest result is the hypothesis we killed.</h2>
+    <p class="big" style="max-width:62ch">
+      A pre-registered falsification, reported without smoothing, is the clearest proof the Evaluation phase did its job. We did not relabel a sealed-surface map as a fungal one; we shipped the honest question instead.
+    </p>
+    <div class="row" style="margin-top:1rem; align-items:stretch">
+      <div class="col" style="flex:1 1 360px;">
+        <div class="note" style="background:rgba(12,21,32,.8)">
+          <strong>Five contributions, no new algorithm:</strong><br>
+          Failure-as-outcome &middot; anti-tautology discipline &middot; nominal vs. effective weights &middot; honesty gate for layers &middot; honest downgrade when validation data is missing.
+        </div>
+      </div>
+      <div class="col" style="flex:1 1 320px;">
+        <div class="card amb" style="background:rgba(32,24,8,.82)">
+          <h3 style="color:var(--amb)">What next</h3>
+          <p style="font-size:.88rem; color:#e8d8b8">
+            Pilot inside the 2026&ndash;27 renewal plan in one district (e.g. Sant Mart&iacute;), sequencing the felling the city already commits to and pairing it with the <em>Eixos Verds</em> replanting. <em>Platanus</em> sensitises ~37% of the pollen-allergic (~24,500 of the committed renewals), so the co-benefit is measurable from day one.
+          </p>
+        </div>
       </div>
     </div>
-    <div class="col">
-      <div class="card amb">
-        <h3 style="color:var(--amb)">Limitation: MAUP</h3>
-        <p>At the <strong>census section</strong> scale, a park section (Montjuïc: 594 mature plane trees, ~2,000 residents) dominates the ranking. The T1 test <strong>fails</strong> (Spearman 0.97). This is the Modifiable Areal Unit Problem. The answer changes with the map's granularity. We measured and declared it, delivering both granularities with the explicit warning.</p>
-      </div>
-      <p class="mut" style="margin-top:1rem; font-size:.88rem">
-        Full paper: <code style="font-family:var(--mono)">outputs/reports/crispdm-phase-1-to-6-paper.md</code><br>
-        Interactive map: <code style="font-family:var(--mono)">outputs/phase-6/maps/deployment_map.html</code>
-      </p>
+    <div class="cites">
+      <span class="cite">Full paper: outputs/reports/crispdm-phase-1-to-6-paper.md</span>
+      <span class="cite">~37% of pollen-allergic sensitised to Platanus (Puigg&ograve;s 2015)</span>
+      <span class="cite">Pla Director de l'Arbrat 2017&ndash;2037</span>
     </div>
   </div>
-  <div class="snum">15 / 19</div>
-</section>
-
-<!-- ═══════════════════════════════════════════  SLIDE 16 — Project Intro -->
-<section class="slide" id="s16">
-  <div class="kicker">Section 1: Introduction</div>
-  <h2>Renewing Barcelona's Green Heart</h2>
-  <div class="row">
-    <div class="col">
-      <p class="big">Our cities are complex ecosystems. For decades, urban planning has favored efficiency, often creating green landscapes dominated by a few tree species. In Barcelona, the London plane tree (Platanus × acerifolia), though iconic, represents one such monoculture.</p>
-      <p>This reliance on a single species, however robust it may seem, creates a hidden ecological vulnerability. A less diverse urban forest is more susceptible to specific pests and diseases, and less adaptable to the growing challenges of climate change, such as droughts. Furthermore, a high concentration of pollen from a single source can significantly impact the quality of life and respiratory health of residents.</p>
-    </div>
-    <div class="col">
-      <p>Our project stems from a fundamental question: How can we transform this challenge into an opportunity?</p>
-      <p>We propose a planned and strategic transition. This is not about removing trees indiscriminately, but about initiating a cycle of urban renewal. Our tool serves as a compass guiding this process, helping the city evolve towards a more diverse, resilient, and healthy urban forest. By diversifying our green heritage, we not only strengthen the ecosystem against future crises but also create a more harmonious and healthier environment for all its inhabitants.</p>
-      <p><strong>This is a plan to cultivate Barcelona's future, one tree at a time.</strong></p>
-    </div>
-  </div>
-  <div class="snum">16 / 19</div>
-</section>
-
-<!-- ═══════════════════════════════════════════  SLIDE 17 — Technical Core -->
-<section class="slide" id="s17">
-  <div class="kicker">Section 2: The Technical Core</div>
-  <h2>Data Intelligence for an Urban Ecosystem</h2>
-  <p>To build our compass, we have integrated and analyzed multiple layers of high-quality information, all from open and verifiable sources, ensuring a transparent and reproducible process.</p>
-  <div class="row">
-    <div class="col">
-      <h3>Our Data Sources:</h3>
-      <ul class="list">
-        <li><strong>Barcelona Tree Inventory (Open Data BCN, 2026):</strong> The complete census of the city's more than 188,000 trees, which tells us what species are present and where they are located.</li>
-        <li><strong>Demographic Data (National Institute of Statistics):</strong> Information on residential population density, to understand how many people live in each area.</li>
-        <li><strong>Socioeconomic Deprivation Index:</strong> An indicator that allows us to add a layer of equity to our recommendations, ensuring that benefits reach all neighborhoods.</li>
-        <li><strong>Scientific Databases (FungalRoot, VPA):</strong> Scientifically validated information on the ecological characteristics and allergenic potential of different tree species.</li>
-      </ul>
-    </div>
-    <div class="col">
-      <h3>Our Core Logic:</h3>
-      <p>The heart of our tool is a composite indicator we created to identify priority intervention areas. The formula is simple yet powerful:</p>
-      <div class="formula" style="font-size: clamp(1rem, 2vw, 1.5rem);">Priority = <span class="src">Source Intensity</span> <span class="op">×</span> <span class="exp">Population Exposure</span></div>
-      <p>This approach allows us to go beyond simply acting where there are more trees. We prioritize areas where the tree renewal process will have the greatest positive impact on public health and well-being.</p>
-      <p class="mut">Furthermore, we have developed an equity variant of the index (v3), demonstrating that it is possible to direct efforts towards more socioeconomically vulnerable areas with minimal cost to the overall efficiency of the program. The entire process, from data loading to index generation, is encapsulated in a deterministic and auditable code pipeline.</p>
-    </div>
-  </div>
-  <div class="snum">17 / 19</div>
-</section>
-
-<!-- ═══════════════════════════════════════════  SLIDE 18 — The Interface -->
-<section class="slide" id="s18">
-  <div class="kicker">Section 3: The Interface</div>
-  <h2>Navigating Barcelona's Green Future</h2>
-  <div class="row" style="align-items: center;">
-    <div class="col" style="flex: 1 1 400px;">
-        <p>This is the result of our work: an interactive map designed to be a decision-support tool for urban planners in Barcelona.</p>
-        <p>What does this tool allow you to do?</p>
-        <ul class="list">
-            <li><strong>Visualize Priority:</strong> The map uses an intuitive color code to show the census sections of the city where tree renewal intervention would generate the greatest public health benefit. Brighter areas indicate higher priority for initiating this diversification process.</li>
-            <li><strong>Explore Action Plans:</strong> By clicking on any section of the map, the tool displays detailed information, including a list of streets and the suggested number of trees for renewal. This translates a city-level strategy into concrete actions at the street level.</li>
-            <li><strong>Analyze with Rigor (MAUP):</strong> The interface allows switching the visualization between census section granularity and a uniform 400m grid. This functionality is not just a technical detail; it is a demonstration of analytical rigor. It allows planners to observe how the scale of analysis (known as the "Modifiable Areal Unit Problem" or MAUP) can influence results, fostering more robust and context-aware decisions.</li>
-        </ul>
-    </div>
-    <div class="col" style="flex: 1 1 500px; min-width: 400px;">
-        <iframe src="outputs/phase-6/maps/deployment_map.html" style="width:100%; height: 450px; border: 1px solid var(--line); border-radius: 10px;" title="Interactive Map for Green Renewal" loading="lazy" sandbox="allow-scripts allow-same-origin"></iframe>
-    </div>
-  </div>
-  <p style="margin-top: 1rem;">This tool transforms complex data into a visual and actionable guide, facilitating more strategic, equitable, and citizen-well-being-oriented urban tree management.</p>
-  <div class="snum">18 / 19</div>
-</section>
-
-<!-- ═══════════════════════════════════════════  SLIDE 19 — Strategic Plan -->
-<section class="slide" id="s19">
-  <div class="kicker">Section 4: Business Plan</div>
-  <h2>From Tool to Urban Strategy</h2>
-  <div class="cards" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch;">
-    <div class="card blu">
-      <h4 style="color:var(--blu)">1. The Opportunity: Health-Driven Urban Planning</h4>
-      <p style="font-size:.9rem; line-height:1.5; color: var(--sub)">
-        Barcelona's plan to remove ~25,000 plane trees by 2037 is a sunk cost. Our tool transforms this into a public health investment by targeting the primary source of city pollen (~46%), which affects over 25% of residents.
-      </p>
-      <p style="font-size:.8rem; line-height:1.5; color: var(--dim); margin-top:.5rem;">
-        <strong>Target Users:</strong> Urban Planners (Parcs i Jardins), Public Health Officials (ASPB), and Strategic Planners (Barcelona Regional).
-      </p>
-    </div>
-    <div class="card ok">
-      <h4 style="color:var(--grn)">2. The Product: A Decision-Support Engine</h4>
-      <p style="font-size:.9rem; line-height:1.5; color: var(--sub)">
-        We deliver an interactive map and prioritized worklist to guide tree felling.
-      </p>
-      <ul class="list" style="font-size:.85rem; margin-top:.4rem; padding-left:1rem;">
-        <li><strong>Maximize Health ROI:</strong> Focuses resources for the greatest reduction in pollen exposure per euro spent.</li>
-        <li><strong>Data-Driven Governance:</strong> Provides a transparent, auditable rationale for interventions.</li>
-        <li><strong>Equity Analysis (v3):</strong> A deprivation-weighted variant measures the trade-off between efficiency and social equity, enabling an "almost-free" win for vulnerable communities.</li>
-      </ul>
-    </div>
-    <div class="card amb">
-      <h4 style="color:var(--amb)">3. Go-to-Market & Adoption Strategy</h4>
-      <ul class="list" style="font-size:.85rem; margin-top:.4rem; padding-left:1rem;">
-        <li><strong>Pilot (0-12m):</strong> Integrate into the 2026-27 felling plan for a pilot district (e.g., Sant Martí). Validate impact via public health metrics and operational feedback.</li>
-        <li><strong>Rollout (12-24m):</strong> Become the standard sequencing tool for all city districts. Integrate outputs with the "Eixos Verds" project to guide replacement planting.</li>
-        <li><strong>Engagement:</strong> Launch a public-facing version of the map to increase citizen engagement and transparency.</li>
-      </ul>
-    </div>
-    <div class="card" style="border-color: var(--pur); background: #14102a;">
-      <h4 style="color:var(--pur)">4. Vision: Integrated Urban Forest Management</h4>
-      <ul class="list" style="font-size:.85rem; margin-top:.4rem; padding-left:1rem;">
-        <li><strong>Medium-Term (1-3y):</strong> Expand the model to other allergenic species (olive, cypress). Develop an API for integration with other city management systems. Pilot the tool in other European cities (Madrid, Paris).</li>
-        <li><strong>Long-Term (3-5y):</strong> Evolve into a comprehensive Urban Forest Management Platform for Barcelona, incorporating modules for climate adaptation (drought/heat resistance), pest control, and optimizing ecosystem services (carbon capture, cooling).</li>
-      </ul>
-    </div>
-  </div>
-  <div class="snum">19 / 19</div>
+  <div class="snum">16 / 16</div>
 </section>
 </main>
 
