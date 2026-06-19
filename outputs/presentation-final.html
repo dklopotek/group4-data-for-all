@@ -47,7 +47,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 5vh 8vw 7vh;
+  padding: 4vh 8vw 4vh;
   border-bottom: 1px solid var(--line);
   position: relative;
 }
@@ -287,6 +287,14 @@ tr:last-child td { border-bottom: none; }
 /* triptych of evidence */
 .trip { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8rem; margin-top: 1rem; }
 @media (max-width: 860px) { .trip { grid-template-columns: 1fr; } .score { grid-template-columns: 1fr; } }
+
+/* "in plain terms" analogy callout */
+.plain { display: flex; align-items: baseline; gap: .55rem; margin-top: .7rem;
+  font-size: .88rem; color: #cfe8e2; line-height: 1.4; max-width: 96ch; }
+.plain::before { content: "IN PLAIN TERMS"; flex-shrink: 0; font-family: var(--mono);
+  font-size: .6rem; letter-spacing: .12em; color: var(--teal); border: 1px solid #1a5c5c;
+  background: #0c2020; border-radius: 6px; padding: .2rem .45rem; position: relative; top: -.06rem; }
+.plain b { color: var(--ink); font-weight: 700; }
 
 /* ════════ v2 data-story additions (distinct-viz redesign) ════════ */
 
@@ -630,6 +638,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Soudzilovskaia et al. 2020, FungalRoot v2.0</span>
     <span class="cite">Copernicus CLMS · ESA Sentinel-2 · USGS Landsat</span>
   </div>
+  <div class="plain"><span><b>We graded every dataset like a report card before trusting it</b>, and three failed.</span></div>
   <div class="snum">5 / 17</div>
 </section>
 
@@ -733,6 +742,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="chip">Domain heuristic 0.18</span>
     <span class="chip ok">Linear model 0.877</span>
   </div>
+  <div class="plain"><span>The model aced the exam. The catch: <b>it had secretly written the exam itself</b>.</span></div>
   <div class="snum">7 / 17</div>
 </section>
 
@@ -794,6 +804,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
       </div>
     </div>
   </div>
+  <div class="plain"><span>Like <b>grading a test with its own answer key</b>: a high score proves the copying worked, not the biology.</span></div>
   <div class="snum">8 / 17</div>
 </section>
 
@@ -871,6 +882,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Berlin null: ~86% of AM richness = sealed/greenness axis</span>
     <span class="cite">Pre-registered: phase-5/external-validation-design.md</span>
   </div>
+  <div class="plain"><span>Tested against <b>real fungi in the wild</b>, the biology explained nothing the pavement had not already explained.</span></div>
   <div class="snum">9 / 17</div>
 </section>
 
@@ -916,6 +928,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Maya-Manzano et al. 2017, Urban For. &amp; Urban Green.</span>
     <span class="cite">Pla Director de l'Arbrat 2017–2037</span>
   </div>
+  <div class="plain"><span>Like a fire, it needs <b>both the trees and the people</b>. Take away either and nothing happens.</span></div>
   <div class="snum">10 / 17</div>
 </section>
 
@@ -925,10 +938,10 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
   <h2>Thirty-two years of pollen confirm the source.</h2>
   <p class="subline">The XAC Barcelona station (Hirst volumetric trap, Prof. Jordina Belmonte, LAP-UAB) has counted pollen <strong>continuously since 1994</strong>. <em>Platanus</em> is risk level 3&ndash;4, the maximum tier.</p>
 
-  <div class="row" style="margin-top:.6rem; align-items:flex-start">
+  <div class="row" style="margin-top:.3rem; align-items:flex-start">
     <div class="col" style="flex:1 1 560px;">
       <!-- 32-year Mar-Apr pollen-season ridgeline / area chart (distinct viz) -->
-      <svg viewBox="0 0 700 300" class="svgwrap" role="img" aria-label="Thirty-two-year ridgeline of the March to April Platanus-dominated pollen season, peaking each spring">
+      <svg viewBox="0 0 700 300" class="svgwrap" style="max-width:88%" role="img" aria-label="Thirty-two-year ridgeline of the March to April Platanus-dominated pollen season, peaking each spring">
         <!-- frame -->
         <g stroke="#252c38" stroke-width="1">
           <line x1="56" y1="20" x2="56" y2="250"/>
@@ -976,18 +989,18 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
         </g>
         <text x="368" y="288" text-anchor="middle" class="chcap">one spring spike per year &middot; 32 continuous seasons, Mar&ndash;Apr, Platanus-dominated window</text>
       </svg>
-      <div class="note" style="margin-top:.7rem; max-width:none">
-        <strong>Calendar note (Belmonte et al.):</strong> &ldquo;near the source plants, pollen levels can be higher than the charts show&rdquo;: the scientific licence for mapping at street level.
+      <div class="note" style="margin-top:.4rem; max-width:none; padding:.5rem 0 .5rem 1.1rem">
+        <strong>Calendar note (Belmonte et al.):</strong> &ldquo;near the source plants, pollen levels can be higher than the charts show&rdquo;: the licence for mapping at street level.
       </div>
     </div>
     <div class="col" style="flex:1 1 240px;">
-      <figure class="framefig">
-        <img src="img/wind-pollen-dispersal.png" alt="Wind-borne pollen plumes drifting over city blocks">
+      <figure class="framefig" style="margin:0">
+        <img src="img/wind-pollen-dispersal.png" alt="Wind-borne pollen plumes drifting over city blocks" style="max-height:108px; object-fit:cover">
         <figcaption class="fig-cap">Wind-borne plumes carry the source into where people live.</figcaption>
       </figure>
-      <div class="card amb" style="margin-top:.8rem">
-        <h3 style="color:var(--amb)">Honest limit: validated on time + species, not space</h3>
-        <p style="font-size:.86rem; color:#e8d8b8">No open station-level <em>Platanus</em> time-series with coordinates exists. One in-city station gives zero intra-city resolution. The source layer is a <strong>literature-anchored emission proxy</strong>, confirmed by the 32-year Hirst series on <strong>time and species</strong>, not spatially.</p>
+      <div class="card amb" style="margin-top:.6rem; padding:.8rem .9rem">
+        <h3 style="color:var(--amb); font-size:.95rem">Honest limit: time + species, not space</h3>
+        <p style="font-size:.82rem; color:#e8d8b8; margin-top:.2rem"><b>In plain terms:</b> 32 years tell us <em>when</em> and <em>what</em>, like knowing a city's total rainfall but not which street is wettest. No open station-level <em>Platanus</em> series with coordinates exists, so the source layer is a <strong>literature-anchored emission proxy</strong>: validated on <strong>time and species</strong>, not space.</p>
       </div>
     </div>
   </div>
@@ -1065,6 +1078,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Pre-registered: phase-5/test-design.md (T1&ndash;T4)</span>
     <span class="cite">T3 burden capture: +4.6 pp over density-only, top-15</span>
   </div>
+  <div class="plain"><span>We send crews <b>where the most people benefit</b>, not just where the most trees stand.</span></div>
   <div class="snum">12 / 17</div>
 </section>
 
@@ -1074,7 +1088,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
   <h2>Recomputed where people actually live.</h2>
   <p class="subline">Priority re-run at <strong>1,068 census sections</strong> (the native demand grain, dropping the interpolation crutch), then turned into a per-street worklist.</p>
 
-  <div class="row" style="margin-top:.6rem; align-items:flex-start">
+  <div class="row" style="margin-top:.3rem; align-items:flex-start">
     <div class="col" style="flex:1 1 430px;">
       <!-- cross-grain corroboration: segmented horizontal bar (distinct viz) -->
       <svg viewBox="0 0 480 150" class="svgwrap" role="img" aria-label="Segmented bar of cross-grain corroboration badges: 187 corroborated, 169 artifact, 169 underrated">
@@ -1107,7 +1121,6 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
           <tr><td class="lo">03024</td><td>Av. de l'Estadi</td><td class="hi">277</td><td>114</td></tr>
           <tr><td class="lo">03024</td><td>Av. Miramar</td><td class="hi">224</td><td>100</td></tr>
           <tr><td class="lo">03024</td><td>Pl. Carles Buïgas</td><td class="hi">117</td><td>72</td></tr>
-          <tr><td class="lo">03024</td><td>Av. Francesc Ferrer i Guàrdia</td><td class="hi">92</td><td>51</td></tr>
         </tbody>
       </table>
       <ul class="list" style="margin-top:.5rem">
@@ -1116,7 +1129,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
       </ul>
       <div class="card amb" style="margin-top:.5rem">
         <h3 style="color:var(--amb); font-size:.92rem">Honest negative: MAUP</h3>
-        <p style="font-size:.84rem; color:#e8d8b8; margin:0">At section grain the exposure layer <strong>fails</strong> the reorder test it passed at cell grain (Spearman 0.97): a few park-like sections with huge mature-plane clusters dominate. We ship both grains with the caveat.</p>
+        <p style="font-size:.84rem; color:#e8d8b8; margin:0"><b>In plain terms:</b> like <em>electoral districts</em>, the answer shifts with how you draw the boundaries. At section grain the exposure layer <strong>fails</strong> the reorder test it passed at cell grain (Spearman 0.97): a few park-like sections with huge mature-plane clusters dominate. We ship both grains.</p>
       </div>
     </div>
   </div>
@@ -1173,6 +1186,7 @@ text.chttl { fill: var(--ink); font-family: var(--sans); font-size: 13px; font-w
     <span class="cite">Deprivation r &minus;0.008, 0.17 vs source/exposure &middot; phase-5 equity artifact</span>
     <span class="cite">Cost &minus;0.5 pp exposure relief; deprived-tercile share 40% &rarr; 60%</span>
   </div>
+  <div class="plain"><span>We <b>tilt toward poorer neighbourhoods</b> at almost no cost to the total relief.</span></div>
   <div class="snum">14 / 17</div>
 </section>
 
