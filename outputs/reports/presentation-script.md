@@ -1,10 +1,10 @@
 # Presentation Script — "Platanus Pollen-Allergen Priority, Barcelona"
 
-**Deck:** `outputs/presentation-final.html` (17 slides, DOM order s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s10b, s11, s12b, s12, s13, s14, s15)
+**Deck:** `outputs/presentation-final.html` (17 slides, DOM order s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s10b, s11, s12b, s12, swp, swpvid, s15). The two live-map slides were removed (that interface is a separate teammate deliverable); the Phase-6 wind-pollen CFD tool + its demo video are slides 15 and 16.
 **Audience:** skeptical ecologists. Framing priority in the spoken voice: (1) ecology / environment first, (2) data collection and CRISP-DM second, (3) AI / model third.
 **Headline:** the honest pre-registered falsification of the mycorrhizal hypothesis, then the pivot to a pollen-allergen renewal-sequencing tool.
-**Total talk: ~10 minutes (≈600 s).** Per-slide budget below sums to ~600 s. The two live-map slides (s13 / s14) are short and need a few seconds of actual clicking, not reading.
-**Speaker split:** RAFIK presents the DATA STORY = CRISP-DM phases 2–5 (slides 5–14 in visual order, i.e. data sources, prep, modeling, falsification, pivot, aerobiology, Cycle-B evaluation, deployment, equity). TEAMMATE presents title / business framing (1–3), the live-map demo (15–16), and the conclusion / business plan (17). Marked per slide.
+**Total talk: ~10.5 minutes (≈625 s).** Per-slide budget below. The wind-pollen tool + demo (15–16) carry a live video; trim s7 / s14 a little if you must land under 10.
+**Speaker split:** RAFIK presents the DATA STORY = CRISP-DM phases 2–5 (slides 5–14 in visual order: data sources, prep, modeling, falsification, pivot, aerobiology, Cycle-B evaluation, deployment, equity). DOMINIKA presents the Phase-6 wind-pollen CFD tool + demo video (15–16). TEAMMATE presents title / business framing (1–3) and the conclusion (17). Marked per slide.
 
 **Keep correct throughout:** the spring **pollen** (March–April, modeled, the allergen we map) is DISTINCT from the visible late-April **fruit-fibre** "rain" (the *Sant Jordi* nuisance, an irritant, NOT what we model). Never conflate them.
 
@@ -28,26 +28,32 @@
 | 12 | s11 | Every pre-registered test passed | 45 s | Rafik |
 | 13 | s12b | Recomputed where people actually live | 45 s | Rafik |
 | 14 | s12 | An equity variant, trade-off measured | 30 s | Rafik |
-| 15 | s13 | Live map — deployment priority | 25 s | teammate |
-| 16 | s14 | Live map — efficiency vs equity | 20 s | teammate |
+| 15 | swp | Wind-pollen CFD tool (Infrared) | 45 s | Dominika |
+| 16 | swpvid | Pollen Particle Flow — demo video | 25 s | Dominika |
 | 17 | s15 | The strongest result is the hypothesis we killed | 30 s | teammate |
-| | | **TOTAL** | **~600 s (10 min)** | |
+| | | **TOTAL** | **~625 s (~10.5 min)** | |
 
 ---
 
 ### Slide 1 (s1) — "One species is 27.45% of Barcelona's street trees."  [~35s]  [teammate]
 
-- SCRIPT: "Look at this canopy. One species, the London plane, *Platanus acerifolia*, is 27.45% of Barcelona's street trees — a near-monoculture. For an ecologist that is a fragility in itself: a city leaning a quarter of its urban forest on one tree. It is also the city's single largest pollen source. There are 43,722 plane trees over 1.7 million residents, and the city has already committed to thinning them. Our project does one thing: it sequences that renewal honestly. And the headline of our story is not a model that worked — it is a hypothesis we pre-registered and then killed."
+
+There is one species that dominates Barcelona, and this is the Platanus acerifolia, also known as the London plane. It is a near monoculture, and this is an indicator of a fragile ecosystem. It is the single largest source of pollen in Barcelona, and there are around 44,000 plane trees over approximately 1.7 million residents. There are plans, obviously, for the city to remove these trees, but what can we do to help that?
+
 - BACKED BY: 27.45% and 43,722 planes -> `crispdm-phase-1-to-6-paper.md` §1.3 and Pla Director de l'Arbrat 2017–2037; 1.7M residents (1,729,963) -> §6.2 and `outputs/phase-6/section_priority.md` line 11. "Pre-registered falsification" -> §4, `phase-5/external-validation-design.md`.
 - LIKELY Q&A + DEFENSE:
   - Q: "Is 27.45% street trees or all urban trees?" A: It is the plane share of the *total urban-tree* stock in the Pla Director; our inventory is the street-tree subset. We are careful about that distinction on slide 13.
   - Q: "Why does monoculture matter ecologically?" A: Disease and pest risk concentrate in single-species stands; the city's own stated rationale for reduction is biodiversity and monoculture risk, not allergy (paper §8.3).
 
+
+
 ---
 
 ### Slide 2 (s2) — "Barcelona is already removing plane trees. The only question is: in what order?"  [~40s]  [teammate]
 
-- SCRIPT: "The decision we serve is not whether to remove plane trees — the city already decided that. The Pla Director de l'Arbrat 2017–2037 commits Barcelona to cutting planes from 27.45% to under 12% of its urban trees: about 56% of the 43,722 specimens gone by 2037. The council's stated reason is biodiversity and monoculture risk. But the plane is also responsible for roughly 46% of Barcelona's annual pollen index — so every removal also relieves an allergenic burden. The city does not sequence by that. We supply the missing criterion: in what spatial order to fell, so each removal relieves the most pollen exposure for the people living there. The user is a planning analyst at Parks and Gardens; the unit of action is a census section turned into a street work list."
+- SCRIPT: The Pla Director de l'Arbrat 2017–2037 commits Barcelona to cutting planes from 27.45% to under 12% of its urban trees: about 56% of the 43,722 specimens gone by 2037. The council's stated reason is biodiversity and monoculture risk. But the plane is also responsible for roughly 46% of Barcelona's annual pollen index — so every removal also relieves an allergenic burden. The city does not sequence by that. We supply the missing criterion: in what spatial order to fell, so each removal relieves the most pollen exposure for the people living there. The user is a planning analyst at Parks and Gardens; the unit of action is a census section turned into a street work list."
+
+
 - BACKED BY: 27.45%→<12%, ~56% reduction, 43,722 -> Pla Director, paper §1.3 / §5 / §8.3; 46% of annual pollen index -> Gabarra, Belmonte & Canela 2002, paper §2.4. Decision objective and decision unit -> §6.1.
 - LIKELY Q&A + DEFENSE:
   - Q: "Isn't sequencing for allergy hijacking a biodiversity programme?" A: No — we treat removal as given under city policy and supply only the *order*, with allergen relief as a defensible co-benefit. We never claim to justify the removals (paper §8.3).
@@ -57,7 +63,9 @@
 
 ### Slide 3 (s3) — "Barcelona's most contested tree."  [~35s]  [teammate]
 
-- SCRIPT: "This is not an academic abstraction — it is already a public fight. The Catalan aerobiology network reported 'exceptional levels' of plane pollen across the city this April. A city arboriculture official says the Eixample was once nothing but planes and the species is no longer optimal under climate change. The press calls it 'the most hated tree'; the ombudsman has logged formal complaints about severe plane-pollen allergy. One thing to read carefully, because the public debate blurs it: the allergenic spring *pollen* in March and April is what we model. It is distinct from the visible late-April fruit-fibre 'rain' — the *Sant Jordi* nuisance — which is an irritant, not the allergen. Every tree we rank is an individually catalogued municipal asset, and that inventory is exactly what our pipeline ingests."
+
+There is actually a public fight on the story, so the Catalan AeroBiology Network reported high levels, exceptional levels of plane pollen across the city this April. The press calls it the most hated tree in Barcelona. these Trees are no longer optimal under climate change, according to a city arboriculture official. The allergenic spring pollen in March and April is what we chose to model, and every tree we rank is individually catalogued as a municipal asset, and that inventory is exactly our pipeline.
+
 - BACKED BY: XAC "nivells excepcionals" -> Regió7, 23 Apr 2026 (on-slide cite); Joan Guitart quote -> Tot Barcelona / Europa Press (on-slide cite); "l'arbre més odiat" -> El Periódico 5 May 2026; ombudsman -> Sindicatura de Greuges 2025. Pollen-vs-fruit disambiguation -> paper §2.4 and §8.3 (Sant Jordi = achene fibres, late April).
 - LIKELY Q&A + DEFENSE:
   - Q: "Aren't you just riding a media panic?" A: The salience is real and useful, but our claim is the modeled pollen exposure, not the fruit headlines; we explicitly separate the two mechanisms (paper §2.4).
@@ -67,7 +75,9 @@
 
 ### Slide 4 (s4) — "Map the city's underground fungal network." (Cycle A — Hypothesis)  [~30s]  [Rafik]
 
-- SCRIPT: "Now my part — the data story. We did not start with allergens. We started with an ecological hypothesis I think this room will recognise. Urban soils host mycorrhizal-fungal networks. Plane trees are arbuscular-mycorrhizal; the idea was that swapping the dominant AM plane for ectomycorrhizal host species would reduce a host-fungal mismatch and let the hyphal web recover. So we set out to map, across Barcelona's grid, where that intervention would help most. Spoiler, and it is the whole point of this talk: the data killed it."
+- SCRIPT: We did not start with allergens. We started with an ecological hypothesis... Urban soils host mycorrhizal-fungal networks. Plane trees are arbuscular-mycorrhizal; the idea was that swapping the dominant AM plane for ectomycorrhizal host species would reduce a host-fungal mismatch and let the hyphal web recover. So we set out to map, across Barcelona's grid, where that intervention would help most. Spoiler, and it is the whole point of this talk: the data killed it."
+
+
 - BACKED BY: AM→EM host-mismatch lever -> paper §1.1, §3.1; FungalRoot trait assignment -> Soudzilovskaia et al. 2020. "Data killed it" forward reference -> §4.
 - LIKELY Q&A + DEFENSE:
   - Q: "Is the AM→EM swap mechanism established?" A: We treated it as a hypothesis; our own 44-source review later found it weak-to-unsupported in cities — that is slide 9 (paper §4.3).
@@ -77,7 +87,7 @@
 
 ### Slide 5 (s5) — "Every source scored before use." (Phase 2 — Data Understanding)  [~40s]  [Rafik]
 
-- SCRIPT: "Phase 2, data understanding. We did not just grab data — we earned the right to use each layer. Every source was graded zero to two on seven axes — provenance, resolution, coverage, licence, access, bias, maintenance — and only adopted at ten of fourteen or better. Copernicus, Sentinel-2 and Landsat scored full marks; the municipal tree inventory, our primary source, thirteen; GBIF fungal occurrences and the FungalRoot trait table, twelve. Three sources we rejected on a single fatal axis: the global DNA fungal database has essentially zero samples in Iberia; the weather stations are too sparse; and ERA5 climate is nine kilometres — about twenty-two times too coarse for a 400-metre grid. Rejecting data on a stated rule is itself part of the discipline."
+- SCRIPT: "Phase 2, this is where we earn the data:  Every source was graded zero to two on seven axes — provenance, resolution, coverage, licence, access, bias, maintenance — and only adopted at ten of fourteen or better. Copernicus, Sentinel-2 and Landsat scored full marks; the municipal tree inventory, our primary source, thirteen; GBIF fungal occurrences and the FungalRoot trait table, twelve. Three sources we rejected on a single fatal axis: the global DNA fungal database has essentially zero samples in Iberia; the weather stations are too sparse; and ERA5 climate is nine kilometres — about twenty-two times too coarse for a 400-metre grid. Rejecting data on a stated rule is itself part of the discipline."
 - BACKED BY: 7-axis 0–2 scoring, adopt ≥10/14 -> on-slide chart; scores Copernicus/Sentinel-2/Landsat 14, inventory 13, GBIF 12, FungalRoot 12, GlobalAMFungi 10, AEMET 9, ERA5 9 -> deck slide s5 SVG (the `earn-the-data` 5-dimension discipline, paper §2; FungalRoot -> Soudzilovskaia et al. 2020). 2x resolution rule -> earn-the-data discipline.
 - LIKELY Q&A + DEFENSE:
   - Q: "Why is ERA5 '22x too coarse'?" A: ERA5-Land is ~9 km; our grid is 400 m, so a single climate pixel spans ~22 grid cells — it cannot resolve intra-city variation. That violates the 2x-resolution rule.
@@ -107,7 +117,7 @@
 
 ### Slide 8 (s8) — "The model reconstructed its own ingredients." (Phase 5 — the structural flaw)  [~45s]  [Rafik]
 
-- SCRIPT: "Here is the flaw, and it was structural, present from Phase 3 but invisible until Phase 5. The target, `composite_score_B`, was a weighted sum of the very features used to predict it — sealed surface, plane share, NDVI. The model only had to invert its own arithmetic. When we measured the variance inflation, the picture is damning: plane-share at 699, the priority index at 628, sealed at 166, NDVI at 92 — all far above the collinearity threshold of 10. And when we ask what actually drives the ranking, 91% of the index is sealed surface alone. The ecological terms we cared about carried near-zero weight — correlation under 0.2. We had built a map of asphalt in a biodiversity costume."
+- SCRIPT: "Here is the flaw, honestly, we should have caught it earlier, but we didn't catch it until the evaluation phase. The target, `composite_score_B`, was a weighted sum of the very features used to predict it — sealed surface, plane share, NDVI. The model only had to invert its own arithmetic. When we measured the variance inflation, the picture is damning: plane-share at 699, the priority index at 628, sealed at 166, NDVI at 92 — all far above the collinearity threshold of 10. And when we ask what actually drives the ranking, 91% of the index is sealed surface alone. The ecological terms we cared about carried near-zero weight — correlation under 0.2. We had built a map of asphalt in a biodiversity costume."
 - BACKED BY: VIF platanus 698.93, prpi 627.91, sealed 165.74, ndvi 92.22 (vs total_trees 5.19, richness 3.8, effort 1.22) -> `outputs/phase-5/external_validation_results.md` VIF block. 91% sealed / biotic r<0.2 -> paper §4.1 (composite 91% explained by sealed, R² 0.91 r 0.95; s4_mismatch −0.015, PRPI +0.18 vs sealed +0.95). 99.9% by raw inputs -> §3.2/§4.1.
 - LIKELY Q&A + DEFENSE:
   - Q: "Isn't a high R² between a composite and its inputs just expected?" A: Exactly — that is the point. In-distribution it is arithmetic, not evidence; we had validated a tautology (paper §3.2).
@@ -127,7 +137,7 @@
 
 ### Slide 10 (s10) — "We kept what the data supports." (The Pivot)  [~40s]  [Rafik]
 
-- SCRIPT: "So we pivoted — a documented decision, not a quiet relabel. We killed the mycorrhizal priority, keeping it only as an untested future hypothesis. What survives is the plane tree itself, not for a contested fungal mechanism but for a property the data and the literature genuinely support: its pollen. *Platanus* is 46% of Barcelona's annual pollen index, the single largest source. The new product is deliberately the structural opposite of what failed: priority equals source times exposure — mature plane density multiplied by residential population, each min-max standardised. It is multiplicative on purpose: no trees, or no people, means no priority. You cannot rescue one missing layer with the other, the way sealed surface rescued everything in Cycle A."
+- SCRIPT: "So we pivoted — a documented decision, not a quiet relabel. We killed the mycorrhizal priority, keeping it only as an untested future hypothesis. What survives is the plane tree itself. *Platanus* is 46% of Barcelona's annual pollen index, the single largest source. The new product is deliberately the structural opposite of what failed: priority equals source times exposure — mature plane density multiplied by residential population. It is multiplicative on purpose: no trees, or no people, means no priority. You cannot rescue one missing layer with the other, the way sealed surface rescued everything in Cycle A."
 - BACKED BY: 46% Platanus -> Gabarra et al. 2002 (on-slide donut); priority = source x exposure, multiplicative rationale -> paper §6.4; pivot decision -> §5; Maya-Manzano et al. 2017 and Pla Director -> on-slide cites.
 - LIKELY Q&A + DEFENSE:
   - Q: "Why multiplicative rather than a weighted sum?" A: A sum is fully compensatory — that is precisely how one high-variance layer dominated Cycle A. A product is partially non-compensatory and matches the decision semantics: a dense stand with no residents is not a priority (paper §6.4).
@@ -175,28 +185,28 @@
 
 ---
 
-### Slide 15 (s13) — Live map: deployment priority  [~25s]  [teammate]  [CLICK, don't read]
+### Slide 15 (swp) — "We added the dimension the station could not: space." (Wind-pollen CFD tool)  [~45s]  [Dominika / teammate]
 
-- SCRIPT: "Here is the live product. [CLICK the layer toggle.] This switches between the 400-metre cells and the 1,068 census sections — and you can literally watch the MAUP effect appear as the ranking shifts. [CLICK a top section.] Click any priority section and it opens the street work list underneath — the actual instruction a planner acts on."
-- BACKED BY: `outputs/phase-6/maps/deployment_map.html` -> paper §8.3 (interactive map, toggles cell vs section, click for street worklist). MAUP live -> §8.2.
+- SCRIPT: "Everything so far told us *when* and *what*. It could not tell us *where*, street by street. This is the Phase-6 product that closes that gap. We take 474 real plane trees in the Eixample core and the real building heights from OpenStreetMap, and we run a computational-fluid-dynamics wind field over them with the Infrared SDK, at one-metre, GPU-accelerated. The pollen then disperses as a Gaussian plume from each tree, on a five-metre grid, and the wind field bends it down the street canyons. We run four real wind regimes: the sea breeze from the south-east, four metres a second, which dominates the March–April daytime; the Tramontane from the north-west, the strongest dispersal event; a near-calm south, the worst case where pollen just pools at the source; and no wind as a baseline. In plain terms, it is a weather forecast for pollen: it shows which streets the cloud actually settles in."
+- BACKED BY: tool lives in `phase-6/wind-pollen/`. Infrared CFD wind -> `wind_runner.py` (WindModelRequest, 1.5 m pedestrian height, scenarios from `config_barcelona.json`). Gaussian plume + grid -> `pollen_dispersion.py` (5 m grid, 600 m max radius). Physics (grain 32 µm, release 18 m, settling 0.003 m/s, Mar–Apr) + scenarios (sea breeze SE 4 m/s, Tramontane NW 6 m/s, calm S 2 m/s) -> `config_barcelona.json`. 474 Platanus trees + OSM buildings -> `platanus_trees.geojson`, `buildings.geojson`. Viewers -> `viewer.html`, `block_viewer.html` (deck.gl). Eixample = top priority cells -> ties to the section_priority top rows.
 - LIKELY Q&A + DEFENSE:
-  - Q: "Isn't a front-end outside the pipeline-only scope?" A: Yes — we say so explicitly; it is a presentation and exploration aid, not the deliverable. The deliverable is the CSVs, the report, and the reproducible pipeline (paper §8.3).
-  - Q: "What do the colours mean?" A: Priority intensity from the source x exposure product; deeper = higher modeled exposure relief per removal.
+  - Q: "Is the wind field real or decorative?" A: Real CFD from the Infrared SDK over actual OSM building geometry; the same engine family used in the IAAC x Infrared work. We also keep a `--mock` synthetic mode for running without an API key, clearly flagged.
+  - Q: "Does this finally validate the pollen spatially?" A: No, and we are careful: it is a physically-grounded *simulation* of dispersion, not measured-pollen validation. It adds a defensible spatial mechanism on top of the literature-anchored source; the station limit from the previous slide still stands.
 
 ---
 
-### Slide 16 (s14) — Live map: efficiency vs equity  [~20s]  [teammate]  [CLICK, don't read]
+### Slide 16 (swpvid) — "Pollen Particle Flow." (Live tool demo video)  [~25s]  [Dominika / teammate]  [VIDEO plays]
 
-- SCRIPT: "And this second map shows exactly which cells change when we add the deprivation weight. [CLICK.] Blue cells are the equity gains — areas pulled up because they are more deprived; orange are the efficiency losses we accept in exchange. This is the half-a-point trade-off from the previous slide, made spatial."
-- BACKED BY: `outputs/phase-6/maps/priority_equity_shift.html`; equity gains/losses -> `equity_results.md` V3-3 (−0.5 pp relief, deprived share 40→60%).
+- SCRIPT: "And this is it running. [VIDEO.] Each green crown is a plane tree, the blue blocks are real building heights, and the drifting grains are pollen carried by the CFD wind. Watch what happens when we switch the wind regime — sea breeze, Tramontane, calm: the plume reshapes, and you can see exactly which streets load up and which clear. This is the street-scale picture a planner needs to sequence renewal where the exposure is worst, block by block."
+- BACKED BY: `outputs/img/wind-pollen-tool.mp4` (a 14 s loop of `phase-6/wind-pollen/block_viewer.html`, real recording). Full 58 s walkthrough kept at `outputs/img/wind-pollen-tool-full.mp4`. On-screen readout in the clip ("Calm S · 2 m/s input · real CFD (Infrared SDK) · 474 Platanus trees") is generated by the viewer, not annotated by us.
 - LIKELY Q&A + DEFENSE:
-  - Q: "Could the planner end up over-weighting equity?" A: It is an explicit, optional objective shown alongside efficiency — the trade-off is quantified so the choice is informed, never hidden.
+  - Q: "Is this a canned animation?" A: No — it is a screen recording of the interactive deck.gl viewer; the scenario buttons re-run the dispersion against a different stored CFD wind field live.
 
 ---
 
 ### Slide 17 (s15) — "The strongest result is the hypothesis we killed." (Conclusion)  [~30s]  [teammate]
 
-- SCRIPT: "So where does this leave us? Our strongest result is not the tool — it is the hypothesis we killed. A pre-registered falsification, reported without smoothing, is the clearest possible proof that the Evaluation phase did its job. We did not relabel a sealed-surface map as a fungal one; we shipped the honest question instead. Five contributions, no new algorithm: failure-as-outcome, anti-tautology discipline, nominal versus effective weights, an honesty gate for layers, and honest downgrade when validation data is missing. What next: pilot it inside the 2026–27 renewal plan in one district — say Sant Martí — sequencing the felling the city already commits to and pairing it with the Eixos Verds replanting. Plane pollen sensitises about 37% of the pollen-allergic, so across roughly 24,500 committed renewals the co-benefit is measurable from day one. Thank you."
+- SCRIPT: "So where does this leave us? Our strongest result is not only the tool — it is the hypothesis we killed. A pre-registered falsification, reported without smoothing, is the clearest possible proof that the Evaluation phase did its job. We did not relabel a sealed-surface map as a fungal one; we shipped the honest question instead. Five contributions, no new algorithm: failure-as-outcome, anti-tautology discipline, nominal versus effective weights, an honesty gate for layers, and honest downgrade when validation data is missing. What next: pilot it inside the 2026–27 renewal plan in one district — say Sant Martí — sequencing the felling the city already commits to and pairing it with the Eixos Verds replanting. Plane pollen sensitises about 37% of the pollen-allergic, so across roughly 24,500 committed renewals the co-benefit is measurable from day one. Thank you."
 - BACKED BY: five contributions -> paper §1.4; pivot/honest-question -> §11; ~37% Platanus sensitization -> Puiggròs 2015 (on-slide) and paper §2.4 / `atrisk_results.json` (0.37 constant); ~24,500 renewals -> ~56.3% of 43,722, paper §8.3; Pla Director / Eixos Verds -> §8.3 / §5.
 - LIKELY Q&A + DEFENSE:
   - Q: "Is the project actually deployable, or just a seminar exercise?" A: It is analytically ship-ready — passes every pre-registered test, survives sensitivity, honest about its one un-closable limit — but deployment-pending on two organizational gates: a real Espais Verds analyst's sign-off and an independent reproduction (paper §7.4 / §8.4).
